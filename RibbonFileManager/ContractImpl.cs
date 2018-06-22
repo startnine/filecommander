@@ -19,7 +19,7 @@ namespace RibbonFileManager
         public Object Object { get; }
     }
 
-    class DoubleDeckerBarConfiguration : IConfiguration
+    class RibbonFileManagerConfiguration : IConfiguration
     {
         public IDictionary Entries => GetType().GetFields().Select(f => (f.Name, f.GetValue(this))).ToDictionary(k => k.Name, v => v.Item2);
     }
