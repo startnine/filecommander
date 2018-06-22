@@ -218,6 +218,7 @@
                     </Fluent:RibbonGroupBox>
                     <Fluent:RibbonGroupBox x:Name="ShareBlank" Header="Send">
                         <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
+                        <Fluent:Button x:Name="GetModules" Header="Get module list" Click="GetModules_Click"/>
                     </Fluent:RibbonGroupBox>
                 </Fluent:RibbonTabItem>
                 <Fluent:RibbonTabItem Header="View">

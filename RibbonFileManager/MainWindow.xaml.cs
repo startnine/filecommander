@@ -15,6 +15,7 @@ using Fluent;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.VisualBasic.FileIO;
+using RibbonFileManager.View;
 
 namespace RibbonFileManager
 {
@@ -965,6 +966,12 @@ namespace RibbonFileManager
                     d.Selected = (!(d.Selected));
                 }
             }
+        }
+
+        private void GetModules_Click(Object sender, RoutedEventArgs e)
+        {
+            var count = RibbonFileManagerAddIn.Host.GetModules().Count;
+            Start9.Api.Plex.MessageBox.Show(this, $"Modules successfully received - Count = {count}", "Modules received");
         }
     }
 

@@ -14,10 +14,19 @@ namespace RibbonFileManager
     [AddIn("Ribbon File Manager", Description = "Ribbon Test", Publisher = "Start9", Version = "1.0.0.0")]
     public class RibbonFileManagerAddIn : IModule
     {
+        public IConfiguration Configuration { get; } = new RibbonFileManagerConfiguration();
+
         public IMessage SendMessage(IMessage message)
         {
             System.Windows.MessageBox.Show(message.Text);
             return Message.Empty;
+        }
+
+        public static IHost Host { get; private set; }
+
+        public void HostReceived(IHost host)
+        {
+            Host = host;
         }
 
         public RibbonFileManagerAddIn()

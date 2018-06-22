@@ -19,6 +19,19 @@ namespace RibbonFileManager.Adapter
             _handle = new ContractHandle(contract);
         }
 
+        public IConfiguration Configuration
+        {
+            get
+            {
+                return IConfigurationAddInAdapter.ContractToViewAdapter(_contract.Configuration);
+            }
+        }
+
+        public void HostReceived(IHost host)
+        {
+            _contract.HostReceived(IHostAddInAdapter.ViewToContractAdapter(host));
+        }
+
         public IMessage SendMessage(IMessage message)
         {
             return IMessageAddInAdapter.ContractToViewAdapter(_contract.SendMessage(IMessageAddInAdapter.ViewToContractAdapter(message)));

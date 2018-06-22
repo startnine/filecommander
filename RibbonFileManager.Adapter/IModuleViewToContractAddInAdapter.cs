@@ -4,7 +4,7 @@ using System.AddIn.Pipeline;
 
 namespace RibbonFileManager.Adapter
 {
-    [AddInAdapterAttribute]
+    [AddInAdapter]
     public class IModuleViewToContractAddInAdapter : ContractBase, IModuleContract
     {
         private IModule _view;
@@ -12,6 +12,18 @@ namespace RibbonFileManager.Adapter
         public IModuleViewToContractAddInAdapter(IModule view)
         {
             _view = view;
+        }
+        public IConfigurationContract Configuration
+        {
+            get
+            {
+                return IConfigurationAddInAdapter.ViewToContractAdapter(_view.Configuration);
+            }
+        }
+
+        public void HostReceived(IHostContract host)
+        {
+            _view.HostReceived(IHostAddInAdapter.ContractToViewAdapter(host));
         }
 
         public virtual IMessageContract SendMessage(IMessageContract message)
