@@ -21,6 +21,6 @@ namespace RibbonFileManager
 
     class RibbonFileManagerConfiguration : IConfiguration
     {
-        public IDictionary Entries => GetType().GetFields().Select(f => (f.Name, f.GetValue(this))).ToDictionary(k => k.Name, v => v.Item2);
+        public IDictionary Entries => GetType().GetFields().ToDictionary(k => k.Name, v => v.GetValue(this));
     }
 }
