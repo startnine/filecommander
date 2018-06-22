@@ -46,7 +46,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Start9.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Start9.Api.1.0.0-CI00092\lib\net40\Start9.Api.dll</HintPath>
+      <HintPath>..\packages\Start9.Api.1.0.0-CI00099\lib\net40\Start9.Api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AddIn" />
@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ContractImpl.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="RibbonTestAddIn.cs" />
     <Compile Include="SeparateQuickAccessBarRibbon.cs" />

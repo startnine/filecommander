@@ -14,6 +14,7 @@
     <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <local:ThicknessLeftToSubtractDoubleConverter x:Key="ThicknessLeftToSubtractDoubleConverter"/>
     <local:DoubleAdderConverter x:Key="DoubleAdderConverter"/>
+    <local:DoubleComparisonConverter x:Key="DoubleComparisonConverter"/>
 
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
 
@@ -1051,7 +1052,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="PlexRibbonButtonStyle" TargetType="{x:Type Fluent:Button}">
+    <Style x:Key="{x:Type Fluent:Button}" TargetType="{x:Type Fluent:Button}">
         <Setter Property="Height" Value="68" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Foreground" Value="{DynamicResource PlexRibbonForegroundBrush}" />
@@ -1095,7 +1096,7 @@
                                 </VisualBrush>
                             </apictrl:Reveal.OpacityMask>
                         </apictrl:Reveal>
-                        <apictrl:Reveal x:Name="HoverReveal" HoverWidth="128" HoverHeight="128" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}" Opacity="0">
+                        <apictrl:Reveal x:Name="HoverReveal" HoverWidth="128" HoverHeight="128" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}" Opacity="0" Visibility="Hidden">
                             <apictrl:Reveal.Hover>
                                 <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5">
                                     <RadialGradientBrush.GradientStops>
@@ -1151,6 +1152,7 @@
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                             <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                            <Setter TargetName="HoverReveal" Property="Visibility" Value="Visible"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Trigger.EnterActions>
@@ -1222,7 +1224,318 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="{x:Type Fluent:Button}" TargetType="{x:Type Fluent:Button}" BasedOn="{StaticResource PlexRibbonButtonStyle}"/>
+
+    <Style x:Key="{x:Type Fluent:DropDownButton}" TargetType="{x:Type Fluent:DropDownButton}">
+        <Setter Property="Height" Value="68" />
+        <Setter Property="Foreground" Value="{DynamicResource PlexRibbonForegroundBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="SnapsToDevicePixels" Value="False" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="2,1"/>
+        <Setter Property="Padding" Value="6,2"/>
+        <Setter Property="Fluent:KeyTip.AutoPlacement" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Fluent:DropDownButton}">
+                    <ControlTemplate.Resources>
+                        <Style BasedOn="{StaticResource MenuSeparatorStyle}" TargetType="{x:Type Separator}" />
+                    </ControlTemplate.Resources>
+                    <Grid>
+                        <Border x:Name="PART_ButtonBorder" BorderThickness="0" Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+                            <Grid>
+                                <Border x:Name="HoverBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
+                                    <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                        <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="#FF68A2CC" BorderBrush="#FF58BFEA"/>
+                                    </Border>
+                                </Border>
+                                <Border x:Name="SelectedBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
+                                    <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                        <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarToggleButtonSelectedBackground}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
+                                    </Border>
+                                </Border>
+                                <Canvas x:Name="SizingAid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <apictrl:Reveal x:Name="IdleReveal" HoverWidth="512" HoverHeight="512" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+                                    <apictrl:Reveal.Hover>
+                                        <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Offset="0" Color="#FFEEFEFE"/>
+                                                <GradientStop Offset="0.5" Color="#B076BDEF"/>
+                                                <GradientStop Offset="0.75" Color="#5076BEEF"/>
+                                                <GradientStop Offset="1" Color="#0076BEEF"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </apictrl:Reveal.Hover>
+                                    <apictrl:Reveal.OpacityMask>
+                                        <VisualBrush>
+                                            <VisualBrush.Visual>
+                                                <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=TemplatedParent}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=TemplatedParent}}" Background="Transparent" BorderBrush="Black" BorderThickness="1" CornerRadius="4"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </apictrl:Reveal.OpacityMask>
+                                </apictrl:Reveal>
+                                <apictrl:Reveal x:Name="HoverReveal" HoverWidth="128" HoverHeight="128" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}" Opacity="0" Visibility="Hidden">
+                                    <apictrl:Reveal.Hover>
+                                        <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5">
+                                            <RadialGradientBrush.GradientStops>
+                                                <GradientStop Offset="0" Color="#C0B8F2FB"/>
+                                                <GradientStop Offset="1" Color="#00B8F2FB"/>
+                                            </RadialGradientBrush.GradientStops>
+                                        </RadialGradientBrush>
+                                    </apictrl:Reveal.Hover>
+                                    <apictrl:Reveal.OpacityMask>
+                                        <VisualBrush>
+                                            <VisualBrush.Visual>
+                                                <Border Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}" Background="Black" BorderBrush="Transparent" BorderThickness="3" CornerRadius="4"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </apictrl:Reveal.OpacityMask>
+                                </apictrl:Reveal>
+                                <StackPanel x:Name="stackPanel" Width="Auto" Margin="{TemplateBinding Padding}" Orientation="Horizontal">
+                                    <ContentPresenter x:Name="largeIconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Margin="0,2,0,0" SnapsToDevicePixels="True" Visibility="Collapsed" Content="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='32,32'}"/>
+                                    <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Margin="0,2" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
+                                    <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,0" HasTwoLines="False" HasGlyph="{TemplateBinding HasTriangle}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Popup x:Name="PART_Popup" Placement="Bottom" MinWidth="{TemplateBinding ActualWidth}" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Margin="0,0,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                            <Grid Name="DropDown" IsEnabled="{TemplateBinding IsEnabled}" SnapsToDevicePixels="True" Margin="0" VerticalAlignment="Top">
+                                <Border x:Name="PART_DropDownBorder" SnapsToDevicePixels="True" Background="{DynamicResource ContextMenuBackgroundBrush}" BorderBrush="{DynamicResource ContextMenuBorderBrush}" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                    <!--d:LayoutOverrides="Width, Height"-->
+                                    <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                        <Grid Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <ScrollViewer x:Name="PART_ScrollViewer" MaxHeight="{TemplateBinding MaxDropDownHeight}" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" ClipToBounds="True">
+                                                <StackPanel x:Name="PART_MenuPanel" Orientation="Vertical" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" Margin="3"/>
+                                            </ScrollViewer>
+                                            <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,1,0,0" Grid.Row="1" CornerRadius="0,0,1,1" Visibility="Collapsed">
+                                                <Grid>
+                                                    <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
+                                                    <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                        <!--Popup x:Name="PART_Popup"
+							   Placement="Bottom"
+							   IsOpen="{TemplateBinding IsDropDownOpen}"
+							   AllowsTransparency="True"
+							   PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"
+							   Margin="0,0,-4,0"
+							   VerticalAlignment="Top"
+							   Grid.ColumnSpan="2">
+                            <Grid Name="DropDown"
+								  SnapsToDevicePixels="True"
+								  Margin="0"
+								  VerticalAlignment="Top">
+                                <Border x:Name="PART_DropDownBorder"
+										MinWidth="{TemplateBinding ActualWidth}"
+										SnapsToDevicePixels="True"
+										Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}"
+										BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BorderBrush}"
+										BorderThickness="1"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Top">
+                                    <Grid Width="Auto"
+										  Height="Auto"
+										  HorizontalAlignment="Stretch"
+										  VerticalAlignment="Top">
+                                        <Border VerticalAlignment="Top"
+												Width="Auto"
+												Height="Auto"
+												BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}"
+												BorderThickness="1" />
+                                        <Grid Margin="1"
+											  HorizontalAlignment="Stretch"
+											  VerticalAlignment="Top">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <ScrollViewer x:Name="PART_ScrollViewer"
+														  Style="{DynamicResource MenuScrollViewer}"
+														  IsTabStop="False"
+														  Margin="1"
+														  MaxHeight="{TemplateBinding MaxDropDownHeight}"
+														  SnapsToDevicePixels="True"
+														  VerticalScrollBarVisibility="Auto"
+														  HorizontalScrollBarVisibility="Hidden">
+                                                <StackPanel Orientation="Vertical"
+															IsItemsHost="True"
+															KeyboardNavigation.DirectionalNavigation="Local" />
+                                            </ScrollViewer>
+                                            <Border x:Name="resizeBorder"
+													HorizontalAlignment="Stretch"
+													VerticalAlignment="Top"
+													Height="11"
+													BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"
+													BorderThickness="0,1,0,0"
+													Grid.Row="1"
+													Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgoundBrush}">
+                                                <Grid>
+                                                    <Thumb x:Name="PART_ResizeVerticalThumb"
+														   HorizontalAlignment="Stretch"
+														   Margin="0,0,0,-90"
+														   Width="Auto"
+														   Height="10"
+														   VerticalAlignment="Top"
+														   Cursor="SizeNS"
+														   Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
+                                                    <Thumb x:Name="PART_ResizeBothThumb"
+														   HorizontalAlignment="Right"
+														   Margin="0,0,0,-90"
+														   Width="10"
+														   Height="10"
+														   VerticalAlignment="Top"
+														   Cursor="SizeNWSE"
+														   Template="{DynamicResource ResizeBothThumbControlTemplate}" />
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Popup-->
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ResizeMode" Value="None">
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Both">
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Vertical">
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="Size" Value="Small">
+                            <Setter Property="Visibility" TargetName="controlLabel" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Size" Value="Large">
+                            <Setter Property="HasTwoLines" TargetName="controlLabel" Value="True" />
+                            <Setter Property="Orientation" TargetName="stackPanel" Value="Vertical" />
+                            <Setter Property="Visibility" TargetName="largeIconImage" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="iconImage" Value="Collapsed" />
+                            <Setter Property="Margin" TargetName="controlLabel" Value="2,0,0,0" />
+                        </Trigger>
+                        <!--Trigger Property="IsDropDownOpen"
+								 Value="True">
+                            <Setter Property="BorderBrush" TargetName="PART_ButtonBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.BorderBrush}" />
+                            <Setter Property="Background" TargetName="PART_ButtonBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
+                        </Trigger-->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver"
+										   Value="True" />
+                                <Condition Property="IsDropDownOpen"
+										   Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.0625" />
+                                        <DoubleAnimation Storyboard.TargetName="HoverReveal" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.0625" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                        <DoubleAnimation Storyboard.TargetName="HoverReveal" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                            <Setter TargetName="HoverReveal" Property="Visibility" Value="Visible"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IdleReveal" Storyboard.TargetProperty="Opacity" To="0.25" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="iconImage" Storyboard.TargetProperty="Opacity" To="0.25" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="largeIconImage" Storyboard.TargetProperty="Opacity" To="0.25" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="controlLabel" Storyboard.TargetProperty="Opacity" To="0.25" Duration="0:0:0.25" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IdleReveal" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="iconImage" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="largeIconImage" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="controlLabel" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter Property="Effect" TargetName="iconImage">
+                                <Setter.Value>
+                                    <Fluent:GrayscaleEffect />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Effect" TargetName="largeIconImage">
+                                <Setter.Value>
+                                    <Fluent:GrayscaleEffect />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Size"
+                     Value="Large">
+                <Setter Property="Height"
+                        Value="68" />
+            </Trigger>
+            <Trigger Property="Size"
+                     Value="Middle">
+                <Setter Property="Height"
+                        Value="22" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+            </Trigger>
+            <Trigger Property="Size"
+                     Value="Small">
+                <Setter Property="Height"
+                        Value="22" />
+                <Setter Property="Width"
+                        Value="32" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
     <Style x:Key="{x:Type Fluent:SplitButton}" TargetType="{x:Type Fluent:SplitButton}">
         <Setter Property="Height" Value="68" />
@@ -1272,7 +1585,7 @@
                                                 </VisualBrush>
                                             </apictrl:Reveal.OpacityMask>
                                         </apictrl:Reveal>
-                                        <apictrl:Reveal x:Name="LowerHoverReveal" HoverWidth="128" HoverHeight="128" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-1,0,-1,-1" Opacity="0">
+                                        <apictrl:Reveal x:Name="LowerHoverReveal" HoverWidth="128" HoverHeight="128" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-1,0,-1,-1" Opacity="0" Visibility="Hidden">
                                             <apictrl:Reveal.Hover>
                                                 <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5">
                                                     <RadialGradientBrush.GradientStops>
@@ -1320,7 +1633,7 @@
                                             </VisualBrush>
                                         </apictrl:Reveal.OpacityMask>
                                     </apictrl:Reveal>
-                                    <apictrl:Reveal x:Name="HoverReveal" HoverWidth="128" HoverHeight="128" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-1,-1,-1,0" Opacity="0">
+                                    <apictrl:Reveal x:Name="HoverReveal" HoverWidth="128" HoverHeight="128" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-1,-1,-1,0" Opacity="0" Visibility="Hidden">
                                         <apictrl:Reveal.Hover>
                                             <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5">
                                                 <RadialGradientBrush.GradientStops>
@@ -1499,6 +1812,7 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiTrigger.ExitActions>
+                            <Setter TargetName="HoverReveal" Property="Visibility" Value="Visible"/>
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1524,6 +1838,7 @@
                             <!--Setter Property="BorderBrush" TargetName="PART_ButtonBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" />
                             <Setter Property="Background" TargetName="downBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" />
                             <Setter Property="BorderBrush" TargetName="downBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" /-->
+                            <Setter TargetName="LowerHoverReveal" Property="Visibility" Value="Visible"/>
                         </MultiTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Trigger.EnterActions>
@@ -2199,7 +2514,7 @@
                                 </ContentControl>
                             </Grid>
                         </Border>
-                        <Border Background="Transparent" BorderBrush="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0" Height="10" VerticalAlignment="Bottom" IsHitTestVisible="False">
+                        <Border x:Name="SeparatorBorder" Background="Transparent" BorderBrush="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0" Height="10" VerticalAlignment="Bottom" IsHitTestVisible="False">
                             <Border.OpacityMask>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                     <LinearGradientBrush.GradientStops>
@@ -2237,6 +2552,11 @@
                         TargetName="quickAccessToolBarHolder"
                         Value="Collapsed" />
                         </Trigger>
+                        <DataTrigger Binding="{Binding ActualWidth, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=&lt;325}" Value="True">
+                            <Setter TargetName="PART_RibbonTabControl" Property="IsEnabled" Value="False"/>
+                            <Setter TargetName="SeparatorBorder" Property="Visibility" Value="Collapsed"/>
+                            <!--Setter Property="Height" Value="0"/-->
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -2262,7 +2582,7 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
                                         <Grid x:Name="Grid" Background="{TemplateBinding Background}" IsHitTestVisible="True">
-                                            <ScrollContentPresenter Width="{TemplateBinding ActualWidth}" Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" ClipToBounds="False" />
+                                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Width="{TemplateBinding ActualWidth}" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" ClipToBounds="False" />
                                             <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Left" Width="13" Height="Auto" VerticalAlignment="Stretch" Style="{DynamicResource ScrollButtonStyle}">
                                                 <RepeatButton.Visibility>
                                                     <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="0">
@@ -2404,7 +2724,7 @@
                                 <StackPanel x:Name="PART_ToolbarPanel" Visibility="{Binding IsQuickAccessToolBarVisible, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal" />
                             </StackPanel>
                         </Grid>
-                        <Border Background="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderBrush="Transparent" BorderThickness="0" Height="1" VerticalAlignment="Bottom" Margin="0" IsHitTestVisible="False" Grid.Row="0">
+                        <Border x:Name="BottomSeparator" Background="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderBrush="Transparent" BorderThickness="0" Height="1" VerticalAlignment="Bottom" Margin="0" IsHitTestVisible="False" Grid.Row="0">
                             <Border.OpacityMask>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                     <LinearGradientBrush.GradientStops>
@@ -2440,6 +2760,7 @@
                                                 <QuinticEase EasingMode="EaseOut"/>
                                             </DoubleAnimation.EasingFunction>
                                         </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="BottomSeparator" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
                                         <!--ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="RibbonTabControl.IsManipulationEnabled">
                                             <ObjectAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="False"/>
@@ -2456,6 +2777,7 @@
                                                 <QuinticEase EasingMode="EaseOut"/>
                                             </DoubleAnimation.EasingFunction>
                                         </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="BottomSeparator" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
                                         <!--ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="RibbonTabControl.IsManipulationEnabled">
                                             <ObjectAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="True"/>
@@ -2482,6 +2804,11 @@
                             <Setter Property="Visibility" TargetName="image" Value="Visible" />
                             <Setter Property="Opacity" TargetName="PART_MinimizeButton" Value="0" />
                         </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_TabsContainer" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="mainContentControlBorder" Property="Visibility" Value="Collapsed"/>
+                            <!--Setter TargetName="BottomSeparator" Property="Visibility" Value="Collapsed"/-->
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -2769,7 +3096,17 @@
                             <Border Background="#FF3566A4" BorderBrush="#FF3566A4" BorderThickness="0,0,1,1" CornerRadius="0,0,24,0" Margin="1,24,0,0">
                                 <Border Background="#FF528CD8" BorderBrush="#FF528CD8" BorderThickness="0" CornerRadius="0,0,23,0" Margin="-1,-1,0,0"/>
                             </Border>
-                            <Grid Margin="8,7,9,9">
+                            <Grid Margin="10,9,11,11">
+                                <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStop Offset="0" Color="#20000000" />
+                                                <GradientStop Offset="1" Color="#60FFFFFF" />
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
                                 <Grid x:Name="IdleBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                               Margin="0" Background="Transparent" Opacity="1">
                                     <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Fill="{DynamicResource RoundButtonIdlePrimaryFillBrush}"/>
@@ -2972,7 +3309,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:BackstageTabItem}">
                     <ControlTemplate.Resources>
-                        <Style x:Key="{x:Type Fluent:Button}" TargetType="{x:Type Fluent:Button}" BasedOn="{StaticResource PlexRibbonButtonStyle}">
+                        <Style x:Key="{x:Type Fluent:Button}" TargetType="{x:Type Fluent:Button}" BasedOn="{StaticResource {x:Type Fluent:Button}}">
                             <Setter Property="Foreground" Value="{DynamicResource PlexRibbonDarkForegroundBrush}"/>
                         </Style>
                     </ControlTemplate.Resources>

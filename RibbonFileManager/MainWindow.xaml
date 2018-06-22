@@ -11,7 +11,7 @@
         x:Class="RibbonFileManager.MainWindow"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Height="500" Width="850" ShowToolBar="{Binding IsCollapsed, Converter={x:Static local:BoolInverterConverter.Instance}, FallbackValue=True, Source={x:Reference RibbonControl}}" ToolBarHeight="{Binding Height, Source={x:Reference RibbonControl}}" Loaded="MainWindow_Loaded">
+        Title="MainWindow" Width="925" Height="500" MinWidth="225" ShowToolBar="{Binding IsCollapsed, Converter={x:Static local:BoolInverterConverter.Instance}, FallbackValue=True, Source={x:Reference RibbonControl}}" ToolBarHeight="{Binding Height, Source={x:Reference RibbonControl}}" Loaded="MainWindow_Loaded">
     <!--plex:PlexWindow.Style>
         <Style TargetType="{x:Type local:MainWindow}" BasedOn="{DynamicResource PlexWindowStyle}"/>
     </plex:PlexWindow.Style-->
@@ -50,7 +50,10 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ContentControl}">
                                 <Grid>
-                                    <Rectangle x:Name="BackgroundRectangle" StrokeThickness="1" IsHitTestVisible="False">
+                                    <Grid.Effect>
+                                        <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
+                                    </Grid.Effect>
+                                    <!--Rectangle x:Name="BackgroundRectangle" StrokeThickness="1" IsHitTestVisible="False">
                                         <Rectangle.Fill>
                                             <VisualBrush TileMode="Tile" Viewport="0,0,2,2"
                                              Viewbox="0,0,2,2" ViewportUnits="Absolute"
@@ -93,9 +96,48 @@
                                                 </VisualBrush.Visual>
                                             </VisualBrush>
                                         </Rectangle.OpacityMask>
-                                    </Rectangle>
+                                    </Rectangle-->
                                     <!--Border OpacityMask="{Binding OpacityMask, Source={x:Reference BackgroundRectangle}}" ClipToBounds="True" Margin="0" Padding="0" Background="Red" BorderBrush="Transparent" BorderThickness="0">
                                     </Border-->
+                                    <Grid Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Grid.Column="0" Grid.Row="0" Margin="5,5,0,0" IsHitTestVisible="False">
+                                            <Rectangle.Fill>
+                                                <RadialGradientBrush Center="0,0" GradientOrigin="0,0" RadiusX="1" RadiusY="1">
+                                                    <GradientStop Offset="0.975" Color="Transparent"/>
+                                                    <GradientStop Offset="1" Color="#FFBDD7EF"/>
+                                                </RadialGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <Border Background="#FFBDD7EF" BorderBrush="Transparent" BorderThickness="0" CornerRadius="5,10,0,0" Grid.Column="1" Grid.Row="0"/>
+                                        <Border BorderBrush="Transparent" BorderThickness="0" CornerRadius="5,0,0,10" Grid.Column="0" Grid.Row="1">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <LinearGradientBrush.GradientStops>
+                                                        <GradientStop Offset="0" Color="#FFBDD7EF"/>
+                                                        <GradientStop Offset="1" Color="#FFB5C7E7"/>
+                                                    </LinearGradientBrush.GradientStops>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                        <Border BorderBrush="Transparent" BorderThickness="0" CornerRadius="0,0,10,0" Grid.Column="1" Grid.Row="1">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <LinearGradientBrush.GradientStops>
+                                                        <GradientStop Offset="0" Color="#FFBDD7EF"/>
+                                                        <GradientStop Offset="1" Color="#FFB5C7E7"/>
+                                                    </LinearGradientBrush.GradientStops>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
                                     <ContentPresenter/>
                                     <!--IsChecked="{Binding IsEnabled, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"-->
                                 </Grid>
@@ -165,7 +207,7 @@
     </plex:PlexWindow.TitleBarContent>
     <plex:PlexWindow.ToolBarContent>
         <StackPanel Orientation="Vertical">
-            <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="True" IsAutomaticCollapseEnabled="True">
+            <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="False" IsAutomaticCollapseEnabled="False" IsCollapsed="{Binding RibbonShown, Mode=TwoWay}">
                 <!--IsMinimizedChanged="RibbonControl_IsMinimizedChanged"-->
                 <Fluent:Ribbon.Menu>
                     <Fluent:Backstage x:Name="RibbonBackstage" IsOpenChanged="RibbonBackstage_IsOpenChanged"/>
