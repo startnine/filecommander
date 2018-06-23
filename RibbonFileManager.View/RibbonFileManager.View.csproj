@@ -81,6 +81,7 @@
     <Compile Include="IConfiguration.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IHost.cs" />
     <Compile Include="IMessage.cs">
       <SubType>Code</SubType>
     </Compile>
