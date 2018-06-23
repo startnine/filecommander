@@ -239,7 +239,7 @@ namespace RibbonFileManager
             var path = Environment.ExpandEnvironmentVariables(targetPath);
             if (path.EndsWith("lnk"))
             {
-                path = new Shortcuts.Shortcut(path).TargetPath;
+                path = new Shortcut(path).TargetPath;
             }
 
             if (Directory.Exists(path))
@@ -843,7 +843,7 @@ namespace RibbonFileManager
         {
             foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
             {
-                Shortcuts.Shortcut.CreateShortcut(d.ItemName + " - Shortcut", null, d.ItemPath, HistoryList[HistoryIndex]);
+                Shortcut.CreateShortcut(d.ItemName + " - Shortcut", null, d.ItemPath, HistoryList[HistoryIndex]);
             }
         }
 

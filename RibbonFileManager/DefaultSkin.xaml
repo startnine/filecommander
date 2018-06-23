@@ -4154,7 +4154,7 @@
 
     <DropShadowEffect x:Key="IconInnerShadow" Color="#FF5AA8F5" Direction="225" ShadowDepth="2" BlurRadius="7" Opacity="1" />
 
-    <DropShadowEffect x:Key="IconSmallShadow" Color="Black" Direction="225" ShadowDepth="3" BlurRadius="7" Opacity="0.375" />
+    <DropShadowEffect x:Key="IconSmallShadow" Color="Black" Direction="225" ShadowDepth="3" BlurRadius="7" Opacity="0.625" />
 
     <LinearGradientBrush x:Key="IconPrimaryFillBrush" StartPoint="0,1" EndPoint="1,0">
         <LinearGradientBrush.GradientStops>
