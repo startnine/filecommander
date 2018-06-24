@@ -41,7 +41,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -51,7 +50,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -62,8 +60,9 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="Start9.Api.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Start9.Api.Contracts.1.0.0-CI00100\lib\net40\Start9.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Start9.Api.Contracts.1.0.0-CI00109\lib\net40\Start9.Api.Contracts.dll</HintPath>
     </Reference>
+    <Reference Include="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.AddIn" />
     <Reference Include="System.AddIn.Contract, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -86,34 +85,107 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IHostAddInAdapter.cs" />
-    <Compile Include="IConfigurationAddInAdapter.cs">
+    <ProjectReference Include="..\RibbonFileManager.View\RibbonFileManager.View.csproj">
+      <Project>{0802E603-5220-4B5F-B28B-1784FA308E17}</Project>
+      <Name>DoubleDeckerBar.View</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generated Files\IConfigurationAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IHostContractToViewAddInAdapter.cs" />
-    <Compile Include="IConfigurationContractToViewAddInAdapter.cs">
+    <Compile Include="Generated Files\IConfigurationContractToViewAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IHostViewToContractAddInAdapter.cs" />
-    <Compile Include="IConfigurationViewToContractAddInAdapter.cs">
+    <Compile Include="Generated Files\IConfigurationEntryAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IMessageAddInAdapter.cs">
+    <Compile Include="Generated Files\IConfigurationEntryContractToViewAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IMessageContractToViewAddInAdapter.cs">
+    <Compile Include="Generated Files\IConfigurationEntryViewToContractAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IMessageViewToContractAddInAdapter.cs">
+    <Compile Include="Generated Files\IConfigurationViewToContractAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IModuleAddInAdapter.cs">
+    <Compile Include="Generated Files\IHostAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IModuleContractToViewAddInAdapter.cs">
+    <Compile Include="Generated Files\IHostContractToViewAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IModuleViewToContractAddInAdapter.cs">
+    <Compile Include="Generated Files\IHostViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageContractContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageContractViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageEntryAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageEntryContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageEntryViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageEventHandlerContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageEventHandlerViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IMessageViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IModuleAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IModuleContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IModuleViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverContractContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverContractViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverEntryAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverEntryContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\IReceiverEntryViewToContractAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\MessageReceivedEventArgsAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\MessageReceivedEventArgsContractToViewAddInAdapter.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generated Files\MessageReceivedEventArgsViewToContractAddInAdapter.g.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -125,12 +197,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RibbonFileManager.View\RibbonFileManager.View.csproj">
-      <Project>{0802e603-5220-4b5f-b28b-1784fa308e17}</Project>
-      <Name>RibbonFileManager.View</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
