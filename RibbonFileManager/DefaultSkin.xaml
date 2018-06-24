@@ -4265,11 +4265,11 @@
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
             </Grid.RenderTransform>
-            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconInnerShadow}">
                 <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}"/>
                 <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconSmallShadow}"/>
             </Grid>
-            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Effect="{DynamicResource IconOuterShadow}">
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Effect="{DynamicResource IconInnerShadow}">
                 <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}"/>
                 <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconSmallShadow}"/>
             </Grid>
@@ -4289,6 +4289,10 @@
                 </VisualBrush>
             </Grid.OpacityMask>
         </Grid>
+    </Grid>
+
+    <Grid x:Key="DeleteButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="m 8.2035769 289.44032 c -2.0376073 1.04979 -5.1697653 3.45606 -5.6932662 5.40979 -0.1759565 0.65668 -0.061322 1.36838 -0.8976935 1.44103 -0.65430945 0.0568 -1.36836153 -0.74026 -0.63783485 -1.93713 1.73350825 -2.84013 5.72428765 -5.68705 7.22879455 -4.91369 z m -7.70126483 0.59059 c -0.18478825 -0.48464 0.62555663 -1.01992 1.20479913 -0.77957 2.6825069 1.11308 4.7163748 3.69291 5.2444196 6.56733 -3.3136138 -4.83318 -6.08654335 -4.83659 -6.44921873 -5.78776 z" Fill="{DynamicResource IconPrimaryFillBrush}" Stroke="Transparent" StrokeThickness="0" Effect="{DynamicResource IconOuterShadow}"/>
     </Grid>
 
     <Grid x:Key="RenameButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">

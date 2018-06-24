@@ -223,7 +223,7 @@
                     <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
                         <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small"/>
                         <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small"/>
-                        <Fluent:SplitButton x:Name="DeleteButton" Header="Delet" LargeIcon="{DynamicResource DeletThisButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
+                        <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
                             <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle"/>
                             <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete"/>
                         </Fluent:SplitButton>
