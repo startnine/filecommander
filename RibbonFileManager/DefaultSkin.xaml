@@ -1114,8 +1114,8 @@
                             </apictrl:Reveal.OpacityMask>
                         </apictrl:Reveal>
                         <StackPanel x:Name="stackPanel" Width="Auto" Margin="{TemplateBinding Padding}" Orientation="Horizontal">
-                            <ContentPresenter x:Name="largeIconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Margin="0,2,0,0" SnapsToDevicePixels="True" Visibility="Collapsed" Content="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='32,32'}"/>
-                            <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Margin="0,2" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
+                            <ContentPresenter x:Name="largeIconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Margin="0,2,0,0" SnapsToDevicePixels="True" Visibility="Collapsed" Content="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='32,32'}" IsHitTestVisible="False"/>
+                            <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" Margin="-4" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}" IsHitTestVisible="False"/>
                             <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,0" HasTwoLines="False"/>
                         </StackPanel>
                     </Grid>
@@ -1293,7 +1293,7 @@
                                 </apictrl:Reveal>
                                 <StackPanel x:Name="stackPanel" Width="Auto" Margin="{TemplateBinding Padding}" Orientation="Horizontal">
                                     <ContentPresenter x:Name="largeIconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Margin="0,2,0,0" SnapsToDevicePixels="True" Visibility="Collapsed" Content="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='32,32'}"/>
-                                    <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Margin="0,2" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
+                                    <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" Margin="-4" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
                                     <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,0" HasTwoLines="False" HasGlyph="{TemplateBinding HasTriangle}"/>
                                 </StackPanel>
                             </Grid>
@@ -1671,7 +1671,7 @@
                                     <Fluent:ToggleButton x:Name="PART_Button" Command="{TemplateBinding Command}" CommandParameter="{TemplateBinding CommandParameter}" CommandTarget="{TemplateBinding CommandTarget}" Margin="0,0,0,0" Height="Auto" Width="Auto" Style="{DynamicResource InnerButtonStyle}" IsEnabled="{TemplateBinding IsButtonEnabled}" Header="{TemplateBinding Header}" ToolTip="{TemplateBinding ToolTip}" GroupName="{Binding GroupName, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsChecked="{Binding IsChecked, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" IsDefinitive="{TemplateBinding IsDefinitive}" CanAddToQuickAccessToolBar="{TemplateBinding CanAddButtonToQuickAccessToolBar}" Foreground="{TemplateBinding Foreground}" />
 
                                     <ContentPresenter x:Name="largeIconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="32" Margin="0,2,0,0" SnapsToDevicePixels="True" Visibility="Collapsed" Content="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='32,32'}"/>
-                                    <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Margin="0,2" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
+                                    <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" Margin="-4" SnapsToDevicePixels="True" Content="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'}"/>
                                 </Grid>
                                 <!--LargeIcon="{Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static Converters:StaticConverters.ObjectToImageConverter}}"
                                          Icon="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static Converters:StaticConverters.ObjectToImageConverter}}"-->
@@ -3093,8 +3093,8 @@
                 <ControlTemplate TargetType="{x:Type Fluent:Backstage}">
                     <Border x:Name="border2" Background="Transparent" Margin="0">
                         <Grid>
-                            <Border Background="#FF3566A4" BorderBrush="#FF3566A4" BorderThickness="0,0,1,1" CornerRadius="0,0,24,0" Margin="1,24,0,0">
-                                <Border Background="#FF528CD8" BorderBrush="#FF528CD8" BorderThickness="0" CornerRadius="0,0,23,0" Margin="-1,-1,0,0"/>
+                            <Border x:Name="CircleBackOuterBorder" Background="#FF3566A4" BorderBrush="#FF3566A4" BorderThickness="0,0,1,1" CornerRadius="0,0,24,0" Margin="1,24,0,0">
+                                <Border x:Name="CircleBackInnerBorder" Background="#FF528CD8" BorderBrush="#FF528CD8" BorderThickness="0" CornerRadius="0,0,23,0" Margin="-1,-1,0,0"/>
                             </Border>
                             <Grid Margin="10,9,11,11">
                                 <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3">
@@ -3131,6 +3131,15 @@
                                     <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Fill="{DynamicResource RoundButtonDisabledSecondaryFillBrush}"/>
                                     <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Fill="{DynamicResource RoundButtonDisabledTertiaryFillBrush}"/>
                                 </Grid>
+                                <!--TextBlock x:Name="LabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Text="File">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="#FF7A9BCA" Direction="0" ShadowDepth="0" BlurRadius="3" Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock-->
+                                <Grid x:Name="LabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True">
+                                    <Path Data="M 0 0 L 9 0 L 12 3 L 12 16 L 0 16 Z" StrokeThickness="1" Fill="{DynamicResource IconPathFillBrush}" Stroke="{DynamicResource IconPathStrokeBrush}"/>
+                                    <Path Data="M 0 0 L 0 4 L 4 4 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="1" Fill="{DynamicResource IconPathFillBrush}" Stroke="{DynamicResource IconPathStrokeBrush}"/>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Border>
@@ -3148,6 +3157,9 @@
                                         <DoubleAnimation Storyboard.TargetName="DisabledBackground"
                                                          Storyboard.TargetProperty="Opacity" To="1"
                                                          Duration="0:0:0.125" />
+                                        <DoubleAnimation Storyboard.TargetName="LabelTextBlock"
+                                                         Storyboard.TargetProperty="Opacity" To="0.75"
+                                                         Duration="0:0:0.125" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -3163,6 +3175,9 @@
                                                          Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
                                         <DoubleAnimation Storyboard.TargetName="DisabledBackground"
                                                          Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" />
+                                        <DoubleAnimation Storyboard.TargetName="LabelTextBlock"
+                                                         Storyboard.TargetProperty="Opacity" To="1"
+                                                         Duration="0:0:0.125" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -3206,6 +3221,9 @@
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
+                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type plex:PlexWindow}}}" Value="False">
+                            <Setter TargetName="CircleBackInnerBorder" Property="Background" Value="#FF4478BB"/>
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -3532,7 +3550,7 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ContentControl Content="{TemplateBinding Header}" Height="Auto" HorizontalAlignment="Stretch" Margin="2,0" />
+                                        <ContentControl Content="{TemplateBinding Header}" Height="Auto" HorizontalAlignment="Stretch" Margin="2,0" MinHeight="14"/>
                                         <Fluent:Button x:Name="PART_DialogLauncherButton" HorizontalAlignment="Stretch" Width="15" Height="14" Grid.Column="1" Focusable="False" IsTabStop="False" Template="{DynamicResource DialogLauncherButtonControlTemplate}" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Stretch" Icon="{TemplateBinding LauncherIcon}" />
                                     </Grid>
                                     <Fluent:RibbonGroupBoxWrapPanel x:Name="PART_UpPanel" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Stretch" Width="Auto" Height="Auto" IsItemsHost="True" Margin="0,0,5,0" Grid.Row="1"/>
@@ -4154,7 +4172,7 @@
 
     <DropShadowEffect x:Key="IconInnerShadow" Color="#FF5AA8F5" Direction="225" ShadowDepth="2" BlurRadius="7" Opacity="1" />
 
-    <DropShadowEffect x:Key="IconSmallShadow" Color="Black" Direction="225" ShadowDepth="3" BlurRadius="7" Opacity="0.625" />
+    <DropShadowEffect x:Key="IconSmallShadow" Color="Black" Direction="225" ShadowDepth="1.5" BlurRadius="12.5" Opacity="0.375" />
 
     <LinearGradientBrush x:Key="IconPrimaryFillBrush" StartPoint="0,1" EndPoint="1,0">
         <LinearGradientBrush.GradientStops>
@@ -4218,9 +4236,9 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="CopyPathButtonIcon" Width="16" Height="12" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#01000000">
-        <Border Background="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="1" Effect="{DynamicResource IconSmallShadow}">
-            <TextBlock Foreground="{DynamicResource IconForegroundBrush}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="7" Text="\\..."/>
+    <Grid x:Key="CopyPathButtonIcon" Width="24" Height="24" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconSmallShadow}">
+        <Border Width="16" Height="12" Background="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="1">
+            <TextBlock Foreground="{DynamicResource IconForegroundBrush}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="7" Text="\\..."/>
         </Border>
     </Grid>
 
@@ -4261,11 +4279,11 @@
             <Path Data="M 0 0 L 20 4 L 20 18 L 22 20 L 22 28 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Path Data="M 0 0 L 7 5 L 8 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
         </Grid>
-        <Grid Width="30" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="1,0.5">
+        <Grid Width="30" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" Effect="{DynamicResource IconInnerShadow}">
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
             </Grid.RenderTransform>
-            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconInnerShadow}">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}"/>
                 <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconSmallShadow}"/>
             </Grid>
@@ -4291,11 +4309,36 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="DeleteButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Path Data="m 8.2035769 289.44032 c -2.0376073 1.04979 -5.1697653 3.45606 -5.6932662 5.40979 -0.1759565 0.65668 -0.061322 1.36838 -0.8976935 1.44103 -0.65430945 0.0568 -1.36836153 -0.74026 -0.63783485 -1.93713 1.73350825 -2.84013 5.72428765 -5.68705 7.22879455 -4.91369 z m -7.70126483 0.59059 c -0.18478825 -0.48464 0.62555663 -1.01992 1.20479913 -0.77957 2.6825069 1.11308 4.7163748 3.69291 5.2444196 6.56733 -3.3136138 -4.83318 -6.08654335 -4.83659 -6.44921873 -5.78776 z" Fill="{DynamicResource IconPrimaryFillBrush}" Stroke="Transparent" StrokeThickness="0" Effect="{DynamicResource IconOuterShadow}"/>
+    <Grid x:Key="DeleteButtonLargeIcon" Width="28" Height="28" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource IconPrimaryFillBrush}" Effect="{DynamicResource IconOuterShadow}">
+        <Grid.OpacityMask>
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <Grid Background="#01000000" Width="32" Height="32">
+                        <Canvas>
+                            <Canvas.Background>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Path Data="m 8.2035769 289.44032 c -2.0376073 1.04979 -5.1697653 3.45606 -5.6932662 5.40979 -0.1759565 0.65668 -0.061322 1.36838 -0.8976935 1.44103 -0.65430945 0.0568 -1.36836153 -0.74026 -0.63783485 -1.93713 1.73350825 -2.84013 5.72428765 -5.68705 7.22879455 -4.91369 z" Fill="Black" Stroke="Transparent" StrokeThickness="0"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Canvas.Background>
+                        </Canvas>
+                        <Canvas>
+                            <Canvas.Background>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Path Data="m -7.70126483 0.59059 c -0.18478825 -0.48464 0.62555663 -1.01992 1.20479913 -0.77957 2.6825069 1.11308 4.7163748 3.69291 5.2444196 6.56733 -3.3136138 -4.83318 -6.08654335 -4.83659 -6.44921873 -5.78776 z" Fill="Black" Stroke="Transparent" StrokeThickness="0"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Canvas.Background>
+                        </Canvas>
+                    </Grid>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Grid.OpacityMask>
     </Grid>
 
-    <Grid x:Key="RenameButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <!--Grid x:Key="RenameButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Border Height="12" Background="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="1" Effect="{DynamicResource IconOuterShadow}"/>
         <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="6,0" Effect="{DynamicResource IconOuterShadow}">
             <Canvas.OpacityMask>
@@ -4308,5 +4351,26 @@
                 </VisualBrush>
             </Canvas.OpacityMask>
         </Canvas>
+    </Grid-->
+    <Grid x:Key="RenameButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Height="12" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconForegroundBrush}" BorderThickness="3,3,13,3" CornerRadius="0" Effect="{DynamicResource IconOuterShadow}"/>
+        <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="3,0" Effect="{DynamicResource IconInnerShadow}">
+            <Canvas.OpacityMask>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Border Width="12" Height="24" Background="Transparent" BorderBrush="Black" BorderThickness="0,2">
+                            <Canvas Width="2" Background="Black"/>
+                        </Border>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Canvas.OpacityMask>
+        </Canvas>
+    </Grid>
+
+    <Grid x:Key="NewFolderButtonLargeIcon" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path Data="M 0 0 L 20 4 L 20 18 L 22 20 L 22 28 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+            <Path Data="M 0 0 L 7 5 L 8 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        </Grid>
     </Grid>
 </ResourceDictionary>

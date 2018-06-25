@@ -11,7 +11,7 @@
         x:Class="RibbonFileManager.MainWindow"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="925" Height="500" MinWidth="225" ShowToolBar="{Binding IsCollapsed, Converter={x:Static local:BoolInverterConverter.Instance}, FallbackValue=True, Source={x:Reference RibbonControl}}" ToolBarHeight="{Binding Height, Source={x:Reference RibbonControl}}" Loaded="MainWindow_Loaded">
+        Title="MainWindow" Width="937" Height="500" MinWidth="225" ShowToolBar="{Binding IsCollapsed, Converter={x:Static local:BoolInverterConverter.Instance}, FallbackValue=True, Source={x:Reference RibbonControl}}" ToolBarHeight="{Binding Height, Source={x:Reference RibbonControl}}" Loaded="MainWindow_Loaded">
     <!--plex:PlexWindow.Style>
         <Style TargetType="{x:Type local:MainWindow}" BasedOn="{DynamicResource PlexWindowStyle}"/>
     </plex:PlexWindow.Style-->
@@ -230,7 +230,7 @@
                         <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
                     </Fluent:RibbonGroupBox>
                     <Fluent:RibbonGroupBox x:Name="New" Header="New">
-                        <Fluent:Button x:Name="NewFolderButton" Header="New folder" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
+                        <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
                         <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" SizeDefinition="Middle,Small"/>
                         <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" SizeDefinition="Middle,Small"/>
                     </Fluent:RibbonGroupBox>
@@ -254,11 +254,11 @@
                         <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
                         <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
                     </Fluent:RibbonGroupBox>
-                    <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Send">
+                    <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
                         <Fluent:Gallery/>
                         <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large"/>
                     </Fluent:RibbonGroupBox>
-                    <Fluent:RibbonGroupBox x:Name="ShareBlank" Header="Send">
+                    <Fluent:RibbonGroupBox x:Name="ShareBlank">
                         <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
                         <Fluent:Button x:Name="GetModules" Header="Get module list" Click="GetModules_Click"/>
                     </Fluent:RibbonGroupBox>

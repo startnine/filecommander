@@ -677,29 +677,33 @@ namespace RibbonFileManager
         {
             foreach(var d in ((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource))
             {
-                if (d.ItemName.StartsWith(e.Key.ToString()))
+                try
                 {
-                    if ((((DiskItem)CurrentDirectoryListView.SelectedItem).ItemName.StartsWith(e.Key.ToString())) && CurrentDirectoryListView.SelectedIndex < (CurrentDirectoryListView.Items.Count - 1))
+                    if (d.ItemName.StartsWith(e.Key.ToString()))
                     {
-                        if (((DiskItem)((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex + 1]).ItemName.StartsWith(e.Key.ToString()))
+                        if ((((DiskItem)CurrentDirectoryListView.SelectedItem).ItemName.StartsWith(e.Key.ToString())) && CurrentDirectoryListView.SelectedIndex < (CurrentDirectoryListView.Items.Count - 1))
                         {
-                            CurrentDirectoryListView.SelectedIndex++;
+                            if (((DiskItem)((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex + 1]).ItemName.StartsWith(e.Key.ToString()))
+                            {
+                                CurrentDirectoryListView.SelectedIndex++;
+                            }
+                            else
+                            {
+                                foreach (var i in ((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource))
+                                {
+                                    CurrentDirectoryListView.SelectedItem = i;
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
-                            foreach (var i in ((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource))
-                            {
-                                CurrentDirectoryListView.SelectedItem = i;
-                                break;
-                            }
+                            CurrentDirectoryListView.SelectedItem = d;
                         }
+                        break;
                     }
-                    else
-                    {
-                        CurrentDirectoryListView.SelectedItem = d;
-                    }
-                    break;
                 }
+                catch (System.NullReferenceException ex) { Debug.WriteLine(ex); }
             }
         }
 
