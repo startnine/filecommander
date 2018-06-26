@@ -5,19 +5,16 @@ using System.Linq;
 
 namespace RibbonFileManager
 {
-    public class MessageEntry : IMessageEntry
+    public class ReceiverEntry : IReceiverEntry
     {
-        public MessageEntry(Type type, String name)
+        public ReceiverEntry(String name)
         {
-            MessageObjectType = type;
             FriendlyName = name;
         }
 
-        public Type MessageObjectType { get; }
-
         public String FriendlyName { get; }
 
-        public event EventHandler<MessageReceivedEventArgs> MessageSent;
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
     }
 
     public class ConfigurationEntry : IConfigurationEntry

@@ -15,9 +15,9 @@ namespace RibbonFileManager
 
         public IConfiguration Configuration { get; } = new RibbonFileManagerConfiguration();
 
-        public IMessageContract MessageContract { get; } = new RibbonFileManagerMessageContract();
+        public IMessageContract MessageContract => null;
 
-        public IReceiverContract ReceiverContract => null;
+        public IReceiverContract ReceiverContract { get; } = new RibbonFileManagerReceiverContract();
 
         public IHost Host { get; private set; }
 
@@ -36,11 +36,11 @@ namespace RibbonFileManager
         }
     }
 
-    public class RibbonFileManagerMessageContract : IMessageContract
+    public class RibbonFileManagerReceiverContract : IReceiverContract
     {
-        public IList<IMessageEntry> Entries => new[] { ButtonClickedEntry };
+        public IList<IReceiverEntry> Entries => new[] { ButtonClickedEntry };
 
-        public IMessageEntry ButtonClickedEntry { get; } = new MessageEntry(typeof(DBNull), "Start button clicked");
+        public IReceiverEntry ButtonClickedEntry { get; } = new ReceiverEntry("Start button clicked");
     }
 
     public class RibbonFileManagerConfiguration : IConfiguration
