@@ -40,7 +40,7 @@ namespace RibbonFileManager
     {
         public IList<IReceiverEntry> Entries => new[] { ButtonClickedEntry };
 
-        public IReceiverEntry ButtonClickedEntry { get; } = new ReceiverEntry("Start button clicked");
+        public IReceiverEntry ButtonClickedEntry { get; } = new ReceiverEntry("Open folder");
     }
 
     public class RibbonFileManagerConfiguration : IConfiguration
