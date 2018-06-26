@@ -46,4 +46,19 @@ namespace RibbonFileManager
             throw new NotImplementedException();
         }
     }
+
+    public class StringIsNullOrWhiteSpaceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            return String.IsNullOrWhiteSpace(value.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType,
+        object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

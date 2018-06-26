@@ -15,6 +15,7 @@
     <local:ThicknessLeftToSubtractDoubleConverter x:Key="ThicknessLeftToSubtractDoubleConverter"/>
     <local:DoubleAdderConverter x:Key="DoubleAdderConverter"/>
     <local:DoubleComparisonConverter x:Key="DoubleComparisonConverter"/>
+    <local:StringIsNullOrWhiteSpaceConverter x:Key="StringIsNullOrWhiteSpaceConverter"/>
 
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
 
@@ -2486,15 +2487,18 @@
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Fluent:FrameworkHelper.UseLayoutRounding" Value="True" />
         <!--Setter Property="IsManipulationEnabled" Value="True"/-->
-        <Setter Property="QuickAccessToolBarHeight" Value="{Binding TitleBarHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type plex:PlexWindow}}}" />
+        <Setter Property="QuickAccessToolBarHeight" Value="{Binding TitleBarHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type apictrl:DecoratableWindow}}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:Ribbon}">
                     <ControlTemplate.Resources>
                         <Style x:Key="{x:Type Separator}" BasedOn="{StaticResource PlexRibbonSeparatorStyle}" TargetType="{x:Type Separator}"/>
-                        <Style BasedOn="{StaticResource FluentRibbonDefaultContextMenuStyle}" TargetType="{x:Type ContextMenu}" />
+                        <!--Style BasedOn="{StaticResource FluentRibbonDefaultContextMenuStyle}" TargetType="{x:Type ContextMenu}" /-->
                     </ControlTemplate.Resources>
                     <Grid>
+                        <Border CornerRadius="8,8,0,0" BorderThickness="1,1,1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource WindowToolbarBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarBorderBrush}">
+                            <Border CornerRadius="8,8,0,0" BorderThickness="0,1,0,0" Background="{DynamicResource WindowToolbarSecondaryBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarSecondaryBorderBrush}"/>
+                        </Border>
                         <Border Background="Transparent" BorderThickness="0" BorderBrush="Transparent">
                             <Grid x:Name="PART_LayoutRoot" Width="Auto" Height="Auto">
                                 <Grid.RowDefinitions>
@@ -3221,7 +3225,7 @@
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
-                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type plex:PlexWindow}}}" Value="False">
+                        <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type apictrl:DecoratableWindow}}}" Value="False">
                             <Setter TargetName="CircleBackInnerBorder" Property="Background" Value="#FF4478BB"/>
                         </DataTrigger>
                     </ControlTemplate.Triggers>
@@ -4130,6 +4134,141 @@
         <Setter Property="Tag" Value="{x:Static Visibility.Hidden}"/>
     </Style>
 
+    <Style x:Key="NavigationBarStyle" TargetType="{x:Type local:NavigationBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:NavigationBar}">
+                    <Grid Height="50">
+                        <Grid>
+                            <Border BorderThickness="1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource WindowToolbarBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarBorderBrush}">
+                                <Border BorderThickness="0" Background="{DynamicResource WindowToolbarSecondaryBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarSecondaryBorderBrush}"/>
+                            </Border>
+                            <Canvas Height="1" VerticalAlignment="Bottom" Margin="0" Background="{DynamicResource WindowToolbarBackgroundBrush}"/>
+                            <Canvas Height="1" VerticalAlignment="Bottom" Margin="1" Background="{DynamicResource WindowToolbarTertiaryBackgroundBrush}"/>
+                            <Canvas Height="1" VerticalAlignment="Bottom" Margin="2" Background="{DynamicResource WindowToolbarQuarternaryBackgroundBrush}"/>
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" Width="56" Height="34" Margin="15,0" VerticalAlignment="Center">
+                                    <StackPanel.Background>
+                                        <VisualBrush>
+                                            <VisualBrush.Visual>
+                                                <Path>
+                                                    <Path.Data>
+                                                        <PathGeometry Figures="m 12.327807 289.81714 c -5.4680527 0 -4.8553965 -1.76066 -7.9846772 -1.77066 -2.1058022 -0.0505 -4.30972111 1.76754 -4.3097212 4.45553 -8e-8 2.68799 2.2039189 4.50606 4.3097212 4.45553 3.1292805 -0.01 2.5166243 -1.77066 7.9846772 -1.77066 1.899459 0.0335 3.240643 -1.12201 3.240643 -2.68487 0 -1.56286 -1.341184 -2.71837 -3.240643 -2.68487 z" FillRule="NonZero"/>
+                                                    </Path.Data>
+                                                    <Path.Fill>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Offset="0" Color="#20000000" />
+                                                            <GradientStop Offset="1" Color="#60FFFFFF" />
+                                                        </LinearGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </StackPanel.Background>
+                                    <Button x:Name="PART_BackButton" Style="{DynamicResource RoundButtonStyle}" Width="28" Height="28" Margin="3" Padding="-1,0,2,0" Content="{DynamicResource SmallBackArrowPathIcon}"/>
+                                    <Button x:Name="PART_ForwardButton" Style="{DynamicResource RoundButtonStyle}" Width="17" Height="17" Margin="3" Padding="0,0,-1,0">
+                                        <ContentControl Content="{DynamicResource SmallForwardArrowPathIcon}">
+                                            <ContentControl.RenderTransform>
+                                                <ScaleTransform CenterX="7" CenterY="7" ScaleX="0.625" ScaleY="0.625"/>
+                                            </ContentControl.RenderTransform>
+                                        </ContentControl>
+                                    </Button>
+                                </StackPanel>
+                                <Grid>
+                                    <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,10,0" DockPanel.Dock="Left" Height="22">
+                                        <TextBox x:Name="PART_PathTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource AddressBox}"/>
+                                        <DockPanel>
+                                            <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                                                <Rectangle x:Name="BreadcrumbSizingAid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False"/>
+                                                <StackPanel x:Name="PART_BreadcrumbsStackPanel" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <!-- IsHitTestVisible="False"-->
+                                                    <StackPanel.OpacityMask>
+                                                        <VisualBrush>
+                                                            <VisualBrush.Visual>
+                                                                <!--Grid Width="{Binding ActualWidth, Source={x:Reference AddressBox}}" Height="{Binding ActualHeight, Source={x:Reference AddressBox}}"-->
+                                                                <Border Background="Black" BorderBrush="Transparent" BorderThickness="1" CornerRadius="11,0,0,11" HorizontalAlignment="Left" Width="{Binding ActualWidth, Source={x:Reference BreadcrumbSizingAid}}" Height="22"/>
+                                                                <!--/Grid-->
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </StackPanel.OpacityMask>
+                                                </StackPanel>
+                                            </Grid>
+                                            <ToggleButton x:Name="PART_SearchToggleButton" DockPanel.Dock="Right">/º</ToggleButton>
+                                            <TextBox x:Name="PART_SearchTextBox">
+                                                <TextBox.Style>
+                                                    <Style TargetType="{x:Type TextBox}">
+                                                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+                                                        <Setter Property="FocusVisualStyle" Value="{DynamicResource PlexFocusVisualStyle}" />
+                                                        <Setter Property="AllowDrop" Value="true" />
+                                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                        <Setter Property="Padding" Value="5,0" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource PlexRibbonDarkForegroundBrush}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                                                    <Grid Margin="{TemplateBinding Padding}">
+                                                                        <ScrollViewer x:Name="PART_ContentHost" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                                        <TextBlock x:Name="Watermark" Opacity="0" IsHitTestVisible="False" Focusable="False" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">search for...</TextBlock>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsFocused" Value="False" >
+                                                                            <Trigger.EnterActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="Opacity" To="0.75" Duration="0:0:0.125" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </Trigger.EnterActions>
+                                                                            <Trigger.ExitActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.5" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </Trigger.ExitActions>
+                                                                        </Trigger>
+                                                                        <!-- STILL TRYING TO FIX THIS DATATRIGGER -->
+                                                                        <!--DataTrigger Binding="{Binding TextBlock.Text, Source={x:Reference PART_ContentHost}, Converter={StaticResource StringIsNullOrWhiteSpaceConverter}}" Value="True">
+                                                                            <DataTrigger.EnterActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Watermark" Storyboard.TargetProperty="Opacity" To="0.75" Duration="0:0:0.125" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.EnterActions>
+                                                                            <DataTrigger.ExitActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Watermark" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.ExitActions>
+                                                                        </DataTrigger-->
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </DockPanel>
+                                    </Grid>
+                                </Grid>
+                            </DockPanel>
+                        </Grid>
+                        <Popup x:Name="PART_HistoryPopup">
+                            <ListView x:Name="PART_PartHistoryListView"/>
+                        </Popup>
+                        <Popup x:Name="PART_SearchPredictionPopup"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}" ItemsSource="{Binding SubItems}" ItemContainerStyle="{StaticResource NavigationPaneTreeViewItemStyle}">
         <!--TreeViewItem Style="{DynamicResource NavigationPaneTreeViewItemStyle}" ItemsSource="{Binding SubItems}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
             <TreeViewItem.Header-->
@@ -4291,21 +4430,6 @@
                 <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}"/>
                 <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconSmallShadow}"/>
             </Grid>
-        </Grid>
-    </Grid>
-
-    <Grid x:Key="DeletThisButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid Width="32" Height="32" Background="{DynamicResource IconPrimaryFillBrush}" Effect="{DynamicResource IconOuterShadow}">
-            <Grid.OpacityMask>
-                <VisualBrush>
-                    <VisualBrush.Visual>
-                        <Grid Width="32" Height="24" Background="#01000000">
-                            <Path Data="M 0 18 L 6 0 L 32 0" Fill="Transparent" Stroke="Black" StrokeThickness="6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="24"/>
-                            <Path Data="M 0 0 L 12 0 L 9 12 L 0 12 Z" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-5,-5,5,5"/>
-                        </Grid>
-                    </VisualBrush.Visual>
-                </VisualBrush>
-            </Grid.OpacityMask>
         </Grid>
     </Grid>
 
