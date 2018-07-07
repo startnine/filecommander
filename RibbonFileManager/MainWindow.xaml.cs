@@ -8,20 +8,26 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Start9.Api;
 using Start9.Api.DiskItems;
-using Start9.Api.Plex;
+using Start9.Api.Controls;
 using System.IO;
 using System.Globalization;
 using Fluent;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.VisualBasic.FileIO;
+using static Start9.Api.SystemScaling;
+using static Start9.Api.WinApi;
+using static Start9.Api.Extensions;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace RibbonFileManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : PlexWindow
+    public partial class MainWindow : DecoratableWindow
     {
         //TODO: Customization
         public ObservableCollection<DiskItem> Favorites
@@ -130,6 +136,7 @@ namespace RibbonFileManager
         {
             _startupPath = @"%userprofile%";
             Initialize();
+
         }
 
         public MainWindow(String StartupPath)
@@ -164,6 +171,11 @@ namespace RibbonFileManager
 
         private void MainWindow_Loaded(Object sender, RoutedEventArgs e)
         {
+            NavBar.BackButton.Click += BackButton_Click;
+            NavBar.ForwardButton.Click += ForwardButton_Click;
+            NavBar.PathTextBox.PreviewMouseLeftButtonDown += NavBar_PathTextBox_PreviewMouseLeftButtonDown;
+            NavBar.PathTextBox.KeyDown += NavBar_PathTextBox_KeyDown;
+            NavBar.PathTextBox.LostFocus += NavBar_PathTextBox_LostFocus;
             //Debug.WriteLine(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"));
             //this.CurrentFolder = new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"));
             //CurrentDirectoryListView.ItemsSource = new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%")).SubItems;
@@ -280,7 +292,7 @@ namespace RibbonFileManager
                     }
                 }
 
-                BreadcrumbsStackPanel.Children.Clear();
+                NavBar.BreadcrumbsStackPanel.Children.Clear();
                 foreach (var s in HistoryList[HistoryIndex].Split('\\'))
                 {
                     SplitButton button = new SplitButton()
@@ -291,7 +303,7 @@ namespace RibbonFileManager
                     button.Click += (sneder, args) =>
                     {
                         var breadcrumbPath = "";
-                        foreach(SplitButton b in BreadcrumbsStackPanel.Children)
+                        foreach(SplitButton b in NavBar.BreadcrumbsStackPanel.Children)
                         {
                             breadcrumbPath = breadcrumbPath + b.Header.ToString() + @"\";
                             if (b == button)
@@ -301,13 +313,17 @@ namespace RibbonFileManager
                         }
                         Navigate(breadcrumbPath.Substring(0, breadcrumbPath.LastIndexOf(@"\")));
                     };
+                    button.MouseRightButtonUp += (sneder, args) =>
+                    {
+                        NavBar_PathTextBox_PreviewMouseLeftButtonDown(sneder, args);
+                    };
 
                     button.DropDownOpened += (sneder, args) =>
                     {
                         button.Items.Clear();
 
                         var breadcrumbPath = "";
-                        foreach (SplitButton b in BreadcrumbsStackPanel.Children)
+                        foreach (SplitButton b in NavBar.BreadcrumbsStackPanel.Children)
                         {
                             breadcrumbPath = breadcrumbPath + b.Header.ToString() + @"\";
 
@@ -327,7 +343,7 @@ namespace RibbonFileManager
                         }
                     };
 
-                    BreadcrumbsStackPanel.Children.Add(button);
+                    NavBar.BreadcrumbsStackPanel.Children.Add(button);
                 }
             }
             else
@@ -426,13 +442,24 @@ namespace RibbonFileManager
 
         private void SetDetailsPane(String path)
         {
+
             var item = new DiskItem(path);
-            DetailsPaneIconCanvas.Background = (ImageBrush)(new DiskItemToIconImageBrushOrThumbnailConverter().Convert(item, typeof(Canvas), DetailsPaneIconCanvas.ActualHeight, null));
-            DetailsPaneFileNameTextBlock.Text = item.ItemName;
-            //DetailsPaneFileTypeTextBlock.Text = new FileInfo(path).Attributes;
-            //Debug.WriteLine(new FileInfo(path).Attributes);
-            DetailsPaneFileTypeTextBlock.Text = item.FriendlyItemType;
-            //new FileInfo(path).Length
+            var conv = new DiskItemToIconImageBrushOrThumbnailConverter();
+            //var wpfIcon = (ImageBrush)(conv.Convert(item, typeof(Canvas), 16, null));
+            ShFileInfo shInfo = new ShFileInfo();
+            SHGetFileInfo(path, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), (0x00000000 | 0x100));
+
+            Icon = (Imaging.CreateBitmapSourceFromHIcon(System.Drawing.Icon.FromHandle(shInfo.hIcon).Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(System.Convert.ToInt32(RealPixelsToWpfUnits(16)), System.Convert.ToInt32(RealPixelsToWpfUnits(32)))));
+
+            if (DetailsPane.IsVisible)
+            {
+                DetailsPaneIconCanvas.Background = (ImageBrush)(conv.Convert(item, typeof(Canvas), DetailsPaneIconCanvas.ActualHeight, null));
+                DetailsPaneFileNameTextBlock.Text = item.ItemName;
+                //DetailsPaneFileTypeTextBlock.Text = new FileInfo(path).Attributes;
+                //Debug.WriteLine(new FileInfo(path).Attributes);
+                DetailsPaneFileTypeTextBlock.Text = item.FriendlyItemType;
+                //new FileInfo(path).Length
+            }
         }
 
         private void CurrentDirectoryListView_Item_MouseDoubleClick(Object sender, MouseButtonEventArgs e)
@@ -502,20 +529,20 @@ namespace RibbonFileManager
         {
             if (HistoryIndex == 0)
             {
-                BackButton.IsEnabled = false;
+                NavBar.BackButton.IsEnabled = false;
             }
             else
             {
-                BackButton.IsEnabled = true;
+                NavBar.BackButton.IsEnabled = true;
             }
 
             if (HistoryIndex >= (HistoryList.Count - 1))
             {
-                ForwardButton.IsEnabled = false;
+                NavBar.ForwardButton.IsEnabled = false;
             }
             else
             {
-                ForwardButton.IsEnabled = true;
+                NavBar.ForwardButton.IsEnabled = true;
             }
         }
 
@@ -529,13 +556,13 @@ namespace RibbonFileManager
 
         }
 
-        private void RibbonControl_IsMinimizedChanged(Object sender, DependencyPropertyChangedEventArgs e)
+        /*private void RibbonControl_IsMinimizedChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {
             if (RibbonControl.IsMinimized)
                 ToolBarHeight = 50;
             else
                 ToolBarHeight = RibbonControl.Height + 50;
-        }
+        }*/
 
         private void NavigationPane_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
@@ -765,42 +792,42 @@ namespace RibbonFileManager
             RibbonBackstageTabs.SelectedIndex = -1;
         }
 
-        private void AddressBox_PreviewMouseLeftButtonDown(Object sender, MouseButtonEventArgs e)
+        private void NavBar_PathTextBox_PreviewMouseLeftButtonDown(Object sender, MouseButtonEventArgs e)
         {
-            BreadcrumbsStackPanel.Visibility = Visibility.Hidden;
-            AddressBox.Text = HistoryList[HistoryIndex];
-            AddressBox.SelectAll();
+            NavBar.BreadcrumbsStackPanel.Visibility = Visibility.Hidden;
+            NavBar.PathTextBox.Text = HistoryList[HistoryIndex];
+            NavBar.PathTextBox.SelectAll();
         }
 
-        private void AddressBox_GotFocus(Object sender, RoutedEventArgs e)
+        private void NavBar_PathTextBox_GotFocus(Object sender, RoutedEventArgs e)
         {
         }
 
-        private void AddressBox_LostFocus(Object sender, RoutedEventArgs e)
+        private void NavBar_PathTextBox_LostFocus(Object sender, RoutedEventArgs e)
         {
-            BreadcrumbsStackPanel.Visibility = Visibility.Visible;
-            AddressBox.Text = "";
+            NavBar.BreadcrumbsStackPanel.Visibility = Visibility.Visible;
+            NavBar.PathTextBox.Text = "";
         }
 
-        private void AddressBox_KeyDown(Object sender, KeyEventArgs e)
+        private void NavBar_PathTextBox_KeyDown(Object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                if (Directory.Exists(Environment.ExpandEnvironmentVariables(AddressBox.Text)))
+                if (Directory.Exists(Environment.ExpandEnvironmentVariables(NavBar.PathTextBox.Text)))
                 {
-                    Navigate(AddressBox.Text);
+                    Navigate(NavBar.PathTextBox.Text);
                     CurrentDirectoryListView.Focus();
-                    AddressBox_LostFocus(null, null);
+                    NavBar_PathTextBox_LostFocus(null, null);
                 }
                 else
                 {
-                    var failText = AddressBox.Text;
-                    Start9.Api.Plex.MessageBox.Show(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
+                    var failText = NavBar.PathTextBox.Text;
+                    Start9.Api.Plex.MessageBox.Show(null, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
                 }
             }
             else if (e.Key == Key.Escape)
             {
-                AddressBox_LostFocus(null, null);
+                NavBar_PathTextBox_LostFocus(null, null);
             }
         }
 
@@ -975,111 +1002,7 @@ namespace RibbonFileManager
         private void GetModules_Click(Object sender, RoutedEventArgs e)
         {
             var count = RibbonFileManagerAddIn.Instance.Host.GetModules().Count;
-            Start9.Api.Plex.MessageBox.Show(this, $"Modules successfully received - Count = {count}", "Modules received");
-        }
-    }
-
-    public class BoolToVisibilityConverter : IValueConverter
-    {
-        public Object Convert(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Boolean)value)
-            {
-                return Visibility.Visible;
-            }
-            else
-            {
-                return Visibility.Hidden;
-            }
-        }
-
-        public Object ConvertBack(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Visibility)value == Visibility.Visible)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
-    public class BoolInverterConverter : IValueConverter
-    {
-        private static BoolInverterConverter instance;
-
-        public static BoolInverterConverter Instance => instance ?? (instance = new BoolInverterConverter());
-
-        public Object Convert(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            return !((Boolean)value);
-        }
-
-        public Object ConvertBack(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Visibility)value == Visibility.Visible)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
-    public class ThicknessLeftToSubtractDoubleConverter : IMultiValueConverter
-    {
-        public Object Convert(
-            Object[] values, Type targetType, Object parameter, CultureInfo culture)
-        {
-            //var item = parameter as TreeViewItem;
-            return (Double.Parse(values[0].ToString())) - (((Thickness)(values[1])).Left);
-        }
-
-        public Object[] ConvertBack(
-            Object value, Type[] targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class NavPaneTreeViewItemMarginConverter : IValueConverter
-    {
-        public Object Convert(
-            Object value, Type targetType, Object parameter, CultureInfo culture)
-        {
-            Thickness basePadding = ((Thickness)(value));
-            var param = Double.Parse(parameter.ToString());
-            //Debug.WriteLine(returnVal.ToString() + "    " + ((double)(values[0])).ToString() + "    " + (((Thickness)(values[1])).Left).ToString());
-            return new Thickness(basePadding.Left + param, basePadding.Top, basePadding.Right, basePadding.Bottom);
-        }
-
-        public Object ConvertBack(
-            Object value, Type targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class DoubleAdderConverter : IValueConverter
-    {
-        public Object Convert(
-            Object value, Type targetType, Object parameter, CultureInfo culture)
-        {
-            return Double.Parse(value.ToString()) + Double.Parse(parameter.ToString());
-        }
-
-        public Object ConvertBack(
-            Object value, Type targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
+            Start9.Api.Plex.MessageBox.Show(null, $"Modules successfully received - Count = {count}", "Modules received");
         }
     }
 }
