@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonFileManager", "RibbonFileManager\RibbonFileManager.csproj", "{B9974378-62FC-4CD7-A72C-39A087DAD3D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonFileManager.Adapter", "RibbonFileManager.Adapter\RibbonFileManager.Adapter.csproj", "{CB384261-5BCF-4A22-8665-5C01B1F71C9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonFileManager.Views", "RibbonFileManager.Views\RibbonFileManager.Views.csproj", "{CDD51319-2904-48EC-9BA9-1004F230068B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonFileManager.View", "RibbonFileManager.View\RibbonFileManager.View.csproj", "{0802E603-5220-4B5F-B28B-1784FA308E17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RibbonFileManager.Adapters", "RibbonFileManager.Adapters\RibbonFileManager.Adapters.csproj", "{3E4A0781-D92B-4F66-90B2-28FD48DC2D6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{B9974378-62FC-4CD7-A72C-39A087DAD3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9974378-62FC-4CD7-A72C-39A087DAD3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9974378-62FC-4CD7-A72C-39A087DAD3D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB384261-5BCF-4A22-8665-5C01B1F71C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB384261-5BCF-4A22-8665-5C01B1F71C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB384261-5BCF-4A22-8665-5C01B1F71C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB384261-5BCF-4A22-8665-5C01B1F71C9E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0802E603-5220-4B5F-B28B-1784FA308E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0802E603-5220-4B5F-B28B-1784FA308E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0802E603-5220-4B5F-B28B-1784FA308E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0802E603-5220-4B5F-B28B-1784FA308E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDD51319-2904-48EC-9BA9-1004F230068B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDD51319-2904-48EC-9BA9-1004F230068B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDD51319-2904-48EC-9BA9-1004F230068B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDD51319-2904-48EC-9BA9-1004F230068B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E4A0781-D92B-4F66-90B2-28FD48DC2D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4A0781-D92B-4F66-90B2-28FD48DC2D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4A0781-D92B-4F66-90B2-28FD48DC2D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4A0781-D92B-4F66-90B2-28FD48DC2D6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

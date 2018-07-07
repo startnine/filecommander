@@ -8,16 +8,16 @@ using System.Windows;
 
 namespace RibbonFileManager
 {
-    [AddIn("Ribbon File Manager", Description = "Experimental ribbon-based file manager", Version = "1.0.0.0", Publisher = "Start9")]
+    [AddIn("Ribbon File Manager", Description = "The Windows 8 file manager - now with more plex!", Version = "1.0.0.0", Publisher = "Start9")]
     public class RibbonFileManagerAddIn : IModule
     {
         public static RibbonFileManagerAddIn Instance { get; private set; }
 
-        public IConfiguration Configuration { get; } = new RibbonFileManagerConfiguration();
+        public IConfiguration Configuration { get; set; } = null;
 
         public IMessageContract MessageContract => null;
 
-        public IReceiverContract ReceiverContract { get; } = new RibbonFileManagerReceiverContract();
+        public IReceiverContract ReceiverContract => new RibbonFileManagerReceiverContract();
 
         public IHost Host { get; private set; }
 
@@ -25,28 +25,33 @@ namespace RibbonFileManager
         {
             void Start()
             {
+                Instance = this;
+                Host = host;
                 Application.ResourceAssembly = Assembly.GetExecutingAssembly();
                 App.Main();
-                Instance = this;
             }
 
             var t = new Thread(Start);
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+
+                MessageBox.Show(e.ExceptionObject.ToString(), "Uh oh E R R O R E");
+            };
         }
     }
-
     public class RibbonFileManagerReceiverContract : IReceiverContract
     {
-        public IList<IReceiverEntry> Entries => new[] { ButtonClickedEntry };
+        public RibbonFileManagerReceiverContract()
+        {
+            OpenFolderEntry.MessageReceived += (sender, e) =>
+            {
+                Application.Current.Dispatcher.BeginInvoke((Action)(() => ((MainWindow) Application.Current.MainWindow).Navigate((String)e.Message.Object)));
+            };
+        }
+        public IList<IReceiverEntry> Entries => new[] { OpenFolderEntry };
 
-        public IReceiverEntry ButtonClickedEntry { get; } = new ReceiverEntry("Open folder");
-    }
-
-    public class RibbonFileManagerConfiguration : IConfiguration
-    {
-        public IList<IConfigurationEntry> Entries => new[] { new ConfigurationEntry(GroupItems, "Group Items") };
-
-        public Boolean GroupItems { get; set; } = true;
+        public IReceiverEntry OpenFolderEntry { get; } = new ReceiverEntry(typeof(String), "Open folder");
     }
 }

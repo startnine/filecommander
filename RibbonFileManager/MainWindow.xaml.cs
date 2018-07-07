@@ -141,6 +141,7 @@ namespace RibbonFileManager
         void Initialize()
         {
             InitializeComponent();
+            Application.Current.MainWindow = this;
             if ((Environment.OSVersion.Version.Major < 6) | ((Environment.OSVersion.Version.Major == 6) & (Environment.OSVersion.Version.Minor == 0)))
             {
                 RibbonBackstageTabs.Items.Remove(PowerShellTabItem);
@@ -234,7 +235,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void Navigate(String targetPath)
+        internal void Navigate(String targetPath)
         {
             var path = Environment.ExpandEnvironmentVariables(targetPath);
             if (path.EndsWith("lnk"))
