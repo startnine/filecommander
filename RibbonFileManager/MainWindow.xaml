@@ -11,32 +11,28 @@
         x:Class="RibbonFileManager.MainWindow"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="1232" Height="500" MinWidth="225" Loaded="MainWindow_Loaded">
+        Title="MainWindow" Width="980" Height="500" MinWidth="230" Loaded="MainWindow_Loaded">
     <apictrl:DecoratableWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/DefaultSkin.xaml"/>
+                <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/DefaultSkin.xaml"/-->
+                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/Aeromatic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <local:ToStringConverter x:Key="ToStringConverter"/>
         </ResourceDictionary>
     </apictrl:DecoratableWindow.Resources>
     <apictrl:DecoratableWindow.FullWindowContent>
-        <ContentControl x:Name="BackstageRoot" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}" Opacity="0" RenderTransformOrigin="0,0">
+        <!--ContentControl x:Name="BackstageRoot" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}" Opacity="0" RenderTransformOrigin="0,0">
             <ContentControl.Style>
                 <Style TargetType="{x:Type ContentControl}">
-                    <Style.Resources>
-                        <QuinticEase x:Key="ScaleEase" EasingMode="EaseOut"/>
-                    </Style.Resources>
-                    <Setter Property="Margin" Value="20"/>
+                    
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ContentControl}">
                                 <Grid>
-                                    <Grid.Effect>
-                                        <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
-                                    </Grid.Effect>
-                                    <!--Rectangle x:Name="BackgroundRectangle" StrokeThickness="1" IsHitTestVisible="False">
+                                    <!-Rectangle x:Name="BackgroundRectangle" StrokeThickness="1" IsHitTestVisible="False">
                                         <Rectangle.Fill>
                                             <VisualBrush TileMode="Tile" Viewport="0,0,2,2"
                                              Viewbox="0,0,2,2" ViewportUnits="Absolute"
@@ -79,92 +75,20 @@
                                                 </VisualBrush.Visual>
                                             </VisualBrush>
                                         </Rectangle.OpacityMask>
-                                    </Rectangle-->
-                                    <!--Border OpacityMask="{Binding OpacityMask, Source={x:Reference BackgroundRectangle}}" ClipToBounds="True" Margin="0" Padding="0" Background="Red" BorderBrush="Transparent" BorderThickness="0">
-                                    </Border-->
-                                    <Grid Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="50"/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="50"/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Rectangle Grid.Column="0" Grid.Row="0" Margin="5,5,0,0" IsHitTestVisible="False">
-                                            <Rectangle.Fill>
-                                                <RadialGradientBrush Center="0,0" GradientOrigin="0,0" RadiusX="1" RadiusY="1">
-                                                    <GradientStop Offset="0.975" Color="Transparent"/>
-                                                    <GradientStop Offset="1" Color="#FFBDD7EF"/>
-                                                </RadialGradientBrush>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
-                                        <Border Background="#FFBDD7EF" BorderBrush="Transparent" BorderThickness="0" CornerRadius="5,10,0,0" Grid.Column="1" Grid.Row="0"/>
-                                        <Border BorderBrush="Transparent" BorderThickness="0" CornerRadius="5,0,0,10" Grid.Column="0" Grid.Row="1">
-                                            <Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <LinearGradientBrush.GradientStops>
-                                                        <GradientStop Offset="0" Color="#FFBDD7EF"/>
-                                                        <GradientStop Offset="1" Color="#FFB5C7E7"/>
-                                                    </LinearGradientBrush.GradientStops>
-                                                </LinearGradientBrush>
-                                            </Border.Background>
-                                        </Border>
-                                        <Border BorderBrush="Transparent" BorderThickness="0" CornerRadius="0,0,10,0" Grid.Column="1" Grid.Row="1">
-                                            <Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <LinearGradientBrush.GradientStops>
-                                                        <GradientStop Offset="0" Color="#FFBDD7EF"/>
-                                                        <GradientStop Offset="1" Color="#FFB5C7E7"/>
-                                                    </LinearGradientBrush.GradientStops>
-                                                </LinearGradientBrush>
-                                            </Border.Background>
-                                        </Border>
-                                    </Grid>
+                                    </Rectangle->
+                                    <!-Border OpacityMask="{Binding OpacityMask, Source={x:Reference BackgroundRectangle}}" ClipToBounds="True" Margin="0" Padding="0" Background="Red" BorderBrush="Transparent" BorderThickness="0">
+                                    </Border->
                                     <ContentPresenter/>
-                                    <!--IsChecked="{Binding IsEnabled, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"-->
+                                    <!-IsChecked="{Binding IsEnabled, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"->
                                 </Grid>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                    <Setter Property="RenderTransform">
-                        <Setter.Value>
-                            <ScaleTransform x:Name="BackstageRootScaleTransform" ScaleX="0.75" ScaleY="0.75"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Hidden}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.75" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.75" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25" EasingFunction="{StaticResource ScaleEase}"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                    </Style.Triggers>
                 </Style>
-            </ContentControl.Style>
+            </ContentControl.Style-->
             <!--ToggleButton Width="100" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Mode=TwoWay}">File</ToggleButton-->
             <!--Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=False}"-->
-            <Fluent:BackstageTabControl x:Name="RibbonBackstageTabs">
+        <Fluent:BackstageTabControl x:Name="RibbonBackstageTabs" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}">
                 <!--Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=False}"-->
                 <Fluent:Button x:Name="NewWindowButton" Header="New Window" Click="NewWindowButton_Click"/>
                 <Fluent:Button x:Name="CloseWindowButton" Header="Close" Click="CloseWindowButton_Click"/>
@@ -183,82 +107,81 @@
                 </Fluent:BackstageTabItem>
                 <Fluent:BackstageTabItem Header="History" />
             </Fluent:BackstageTabControl>
-        </ContentControl>
+        <!--/ContentControl-->
     </apictrl:DecoratableWindow.FullWindowContent>
     <apictrl:DecoratableWindow.TitleBarContent>
-        <Fluent:RibbonTitleBar x:Name="RibbonTitleBar" Margin="48,0,64,0"/>
+        <Fluent:RibbonTitleBar x:Name="RibbonTitleBar"/>
     </apictrl:DecoratableWindow.TitleBarContent>
-    <Grid>
-        <DockPanel>
-            <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="False" IsAutomaticCollapseEnabled="False" IsCollapsed="{Binding RibbonShown, Mode=TwoWay}">
-                    <!--IsMinimizedChanged="RibbonControl_IsMinimizedChanged"-->
-                    <Fluent:Ribbon.Menu>
-                        <Fluent:Backstage x:Name="RibbonBackstage" IsOpenChanged="RibbonBackstage_IsOpenChanged"/>
-                    </Fluent:Ribbon.Menu>
-                    <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,Clipboard,Open,Organize,New">
-                        <Fluent:RibbonGroupBox x:Name="Clipboard" Header="Clipboard">
-                            <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" SizeDefinition="Large,Small" Click="CopyButton_Click"/>
-                            <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" SizeDefinition="Large,Small" Click="PasteButton_Click"/>
-                            <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" Click="CutButton_Click"/>
-                            <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" Click="CopyPathButton_Click"/>
-                            <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" Click="PasteShortcutButton_Click"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
-                            <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small"/>
-                            <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small"/>
-                            <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
-                                <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle"/>
-                                <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete"/>
-                            </Fluent:SplitButton>
-                            <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="New" Header="New">
-                            <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
-                            <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" SizeDefinition="Middle,Small"/>
-                            <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" SizeDefinition="Middle,Small"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
-                            <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
-                            <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
-                            <Fluent:Button x:Name="EditButton" Header="Edit" SizeDefinition="Middle,Small" Click="EditButton_Click"/>
-                            <Fluent:Button x:Name="HistoryButton" Header="History" SizeDefinition="Middle,Small" Click="HistoryButton_Click"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="Select" Header="Select">
-                            <Fluent:Button x:Name="SelectAllButton" Header="Select all" SizeDefinition="Middle,Small" Click="SelectAllButton_Click"/>
-                            <Fluent:Button x:Name="SelectNoneButton" Header="Select none" SizeDefinition="Middle,Small" Click="SelectNoneButton_Click"/>
-                            <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
-                        </Fluent:RibbonGroupBox>
-                    </Fluent:RibbonTabItem>
-                    <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank">
-                        <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
-                            <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
-                            <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>
-                            <Fluent:Button x:Name="Burn" Header="Burn to disc" SizeDefinition="Middle,Small"/>
-                            <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
-                            <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
-                            <Fluent:Gallery/>
-                            <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox x:Name="ShareBlank">
-                            <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
-                            <Fluent:Button x:Name="GetModules" Header="Get module list" Click="GetModules_Click"/>
-                        </Fluent:RibbonGroupBox>
-                    </Fluent:RibbonTabItem>
-                    <Fluent:RibbonTabItem Header="View">
-                        <Fluent:RibbonGroupBox Header="Panes">
-                            <Fluent:Button Header="Test"/>
-                            <Fluent:Button Header="Test"/>
-                        </Fluent:RibbonGroupBox>
-                        <Fluent:RibbonGroupBox Header="Panes">
-                            <Fluent:Button Header="Test"/>
-                            <Fluent:Button Header="Test"/>
-                        </Fluent:RibbonGroupBox>
-                    </Fluent:RibbonTabItem>
-                </Fluent:Ribbon>
-                <!--Old NavBar
+    <DockPanel>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="False" IsAutomaticCollapseEnabled="False" IsCollapsed="{Binding RibbonShown, Mode=TwoWay}">
+                <!--IsMinimizedChanged="RibbonControl_IsMinimizedChanged"-->
+                <Fluent:Ribbon.Menu>
+                    <Fluent:Backstage x:Name="RibbonBackstage" IsOpenChanged="RibbonBackstage_IsOpenChanged"/>
+                </Fluent:Ribbon.Menu>
+                <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,Clipboard,Open,Organize,New">
+                    <Fluent:RibbonGroupBox x:Name="Clipboard" Header="Clipboard">
+                        <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" SizeDefinition="Large,Small" Click="CopyButton_Click"/>
+                        <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" SizeDefinition="Large,Small" Click="PasteButton_Click"/>
+                        <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" Click="CutButton_Click"/>
+                        <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" Click="CopyPathButton_Click"/>
+                        <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" Click="PasteShortcutButton_Click"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
+                        <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small"/>
+                        <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small"/>
+                        <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
+                            <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle"/>
+                            <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete"/>
+                        </Fluent:SplitButton>
+                        <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="New" Header="New">
+                        <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
+                        <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" SizeDefinition="Middle,Small"/>
+                        <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" SizeDefinition="Middle,Small"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
+                        <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
+                        <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
+                        <Fluent:Button x:Name="EditButton" Header="Edit" SizeDefinition="Middle,Small" Click="EditButton_Click"/>
+                        <Fluent:Button x:Name="HistoryButton" Header="History" SizeDefinition="Middle,Small" Click="HistoryButton_Click"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="Select" Header="Select">
+                        <Fluent:Button x:Name="SelectAllButton" Header="Select all" SizeDefinition="Middle,Small" Click="SelectAllButton_Click"/>
+                        <Fluent:Button x:Name="SelectNoneButton" Header="Select none" SizeDefinition="Middle,Small" Click="SelectNoneButton_Click"/>
+                        <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
+                    </Fluent:RibbonGroupBox>
+                </Fluent:RibbonTabItem>
+                <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank">
+                    <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
+                        <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
+                        <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>
+                        <Fluent:Button x:Name="Burn" Header="Burn to disc" SizeDefinition="Middle,Small"/>
+                        <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
+                        <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
+                        <Fluent:Gallery/>
+                        <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox x:Name="ShareBlank">
+                        <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
+                        <Fluent:Button x:Name="GetModules" Header="Get module list" Click="GetModules_Click"/>
+                    </Fluent:RibbonGroupBox>
+                </Fluent:RibbonTabItem>
+                <Fluent:RibbonTabItem Header="View">
+                    <Fluent:RibbonGroupBox Header="Panes">
+                        <Fluent:Button Header="Test"/>
+                        <Fluent:Button Header="Test"/>
+                    </Fluent:RibbonGroupBox>
+                    <Fluent:RibbonGroupBox Header="Panes">
+                        <Fluent:Button Header="Test"/>
+                        <Fluent:Button Header="Test"/>
+                    </Fluent:RibbonGroupBox>
+                </Fluent:RibbonTabItem>
+            </Fluent:Ribbon>
+            <!--Old NavBar
                 <Grid DockPanel.Dock="Top" Height="50">
                     <Border BorderThickness="1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource WindowToolbarBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarBorderBrush}">
                         <Border BorderThickness="0" Background="{DynamicResource WindowToolbarSecondaryBackgroundBrush}" BorderBrush="{DynamicResource WindowToolbarSecondaryBorderBrush}"/>
@@ -317,127 +240,136 @@
                     </DockPanel>
                 </Grid>
                 End Old NavBar-->
-                <local:NavigationBar x:Name="NavBar" Style="{DynamicResource NavigationBarStyle}"/>
-            </StackPanel>
-            <TreeView x:Name="NavigationPane" DockPanel.Dock="Left" Style="{DynamicResource NavigationPaneTreeViewStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical" SelectedItemChanged="NavigationPane_SelectedItemChanged">
-                <TreeViewItem x:Name="FavoritesTreeViewItem" Header="Favorites" IsExpanded="True" ItemsSource="{Binding Favorites}" ItemTemplate="{DynamicResource NavigationFavoritesDataTemplate}" ItemContainerStyle="{DynamicResource NavigationFavoritesTreeViewItemStyle}"/>
-                <TreeViewItem x:Name="ThisPcDiskTreeViewItem" IsExpanded="True" Header="Computer" ItemsSource="{Binding ComputerSubfolders}">
-                    <!--TreeView.ItemContainerStyle>
+            <local:NavigationBar x:Name="NavBar" Style="{DynamicResource NavigationBarStyle}"/>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <StatusBarItem.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=Items.Count, Source={x:Reference CurrentDirectoryListView}, Mode=OneWay, Converter={StaticResource ToStringConverter}}" Margin="0,0,5,0"/>
+                        <TextBlock Text="Items"/>
+                    </StackPanel>
+                </StatusBarItem.Content>
+            </StatusBarItem>
+        </StatusBar>
+        <TreeView x:Name="NavigationPane" DockPanel.Dock="Left" Style="{DynamicResource NavigationPaneTreeViewStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical" SelectedItemChanged="NavigationPane_SelectedItemChanged">
+            <TreeViewItem x:Name="FavoritesTreeViewItem" Header="Favorites" IsExpanded="True" ItemsSource="{Binding Favorites}" ItemTemplate="{DynamicResource NavigationFavoritesDataTemplate}" ItemContainerStyle="{DynamicResource NavigationFavoritesTreeViewItemStyle}"/>
+            <TreeViewItem x:Name="ThisPcDiskTreeViewItem" IsExpanded="True" Header="Computer" ItemsSource="{Binding ComputerSubfolders}">
+                <!--TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem">
                         <EventSetter Event="Expanded" Handler="NavigationPane_Item_Expanded"/>
                     </Style>
                 </TreeView.ItemContainerStyle-->
-                </TreeViewItem>
-            </TreeView>
-            <Grid x:Name="DetailsPane" DockPanel.Dock="Top" Height="75">
-                <Rectangle x:Name="DetailPaneSizingAid" VerticalAlignment="Stretch"/>
-                <DockPanel>
-                    <Canvas x:Name="DetailsPaneIconCanvas" Width="{Binding ActualHeight, Source={x:Reference DetailPaneSizingAid}}" Background="Red" DockPanel.Dock="Left"/>
-                    <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                        <TextBlock x:Name="DetailsPaneFileNameTextBlock" Margin="10,10,0,0" FontSize="18"/>
-                        <TextBlock x:Name="DetailsPaneFileTypeTextBlock" Margin="10,10,0,0"/>
-                    </StackPanel>
-                    <Rectangle/>
-                </DockPanel>
-            </Grid>
-            <Grid x:Name="CurrentDirectoryGrid">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                    <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionMode="Extended" SelectionChanged="CurrentDirectoryListView_SelectionChanged" PreviewMouseLeftButtonDown="CurrentDirectoryListView_PreviewMouseLeftButtonDown" KeyDown="CurrentDirectoryListView_KeyDown" AllowDrop="True">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource CurrentDirectoryListViewItemStyle}">
-                                <EventSetter Event="Control.MouseDoubleClick" Handler="CurrentDirectoryListView_Item_MouseDoubleClick"/>
-                                <EventSetter Event="UIElement.MouseRightButtonUp" Handler="CurrentDirectoryListView_Item_MouseRightButtonUp"/>
-                                <Setter Property="ContextMenu">
-                                    <Setter.Value>
-                                        <apictrl:TouchableContextMenu>
-                                            <MenuItem Header="Open" FontWeight="Bold">
-                                                <MenuItem.Style>
-                                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource PlexMenuItemStyle}">
-                                                        <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Open_MouseLeftButtonUp"/>
-                                                        <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
-                                                        <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsManipulationEnabled" Value="True">
-                                                                <Setter Property="Height" Value="46.590925" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </MenuItem.Style>
-                                            </MenuItem>
-                                            <MenuItem Header="Open with">
-                                                <MenuItem.Items>
+            </TreeViewItem>
+        </TreeView>
+        <Grid x:Name="DetailsPane" DockPanel.Dock="Top" Height="75" Visibility="Collapsed">
+            <Rectangle x:Name="DetailPaneSizingAid" VerticalAlignment="Stretch"/>
+            <DockPanel>
+                <Canvas x:Name="DetailsPaneIconCanvas" Width="{Binding ActualHeight, Source={x:Reference DetailPaneSizingAid}}" Background="Red" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                    <TextBlock x:Name="DetailsPaneFileNameTextBlock" Margin="10,10,0,0" FontSize="18"/>
+                    <TextBlock x:Name="DetailsPaneFileTypeTextBlock" Margin="10,10,0,0"/>
+                </StackPanel>
+                <Rectangle/>
+            </DockPanel>
+        </Grid>
+        <Grid x:Name="CurrentDirectoryGrid">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionMode="Extended" SelectionChanged="CurrentDirectoryListView_SelectionChanged" PreviewMouseLeftButtonDown="CurrentDirectoryListView_PreviewMouseLeftButtonDown" KeyDown="CurrentDirectoryListView_KeyDown" AllowDrop="True">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource CurrentDirectoryListViewItemStyle}">
+                            <EventSetter Event="Control.MouseDoubleClick" Handler="CurrentDirectoryListView_Item_MouseDoubleClick"/>
+                            <EventSetter Event="UIElement.MouseRightButtonUp" Handler="CurrentDirectoryListView_Item_MouseRightButtonUp"/>
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <apictrl:TouchableContextMenu>
+                                        <MenuItem Header="Open" FontWeight="Bold">
+                                            <MenuItem.Style>
+                                                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Open_MouseLeftButtonUp"/>
+                                                    <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
+                                                    <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsManipulationEnabled" Value="True">
+                                                            <Setter Property="Height" Value="46.590925" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
+                                        <MenuItem Header="Open with">
+                                            <MenuItem.Items>
 
-                                                </MenuItem.Items>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Share with">
-                                                <MenuItem.Items>
+                                            </MenuItem.Items>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Share with">
+                                            <MenuItem.Items>
 
-                                                </MenuItem.Items>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Send to">
-                                                <MenuItem.Items>
+                                            </MenuItem.Items>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Send to">
+                                            <MenuItem.Items>
 
-                                                </MenuItem.Items>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Cut">
-                                                <MenuItem.Style>
-                                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource PlexMenuItemStyle}">
-                                                        <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Cut_MouseLeftButtonUp"/>
-                                                        <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
-                                                        <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsManipulationEnabled" Value="True">
-                                                                <Setter Property="Height" Value="46.590925" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </MenuItem.Style>
-                                            </MenuItem>
-                                            <MenuItem Header="Copy">
-                                                <MenuItem.Style>
-                                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource PlexMenuItemStyle}">
-                                                        <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Copy_MouseLeftButtonUp"/>
-                                                        <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
-                                                        <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsManipulationEnabled" Value="True">
-                                                                <Setter Property="Height" Value="46.590925" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </MenuItem.Style>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Create shortcut"/>
-                                            <MenuItem Header="Delete">
-                                                <MenuItem.Style>
-                                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource PlexMenuItemStyle}">
-                                                        <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Delete_MouseLeftButtonUp"/>
-                                                        <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
-                                                        <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsManipulationEnabled" Value="True">
-                                                                <Setter Property="Height" Value="46.590925" />
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </MenuItem.Style>
-                                            </MenuItem>
-                                            <MenuItem Header="Rename"/>
-                                            <Separator/>
-                                            <MenuItem Header="Properties"/>
-                                        </apictrl:TouchableContextMenu>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </ScrollViewer>
-                <Border x:Name="SelectionBorder" Background="#400000FF" BorderThickness="5" BorderBrush="#FF0000FF" CornerRadius="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="0" Height="0" Visibility="Hidden"/>
-            </Grid>
-        </DockPanel>
-    </Grid>
+                                            </MenuItem.Items>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Cut">
+                                            <MenuItem.Style>
+                                                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Cut_MouseLeftButtonUp"/>
+                                                    <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
+                                                    <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsManipulationEnabled" Value="True">
+                                                            <Setter Property="Height" Value="46.590925" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
+                                        <MenuItem Header="Copy">
+                                            <MenuItem.Style>
+                                                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Copy_MouseLeftButtonUp"/>
+                                                    <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
+                                                    <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsManipulationEnabled" Value="True">
+                                                            <Setter Property="Height" Value="46.590925" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Create shortcut"/>
+                                        <MenuItem Header="Delete">
+                                            <MenuItem.Style>
+                                                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                    <EventSetter Event="UIElement.PreviewMouseLeftButtonUp" Handler="CurrentDirectoryListView_ItemContextMenu_Delete_MouseLeftButtonUp"/>
+                                                    <Setter Property="ItemContainerStyle" Value="{Binding Style, RelativeSource={RelativeSource Mode=Self}}"/>
+                                                    <Setter Property="IsManipulationEnabled" Value="{Binding OpenedWithTouch, RelativeSource={RelativeSource AncestorType={x:Type apictrl:TouchableContextMenu}, Mode=FindAncestor}}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsManipulationEnabled" Value="True">
+                                                            <Setter Property="Height" Value="46.590925" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
+                                        <MenuItem Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem Header="Properties"/>
+                                    </apictrl:TouchableContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </ScrollViewer>
+            <Border x:Name="SelectionBorder" Background="#400000FF" BorderThickness="5" BorderBrush="#FF0000FF" CornerRadius="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="0" Height="0" Visibility="Hidden"/>
+        </Grid>
+    </DockPanel>
 </apictrl:DecoratableWindow>

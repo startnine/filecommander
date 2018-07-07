@@ -45,8 +45,12 @@
       <HintPath>..\packages\Fluent.Ribbon.6.1.0.233\lib\net40\Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Start9.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Start9.Api.1.0.0-CI00113\lib\net40\Start9.Api.dll</HintPath>
+      <HintPath>..\packages\Start9.Api.1.0.0-CI00114\lib\net40\Start9.Api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AddIn" />
@@ -67,7 +71,6 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -80,6 +83,10 @@
     <Compile Include="NavigationBar.cs" />
     <Compile Include="RibbonTestAddIn.cs" />
     <Compile Include="SeparateQuickAccessBarRibbon.cs" />
+    <Page Include="Aeromatic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DarkLol.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

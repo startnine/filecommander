@@ -15,6 +15,12 @@ using Fluent;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.VisualBasic.FileIO;
+using static Start9.Api.SystemScaling;
+using static Start9.Api.WinApi;
+using static Start9.Api.Extensions;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace RibbonFileManager
 {
@@ -435,13 +441,24 @@ namespace RibbonFileManager
 
         private void SetDetailsPane(String path)
         {
+
             var item = new DiskItem(path);
-            DetailsPaneIconCanvas.Background = (ImageBrush)(new DiskItemToIconImageBrushOrThumbnailConverter().Convert(item, typeof(Canvas), DetailsPaneIconCanvas.ActualHeight, null));
-            DetailsPaneFileNameTextBlock.Text = item.ItemName;
-            //DetailsPaneFileTypeTextBlock.Text = new FileInfo(path).Attributes;
-            //Debug.WriteLine(new FileInfo(path).Attributes);
-            DetailsPaneFileTypeTextBlock.Text = item.FriendlyItemType;
-            //new FileInfo(path).Length
+            var conv = new DiskItemToIconImageBrushOrThumbnailConverter();
+            //var wpfIcon = (ImageBrush)(conv.Convert(item, typeof(Canvas), 16, null));
+            ShFileInfo shInfo = new ShFileInfo();
+            SHGetFileInfo(path, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), (0x00000000 | 0x100));
+
+            Icon = (Imaging.CreateBitmapSourceFromHIcon(System.Drawing.Icon.FromHandle(shInfo.hIcon).Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(System.Convert.ToInt32(RealPixelsToWpfUnits(16)), System.Convert.ToInt32(RealPixelsToWpfUnits(32)))));
+
+            if (DetailsPane.IsVisible)
+            {
+                DetailsPaneIconCanvas.Background = (ImageBrush)(conv.Convert(item, typeof(Canvas), DetailsPaneIconCanvas.ActualHeight, null));
+                DetailsPaneFileNameTextBlock.Text = item.ItemName;
+                //DetailsPaneFileTypeTextBlock.Text = new FileInfo(path).Attributes;
+                //Debug.WriteLine(new FileInfo(path).Attributes);
+                DetailsPaneFileTypeTextBlock.Text = item.FriendlyItemType;
+                //new FileInfo(path).Length
+            }
         }
 
         private void CurrentDirectoryListView_Item_MouseDoubleClick(Object sender, MouseButtonEventArgs e)
@@ -985,110 +1002,6 @@ namespace RibbonFileManager
         {
             var count = RibbonFileManagerAddIn.Instance.Host.GetModules().Count;
             Start9.Api.Plex.MessageBox.Show(null, $"Modules successfully received - Count = {count}", "Modules received");
-        }
-    }
-
-    public class BoolToVisibilityConverter : IValueConverter
-    {
-        public Object Convert(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Boolean)value)
-            {
-                return Visibility.Visible;
-            }
-            else
-            {
-                return Visibility.Hidden;
-            }
-        }
-
-        public Object ConvertBack(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Visibility)value == Visibility.Visible)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
-    public class BoolInverterConverter : IValueConverter
-    {
-        private static BoolInverterConverter instance;
-
-        public static BoolInverterConverter Instance => instance ?? (instance = new BoolInverterConverter());
-
-        public Object Convert(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            return !((Boolean)value);
-        }
-
-        public Object ConvertBack(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
-        {
-            if ((Visibility)value == Visibility.Visible)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
-    public class ThicknessLeftToSubtractDoubleConverter : IMultiValueConverter
-    {
-        public Object Convert(
-            Object[] values, Type targetType, Object parameter, CultureInfo culture)
-        {
-            //var item = parameter as TreeViewItem;
-            return (Double.Parse(values[0].ToString())) - (((Thickness)(values[1])).Left);
-        }
-
-        public Object[] ConvertBack(
-            Object value, Type[] targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class NavPaneTreeViewItemMarginConverter : IValueConverter
-    {
-        public Object Convert(
-            Object value, Type targetType, Object parameter, CultureInfo culture)
-        {
-            Thickness basePadding = ((Thickness)(value));
-            var param = Double.Parse(parameter.ToString());
-            //Debug.WriteLine(returnVal.ToString() + "    " + ((double)(values[0])).ToString() + "    " + (((Thickness)(values[1])).Left).ToString());
-            return new Thickness(basePadding.Left + param, basePadding.Top, basePadding.Right, basePadding.Bottom);
-        }
-
-        public Object ConvertBack(
-            Object value, Type targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class DoubleAdderConverter : IValueConverter
-    {
-        public Object Convert(
-            Object value, Type targetType, Object parameter, CultureInfo culture)
-        {
-            return Double.Parse(value.ToString()) + Double.Parse(parameter.ToString());
-        }
-
-        public Object ConvertBack(
-            Object value, Type targetTypes, Object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }
