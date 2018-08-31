@@ -15,11 +15,11 @@
     <apictrl:DecoratableWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/DefaultSkin.xaml"/-->
-                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/Aeromatic.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/DefaultSkin.xaml"/>
+                <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/Aeromatic.xaml"/-->
             </ResourceDictionary.MergedDictionaries>
 
-            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <!--local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/-->
             <local:ToStringConverter x:Key="ToStringConverter"/>
         </ResourceDictionary>
     </apictrl:DecoratableWindow.Resources>
@@ -114,7 +114,7 @@
     </apictrl:DecoratableWindow.TitleBarContent>
     <DockPanel>
         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-            <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="False" IsAutomaticCollapseEnabled="False" IsCollapsed="{Binding RibbonShown, Mode=TwoWay}">
+            <Fluent:Ribbon x:Name="RibbonControl" AutomaticStateManagement="False" IsAutomaticCollapseEnabled="False"><!--IsCollapsed="{Binding RibbonShown, Mode=TwoWay}"-->
                 <!--IsMinimizedChanged="RibbonControl_IsMinimizedChanged"-->
                 <Fluent:Ribbon.Menu>
                     <Fluent:Backstage x:Name="RibbonBackstage" IsOpenChanged="RibbonBackstage_IsOpenChanged"/>

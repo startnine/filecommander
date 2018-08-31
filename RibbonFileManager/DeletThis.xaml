@@ -1,21 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RibbonFileManager">
-    <Grid x:Key="DeletThisButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid Width="32" Height="32" Background="White">
-            <Grid.Effect>
-                <DropShadowEffect Color="Black" Direction="225" ShadowDepth="3" BlurRadius="25" Opacity="0.375" />
-            </Grid.Effect>
-            <Grid.OpacityMask>
-                <VisualBrush>
-                    <VisualBrush.Visual>
-                        <Grid Width="32" Height="24" Background="#01000000">
-                            <Path Data="M 0 18 L 6 0 L 32 0" Fill="Transparent" Stroke="Black" StrokeThickness="6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="32" Height="24"/>
-                            <Path Data="M 0 0 L 12 0 L 9 12 L 0 12 Z" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-5,-5,5,5"/>
-                        </Grid>
-                    </VisualBrush.Visual>
-                </VisualBrush>
-            </Grid.OpacityMask>
-        </Grid>
-    </Grid>
+    
 </ResourceDictionary>

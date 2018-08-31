@@ -7,5 +7,12 @@ namespace RibbonFileManager
     /// </summary>
     public partial class App : Application
     {
+        /*public App()
+        {
+            new MainWindow()
+            {
+                Visibility = Visibility.Visible
+            }.Show();
+        }*/
     }
 }

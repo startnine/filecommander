@@ -134,21 +134,46 @@ namespace RibbonFileManager
 
         public MainWindow()
         {
-            _startupPath = @"%userprofile%";
-            Initialize();
-
+            InitializeComponent();
+            //MainWindow_Loaded(this, null);
+            //Show();
+            //Show();
+            //MainWindow_Loaded(this, null);
+            //Show();
         }
 
         public MainWindow(String StartupPath)
         {
+            InitializeComponent();
             _startupPath = StartupPath;
-            Initialize();
+            //MainWindow_Loaded(this, null);
+            //Show();
+            //Show();
+            //MainWindow_Loaded(this, null);
+            //Show();
         }
 
-        void Initialize()
+        /*void Initialize()
         {
-            InitializeComponent();
-            Application.Current.MainWindow = this;
+            Debug.WriteLine("Initialize");
+            //Application.Current.MainWindow = this;
+            MainWindow_Loaded(this, null);
+        }
+
+        */protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            if (Manager.OpenWindows.Contains(this))
+            {
+                Manager.OpenWindows.Remove(this);
+            }
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("MainWindow_Loaded");
+            _startupPath = @"%userprofile%";
+            Show();
             if ((Environment.OSVersion.Version.Major < 6) | ((Environment.OSVersion.Version.Major == 6) & (Environment.OSVersion.Version.Minor == 0)))
             {
                 RibbonBackstageTabs.Items.Remove(PowerShellTabItem);
@@ -158,24 +183,12 @@ namespace RibbonFileManager
             RibbonControl.TitleBar = RibbonTitleBar;
             //CurrentFolderContents = new dis
             Manager.OpenWindows.Add(this);
-        }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
-            if (Manager.OpenWindows.Contains(this))
-            {
-                Manager.OpenWindows.Remove(this);
-            }
-        }
-
-        private void MainWindow_Loaded(Object sender, RoutedEventArgs e)
-        {
-            NavBar.BackButton.Click += BackButton_Click;
-            NavBar.ForwardButton.Click += ForwardButton_Click;
-            NavBar.PathTextBox.PreviewMouseLeftButtonDown += NavBar_PathTextBox_PreviewMouseLeftButtonDown;
-            NavBar.PathTextBox.KeyDown += NavBar_PathTextBox_KeyDown;
-            NavBar.PathTextBox.LostFocus += NavBar_PathTextBox_LostFocus;
+            NavBar.BackButtonClick += BackButton_Click;
+            NavBar.ForwardButtonClick += ForwardButton_Click;
+            NavBar.PathTextBoxPreviewMouseLeftButtonDown += NavBar_PathTextBox_PreviewMouseLeftButtonDown;
+            NavBar.PathTextBoxKeyDown += NavBar_PathTextBox_KeyDown;
+            NavBar.PathTextBoxLostFocus += NavBar_PathTextBox_LostFocus;
             //Debug.WriteLine(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"));
             //this.CurrentFolder = new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"));
             //CurrentDirectoryListView.ItemsSource = new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%")).SubItems;
@@ -291,7 +304,18 @@ namespace RibbonFileManager
                         //break;
                     }
                 }
+                RestoreBreadcrumbs();
+            }
+            else
+            {
+                Process.Start(path);
+            }
+        }
 
+        private void RestoreBreadcrumbs()
+        {
+            if (NavBar.BreadcrumbsStackPanel != null)
+            {
                 NavBar.BreadcrumbsStackPanel.Children.Clear();
                 foreach (var s in HistoryList[HistoryIndex].Split('\\'))
                 {
@@ -303,7 +327,7 @@ namespace RibbonFileManager
                     button.Click += (sneder, args) =>
                     {
                         var breadcrumbPath = "";
-                        foreach(SplitButton b in NavBar.BreadcrumbsStackPanel.Children)
+                        foreach (SplitButton b in NavBar.BreadcrumbsStackPanel.Children)
                         {
                             breadcrumbPath = breadcrumbPath + b.Header.ToString() + @"\";
                             if (b == button)
@@ -345,10 +369,6 @@ namespace RibbonFileManager
 
                     NavBar.BreadcrumbsStackPanel.Children.Add(button);
                 }
-            }
-            else
-            {
-                Process.Start(path);
             }
         }
 
@@ -529,20 +549,20 @@ namespace RibbonFileManager
         {
             if (HistoryIndex == 0)
             {
-                NavBar.BackButton.IsEnabled = false;
+                NavBar.IsBackButtonEnabled = false;
             }
             else
             {
-                NavBar.BackButton.IsEnabled = true;
+                NavBar.IsBackButtonEnabled = true;
             }
 
             if (HistoryIndex >= (HistoryList.Count - 1))
             {
-                NavBar.ForwardButton.IsEnabled = false;
+                NavBar.IsForwardButtonEnabled = false;
             }
             else
             {
-                NavBar.ForwardButton.IsEnabled = true;
+                NavBar.IsForwardButtonEnabled = true;
             }
         }
 

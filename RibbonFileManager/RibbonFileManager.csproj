@@ -39,9 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Start9.Api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Start9.Api.1.0.0-CI00107\lib\net40\Start9.Api.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.AddIn" />
     <Reference Include="System.Data" />
@@ -137,7 +135,7 @@
       <Version>6.1.0.233</Version>
     </PackageReference>
     <PackageReference Include="Start9.Api">
-      <Version>1.0.0-CI00107</Version>
+      <Version>1.0.0-CI00116</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
