@@ -1,0 +1,199 @@
+﻿<win:DecoratableWindow x:Class="RibbonFileManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RibbonFileManager"
+        xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
+        xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
+        xmlns:mgrbase="clr-namespace:NT6FileManagerBase;assembly=NT6FileManagerBase"
+        xmlns:Fluent="urn:fluent-ribbon"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="MainWindow" Width="900" Height="550" MinWidth="225" Loaded="MainWindow_Loaded" ShowTitlebarText="False">
+    <win:DecoratableWindow.TitleBarContent>
+        <Fluent:RibbonTitleBar x:Name="RibbonTitleBar"/>
+    </win:DecoratableWindow.TitleBarContent>
+    <!--win:DecoratableWindow.FullWindowContent-->
+    <win:DecoratableWindow.FullWindowContent>
+        <Grid Style="{DynamicResource RootGridStyle}">
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <Control Style="{DynamicResource ToolbarBackgroundControlStyle}"/>
+                    <DockPanel>
+                        <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
+                        <mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/>
+                        <Fluent:Ribbon TitleBar="{x:Reference RibbonTitleBar}">
+                            <Fluent:Ribbon.Menu>
+                                <!--Fluent:Backstage x:Name="RibbonBackstage" IsOpen="False"/-->
+                                <!--IsOpenChanged="RibbonBackstage_IsOpenChanged"-->
+                                <Fluent:ApplicationMenu Header="File">
+                                    <Fluent:MenuItem x:Name="NewWindowMenuItem" Header="Open New Window" IsSplited="True" Click="NewWindowButton_Click">
+                                        <Fluent:MenuItem x:Name="NewWindowSubmenuItem" Header="Open New Window" Click="NewWindowButton_Click"/>
+                                        <Fluent:MenuItem Header="Open New Window in default location" Click="NewWindowDefaultLocationButton_Click"/>
+                                        <!--Fluent:MenuItem Header="Open New Window in new Process"/-->
+                                    </Fluent:MenuItem>
+                                    <Fluent:MenuItem Header="Open Command prompt">
+                                        <Fluent:MenuItem x:Name="OpenCmdButton" Header="Open command prompt" Click="OpenCmdButton_Click"/>
+                                        <Fluent:MenuItem x:Name="OpenCmdAdminButton" Header="Open command prompt as administrator" Click="OpenCmdButton_Click"/>
+                                    </Fluent:MenuItem>
+                                    <Fluent:MenuItem x:Name="PowerShellTabItem" Header="Open Windows PowerShell">
+                                        <Fluent:MenuItem x:Name="OpenPowerShellButton" Header="Open PowerShell" Click="OpenPowerShellButton_Click"/>
+                                        <Fluent:MenuItem x:Name="OpenPowerShellAdminButton" Header="Open PowerShell as administrator" Click="OpenPowerShellButton_Click"/>
+                                    </Fluent:MenuItem>
+                                    <Separator/>
+                                    <Fluent:MenuItem Header="Delete History">
+
+                                    </Fluent:MenuItem>
+                                    <Separator/>
+                                    <Fluent:MenuItem Header="Help"/>
+                                    <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
+                                </Fluent:ApplicationMenu>
+                            </Fluent:Ribbon.Menu>
+                            <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New">
+                                <Fluent:RibbonGroupBox x:Name="ClipboardBox" Header="Clipboard">
+                                    <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" SizeDefinition="Large,Small" Click="CopyButton_Click"/>
+                                    <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" SizeDefinition="Large,Small" Click="PasteButton_Click"/>
+                                    <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" Click="CutButton_Click"/>
+                                    <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" Click="CopyPathButton_Click"/>
+                                    <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" Click="PasteShortcutButton_Click"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
+                                    <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small"/>
+                                    <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small"/>
+                                    <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
+                                        <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle"/>
+                                        <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete"/>
+                                    </Fluent:SplitButton>
+                                    <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="New" Header="New">
+                                    <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
+                                    <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" Icon="{DynamicResource NewItemButtonIcon}" SizeDefinition="Middle,Small"/>
+                                    <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" SizeDefinition="Middle,Small"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
+                                    <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
+                                    <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
+                                    <Fluent:Button x:Name="EditButton" Header="Edit" SizeDefinition="Middle,Small" Click="EditButton_Click"/>
+                                    <Fluent:Button x:Name="HistoryButton" Header="History" SizeDefinition="Middle,Small" Click="HistoryButton_Click"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="Select" Header="Select">
+                                    <Fluent:Button x:Name="SelectAllButton" Header="Select all" SizeDefinition="Middle,Small" Click="SelectAllButton_Click"/>
+                                    <Fluent:Button x:Name="SelectNoneButton" Header="Select none" SizeDefinition="Middle,Small" Click="SelectNoneButton_Click"/>
+                                    <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
+                                </Fluent:RibbonGroupBox>
+                            </Fluent:RibbonTabItem>
+                            <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank">
+                                <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
+                                    <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
+                                    <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>
+                                    <Fluent:Button x:Name="Burn" Header="Burn to disc" SizeDefinition="Middle,Small"/>
+                                    <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
+                                    <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
+                                    <Fluent:InRibbonGallery MinItemsInRow="1" Header="Share with..." SizeDefinition="Large" Style="{DynamicResource ShareWithGalleryStyle}" IsCollapsed="False">
+                                        <Fluent:GalleryItem>UpdatusUser</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem>Specific people...</Fluent:GalleryItem>
+                                    </Fluent:InRibbonGallery>
+                                    <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="ShareBlank">
+                                    <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
+                                </Fluent:RibbonGroupBox>
+                            </Fluent:RibbonTabItem>
+                            <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide">
+                                <Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
+                                    <Fluent:DropDownButton Header="Navigation Pane" SizeDefinition="Large,Small">
+                                        <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" IsChecked="{Binding ShowNavigationPane, ElementName=FileManagerControl, Mode=TwoWay}"  Header="Navigation Pane"/>
+                                    </Fluent:DropDownButton>
+                                    <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview Pane" IsChecked="{Binding ShowPreviewPane, ElementName=FileManagerControl}" SizeDefinition="Middle,Small"/>
+                                    <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details Pane" IsChecked="{Binding ShowDetailsPane, ElementName=FileManagerControl}" SizeDefinition="Middle,Small"/>
+                                    <!--Fluent:Button Header="Test"/-->
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
+                                    <Fluent:InRibbonGallery x:Name="FolderViewsGallery" MinItemsInRow="2" MaxItemsInRow="3" Header="Folder Views" SizeDefinition="Large" Style="{DynamicResource LayoutGalleryStyle}" SelectionChanged="FolderViewsGallery_SelectionChanged">
+                                        <Fluent:GalleryItem x:Name="ExtraLargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Extra large icons</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="LargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Large icons</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="MediumIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Medium icons</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="SmallIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Small icons</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="ListViewGalleryItem" Click="CurrentViewGalleryItem_Click">List</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="DetailsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Details</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="TilesViewGalleryItem" Click="CurrentViewGalleryItem_Click">Tiles</Fluent:GalleryItem>
+                                        <Fluent:GalleryItem x:Name="ContentViewGalleryItem" Click="CurrentViewGalleryItem_Click">Content</Fluent:GalleryItem>
+                                    </Fluent:InRibbonGallery>
+                                    <!--Fluent:InRibbonGallery x:Name="InRibbonGallery"
+                                            Header="Split"
+                                            KeyTip="S"
+                                            GroupBy="Tag"
+         a                                   ResizeMode="Both"
+                                            MaxItemsInRow="6"
+                                            MinItemsInRow="2"
+                                            ItemWidth="40"
+                                            ItemHeight="55"
+                                            MinItemsInDropDownRow="5">
+                                        <Fluent:InRibbonGallery.Filters>
+                                            <Fluent:GalleryGroupFilter Title="All"
+                                                       Groups="Group1,Group2" />
+                                            <Fluent:GalleryGroupFilter Title="Group1"
+                                                       Groups="Group1" />
+                                            <Fluent:GalleryGroupFilter Title="Group2"
+                                                       Groups="Group2" />
+                                        </Fluent:InRibbonGallery.Filters>
+
+                                        <TextBlock Tag="Group1">1</TextBlock>
+                                        <TextBlock Tag="Group1">2</TextBlock>
+                                        <TextBlock Tag="Group1">3</TextBlock>
+                                        <TextBlock Tag="Group1">4</TextBlock>
+                                        <TextBlock Tag="Group1">5</TextBlock>
+                                        <TextBlock Tag="Group1">6</TextBlock>
+                                        <TextBlock Tag="Group2">1 (G 2)</TextBlock>
+                                        <TextBlock Tag="Group2">2 (G 2)</TextBlock>
+                                        <TextBlock Tag="Group2">3 (G 2)</TextBlock>
+                                    </Fluent:InRibbonGallery-->
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="CurrentViewGroupBox" Header="Current view">
+                                    <Fluent:DropDownButton Header="Sort by" SizeDefinition="Large,Small"/>
+                                    <Fluent:DropDownButton Header="Group by" SizeDefinition="Middle,Small"/>
+                                    <Fluent:DropDownButton Header="Add columns" SizeDefinition="Middle,Small"/>
+                                    <Fluent:Button Header="Size all columns to fit" SizeDefinition="Middle,Small"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="ShowHide" Header="Show/hide">
+                                    <Fluent:CheckBox Header="Item check boxes" IsChecked="{Binding ShowItemCheckboxes, ElementName=FileManagerControl}" SizeDefinition="Large,Small"/>
+                                    <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small"/>
+                                    <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small"/>
+                                    <Fluent:Button Header="Hide selected items" SizeDefinition="Large,Small"/>
+                                </Fluent:RibbonGroupBox>
+                                <Fluent:RibbonGroupBox x:Name="Options" Header="Options">
+                                    <Fluent:DropDownButton Header="Options" SizeDefinition="Large,Small"/>
+                                </Fluent:RibbonGroupBox>
+                            </Fluent:RibbonTabItem>
+                        </Fluent:Ribbon>
+                    </DockPanel>
+                </Grid>
+                <mgrbase:FileManagerBase x:Name="FileManagerControl"/>
+            </DockPanel>
+            <!--Fluent:BackstageTabControl x:Name="RibbonBackstageTabs" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}">
+            <!-Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=False}"->
+            <Fluent:Button x:Name="NewWindowButton" Header="New Window" Click="NewWindowButton_Click"/>
+            <Fluent:Button x:Name="CloseWindowButton" Header="Close" Click="CloseWindowButton_Click"/>
+            <!-Fluent:Button Header="New Window in New Process"/->
+            <Fluent:BackstageTabItem Header="Command prompt">
+                <StackPanel>
+                    <Fluent:Button x:Name="OpenCmdButton" Header="Open command prompt" Click="OpenCmdButton_Click"/>
+                        <Fluent:Button x:Name="OpenCmdAdminButton" Header="Open command prompt as administrator" Click="OpenCmdButton_Click"/>
+                </StackPanel>
+            </Fluent:BackstageTabItem>
+            <Fluent:BackstageTabItem x:Name="PowerShellTabItem" Header="PowerShell">
+                <StackPanel>
+                    <Fluent:Button x:Name="OpenPowerShellButton" Header="Open PowerShell" Click="OpenPowerShellButton_Click"/>
+                        <Fluent:Button x:Name="OpenPowerShellAdminButton" Header="Open PowerShell as administrator" Click="OpenPowerShellButton_Click"/>
+                </StackPanel>
+            </Fluent:BackstageTabItem>
+            <Fluent:BackstageTabItem Header="History" />
+        </Fluent:BackstageTabControl-->
+        </Grid>
+    </win:DecoratableWindow.FullWindowContent>
+    <!--/win:DecoratableWindow.FullWindowContent-->
+</win:DecoratableWindow>
