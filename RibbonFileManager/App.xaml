@@ -6,7 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/LightPlexBlue.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/Shale.xaml"/>
+                <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/LightPlexBlue.xaml"/-->
                 <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/DarkPlexBlue.xaml"/-->
                 <!--ResourceDictionary Source="pack://application:,,,/RibbonFileManager;component/Classic.xaml"/-->
             </ResourceDictionary.MergedDictionaries>

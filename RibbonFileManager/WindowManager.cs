@@ -45,8 +45,10 @@ namespace RibbonFileManager
 
             if (!found)
             {
-                new MainWindow(path).Show();
-
+                var win = new MainWindow(path);
+                win.Show();
+                win.Focus();
+                win.Activate();
             }
         }
 
@@ -58,6 +60,8 @@ namespace RibbonFileManager
             win.FileManagerControl.HistoryIndex = targetWindow.FileManagerControl.HistoryIndex;
 
             win.Show();
+            win.Focus();
+            win.Activate();
         }
 
         /*static Manager()

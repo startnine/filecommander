@@ -532,85 +532,93 @@
         </Style.Triggers>
     </Style>
 
-    <ControlTemplate x:Key="CurrentDirectoryListViewItemControlTemplate" TargetType="{x:Type ListViewItem}">
-        <Grid>
-            <Border x:Name="SelectedBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
-                <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
-                    <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarToggleButtonSelectedBackground}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
-                </Border>
-            </Border>
-            <Border x:Name="HoverBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
-                <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
-                    <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarButtonHoverTertiaryBackgroundBrush}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
-                </Border>
-            </Border>
-            <Grid Background="{TemplateBinding Background}" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <ContentPresenter x:Name="PART_ContentPresenter" Margin="0" Visibility="Hidden"/>
-                <DockPanel>
-                    <Grid x:Name="SelectorCheckBoxGrid" VerticalAlignment="Top">
-                        <CheckBox x:Name="SelectorCheckBox" IsThreeState="False" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="Collapsed" DockPanel.Dock="Left"/>
+    <Style x:Key="{x:Type ListViewItem}" TargetType="{x:Type ListViewItem}">
+        <Setter Property="ContextMenu" Value="{DynamicResource ItemContextMenu}"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Grid>
+                        <Border x:Name="SelectedBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
+                            <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarToggleButtonSelectedBackground}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
+                            </Border>
+                        </Border>
+                        <Border x:Name="HoverBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1" CornerRadius="4" Opacity="0">
+                            <Border BorderThickness="1" CornerRadius="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarButtonHoverTertiaryBackgroundBrush}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
+                            </Border>
+                        </Border>
+                        <Grid Background="{TemplateBinding Background}" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <ContentPresenter x:Name="PART_ContentPresenter" Margin="0" Visibility="Hidden" VerticalAlignment="Top"/>
+                            <DockPanel>
+                                <Grid x:Name="SelectorCheckBoxGrid" VerticalAlignment="Top">
+                                    <CheckBox x:Name="SelectorCheckBox" IsThreeState="False" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="Collapsed" DockPanel.Dock="Left"/>
+                                </Grid>
+                                <GridViewRowPresenter x:Name="PART_GridViewRowPesenter" Visibility="Visible" />
+                            </DockPanel>
+                        </Grid>
                     </Grid>
-                    <GridViewRowPresenter x:Name="PART_GridViewRowPesenter" Visibility="Visible" />
-                </DockPanel>
-            </Grid>
-        </Grid>
-        <ControlTemplate.Triggers>
-            <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
-                <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible"/>
-                <Setter TargetName="PART_GridViewRowPesenter" Property="Visibility" Value="Hidden"/>
-            </Trigger>
-            <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="True">
-                <Setter TargetName="SelectorCheckBox" Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
-                <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
-                <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
-            </DataTrigger>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsMouseOver" Value="False"/>
-                    <Condition Property="IsSelected" Value="False"/>
-                </MultiTrigger.Conditions>
-                <Setter TargetName="SelectorCheckBoxGrid" Property="Visibility" Value="Hidden"/>
-            </MultiTrigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.0625" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-                <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
-            </Trigger>
-            <Trigger Property="IsSelected" Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-                <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                            <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="PART_GridViewRowPesenter" Property="Visibility" Value="Hidden"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="True">
+                            <Setter TargetName="SelectorCheckBox" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
+                            <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
+                            <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
+                        </DataTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="False"/>
+                                <Condition Property="IsSelected" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="SelectorCheckBoxGrid" Property="Visibility" Value="Hidden"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.0625" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--Style x:Key="CurrentDirectoryListViewItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
         <Setter Property="Margin" Value="2"/>
@@ -1643,7 +1651,7 @@
                                             ContentStringFormat="{TemplateBinding HeaderStringFormat}"
                                             ContentTemplate="{TemplateBinding HeaderTemplate}"
                                             ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"-->
-                                        <TextBlock Text="{TemplateBinding Header}" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Center" Margin="5,2" KeyboardNavigation.IsTabStop="False" />
+                                        <TextBlock Text="{TemplateBinding Header}" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2" KeyboardNavigation.IsTabStop="False" />
                                         <Fluent:Button Margin="0,0,1,1" x:Name="PART_DialogLauncherButton" HorizontalAlignment="Stretch" Width="15" Height="14" Grid.Column="1" Focusable="False"
                                            IsTabStop="False" Template="{DynamicResource DialogLauncherButtonControlTemplate}" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Bottom" Icon="{TemplateBinding LauncherIcon}" Header="{TemplateBinding LauncherText}" Command="{Binding LauncherCommand, RelativeSource={RelativeSource TemplatedParent}}" CommandTarget="{Binding LauncherCommandTarget, RelativeSource={RelativeSource TemplatedParent}}" CommandParameter="{Binding LauncherCommandParameter, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding LauncherToolTip, RelativeSource={RelativeSource TemplatedParent}}" IsEnabled="{Binding IsLauncherEnabled, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </Grid>
@@ -1916,7 +1924,6 @@
                             <Fluent:DropDownButton.ContextMenu>
                                 <ContextMenu/>
                             </Fluent:DropDownButton.ContextMenu>
-
                             <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}" Width="Auto" Height="26" Margin="-1">
                                 <StackPanel Orientation="Horizontal" x:Name="PART_ToolBarOverflowPanel" HorizontalAlignment="Left" Width="Auto" Height="Auto" VerticalAlignment="Center" Margin="1,0,0,0" />
                                 <Label x:Name="popupContentControl" VerticalAlignment="Center" HorizontalAlignment="Left" Width="13" Background="{x:Null}" Height="22" Focusable="False" Padding="0" Margin="1,0" />

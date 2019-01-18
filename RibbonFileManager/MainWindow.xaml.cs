@@ -28,17 +28,33 @@ namespace RibbonFileManager
     /// </summary>
     public partial class MainWindow : DecoratableWindow
     {
-        static MainWindow()
+        /*static MainWindow()
         {
             //Debug.WriteLine("My Computer Path: " + Environment.GetFolderPath(Environment.SpecialFolder.MyComputer));
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MainWindow), new FrameworkPropertyMetadata(typeof(DecoratableWindow)));
-        }
+        }*/
+
+        public static RoutedCommand RenameCommand = new RoutedCommand();
+        public static RoutedCommand BackCommand = new RoutedCommand();
+        public static RoutedCommand ForwardCommand = new RoutedCommand();
+        public static RoutedCommand UpLevelCommand = new RoutedCommand();
 
         void Initialize()
         {
             InitializeComponent();
+
+            RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
+            BackCommand.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Alt));
+            ForwardCommand.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Alt));
+            UpLevelCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Alt));
+
             WindowManager.OpenWindows.Add(this);
             //FileManagerControl.Resources.MergedDictionaries.Add(Resources);
+        }
+
+        private void RenameCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            FileManagerControl.RenameSelection();
         }
 
         public MainWindow()
@@ -123,20 +139,24 @@ namespace RibbonFileManager
 
         private void NavBackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FileManagerControl.HistoryIndex > 0)
+            /*if (FileManagerControl.HistoryIndex > 0)
             {
                 FileManagerControl.HistoryIndex--;
                 //Navigate(HistoryIndex);
-            }
+            }*/
+            FileManagerControl.NavigateBack();
+            ValidateNavButtonStates();
         }
 
         private void NavForwardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FileManagerControl.HistoryIndex < (FileManagerControl.HistoryList.Count - 1))
+            /*if (FileManagerControl.HistoryIndex < (FileManagerControl.HistoryList.Count - 1))
             {
                 FileManagerControl.HistoryIndex++;
                 //Navigate(HistoryIndex);
-            }
+            }*/
+            FileManagerControl.NavigateForward();
+            ValidateNavButtonStates();
         }
 
         private void NavHistoryButton_Click(object sender, RoutedEventArgs e)
@@ -257,7 +277,7 @@ namespace RibbonFileManager
 
         private void NavUpButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            /*try
             {
                 string path = Path.GetDirectoryName(FileManagerControl.CurrentPath);
                 if (Directory.Exists(path))
@@ -268,7 +288,10 @@ namespace RibbonFileManager
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-            }
+            }*/
+
+            FileManagerControl.NavigateUp();
+            ValidateNavButtonStates();
         }
 
         private void FileManagerBase_CurrentDirectorySelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -445,6 +468,24 @@ namespace RibbonFileManager
         private void InvertSelectionButton_Click(object sender, RoutedEventArgs e)
         {
             FileManagerControl.InvertSelection();
+        }
+
+        private void BackCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            FileManagerControl.NavigateBack();
+            ValidateNavButtonStates();
+        }
+
+        private void ForwardCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            FileManagerControl.NavigateForward();
+            ValidateNavButtonStates();
+        }
+
+        private void UpLevelCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            FileManagerControl.NavigateUp();
+            ValidateNavButtonStates();
         }
     }
 }
