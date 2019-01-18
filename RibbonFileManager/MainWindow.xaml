@@ -28,7 +28,7 @@
                     <DockPanel>
                         <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
                         <mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/>
-                        <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding ElementName=RibbonTitleBar}">
+                        <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding ElementName=RibbonTitleBar}" AutomaticStateManagement="True">
                             <!--x:Reference RibbonTitleBar-->
                             <Fluent:Ribbon.Menu>
                                 <!--Fluent:Backstage x:Name="RibbonBackstage" IsOpen="False"/-->
@@ -56,13 +56,13 @@
                                     <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
                                 </Fluent:ApplicationMenu>
                             </Fluent:Ribbon.Menu>
-                            <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New">
+                            <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
                                 <Fluent:RibbonGroupBox x:Name="ClipboardBox" Header="Clipboard">
-                                    <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" Icon="{DynamicResource CopyButtonIcon}" SizeDefinition="Large,Small" Click="CopyButton_Click"/>
-                                    <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" Icon="{DynamicResource PasteButtonIcon}" SizeDefinition="Large,Small" Click="PasteButton_Click"/>
-                                    <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" Click="CutButton_Click"/>
-                                    <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" Click="CopyPathButton_Click"/>
-                                    <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" Click="PasteShortcutButton_Click"/>
+                                    <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" Icon="{DynamicResource CopyButtonIcon}" SizeDefinition="Large,Small" KeyTip="CO" FocusManager.IsFocusScope="True" Click="CopyButton_Click"/>
+                                    <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" Icon="{DynamicResource PasteButtonIcon}" SizeDefinition="Large,Small" KeyTip="V" Click="PasteButton_Click"/>
+                                    <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="T" Click="CutButton_Click"/>
+                                    <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" KeyTip="CP" Click="CopyPathButton_Click"/>
+                                    <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="PS" Click="PasteShortcutButton_Click"/>
                                 </Fluent:RibbonGroupBox>
                                 <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
                                     <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}"/>
@@ -90,7 +90,7 @@
                                     <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" Icon="{DynamicResource InvertSelectionButtonIcon}" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
                                 </Fluent:RibbonGroupBox>
                             </Fluent:RibbonTabItem>
-                            <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank">
+                            <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank" KeyTip="S">
                                 <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
                                     <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
                                     <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>
@@ -109,7 +109,7 @@
                                     <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
                                 </Fluent:RibbonGroupBox>
                             </Fluent:RibbonTabItem>
-                            <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide">
+                            <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide" KeyTip="V">
                                 <Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
                                     <Fluent:DropDownButton Header="Navigation Pane" SizeDefinition="Large,Small">
                                         <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" IsChecked="{Binding ShowNavigationPane, ElementName=FileManagerControl, Mode=TwoWay}"  Header="Navigation Pane"/>
