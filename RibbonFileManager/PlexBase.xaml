@@ -7,8 +7,7 @@
                     xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
                     xmlns:disk="clr-namespace:WindowsSharp.DiskItems;assembly=WindowsSharp"
                     xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
-                    xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
-                    xmlns:mgrbase="clr-namespace:NT6FileManagerBase;assembly=NT6FileManagerBase">
+                    xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Fluent;Component/Themes/Generic.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;Component/Themes/Plex.xaml" />
@@ -377,7 +376,7 @@
             <!--Style x:Key="CurrentDirItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource CurrentDirectoryListViewItemStyle}"/-->
         </Style.Resources>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Icons">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Icons">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -394,9 +393,9 @@
                                 <MenuItem Header="Properties"/>
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
-                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <!--Width="48" Height="48"-->
-                                <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}">
+                                <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" MaxHeight="44"/>
                                 </Grid>
                             </StackPanel>
@@ -413,7 +412,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
@@ -433,7 +432,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Tiles">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -454,7 +453,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -481,7 +480,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Content">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -564,13 +563,13 @@
                             <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="PART_GridViewRowPesenter" Property="Visibility" Value="Hidden"/>
                         </Trigger>
-                        <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="True">
+                        <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="True">
                             <Setter TargetName="SelectorCheckBox" Property="Visibility" Value="Visible"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
+                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
                             <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
+                        <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                             <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
                         </DataTrigger>
                         <MultiTrigger>

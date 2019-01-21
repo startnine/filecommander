@@ -30,7 +30,7 @@ namespace RibbonFileManager
             {
                 foreach (MainWindow w in OpenWindows)
                 {
-                    if (w.FileManagerControl.CurrentPath == path)
+                    if (w.CurrentPath == path)
                     {
                         w.Show();
                         w.Focus();
@@ -56,8 +56,8 @@ namespace RibbonFileManager
         {
             var win = new MainWindow();
 
-            win.FileManagerControl.HistoryList = targetWindow.FileManagerControl.HistoryList;
-            win.FileManagerControl.HistoryIndex = targetWindow.FileManagerControl.HistoryIndex;
+            win.HistoryList = targetWindow.HistoryList;
+            win.HistoryIndex = targetWindow.HistoryIndex;
 
             win.Show();
             win.Focus();

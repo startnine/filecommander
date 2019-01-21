@@ -12,7 +12,6 @@
                     xmlns:styleSelectors="clr-namespace:Fluent.StyleSelectors;assembly=Fluent"
                     xmlns:templateSelectors="clr-namespace:Fluent.TemplateSelectors;assembly=Fluent"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                    xmlns:mgrbase="clr-namespace:NT6FileManagerBase;assembly=NT6FileManagerBase"
                     xmlns:e="http://schemas.microsoft.com/expression/2010/interactivity">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Shale.xaml"/>
@@ -28,14 +27,21 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter"/>
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
-    
+    <local:DiskItemSubItemsTreeFilterConverter x:Key="DiskItemSubItemsTreeFilterConverter"/>
+
     <!--#endregion Converters-->
 
 
     <!--#region Main Window Styles-->
 
     <Style x:Key="{x:Type local:MainWindow}" TargetType="{x:Type local:MainWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
-        <Setter Property="BorderThickness" Value="0,54,0,0"/>
+        <Setter Property="BorderThickness" Value="0,64,0,0"/>
+        <Setter Property="ShowTitlebarText" Value="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"/>
+        <Style.Triggers>
+            <Trigger Property="InterfaceMode" Value="Ribbon">
+                <Setter Property="BorderThickness" Value="0,54,0,0"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="RootGridStyle" TargetType="{x:Type Grid}">
@@ -124,7 +130,8 @@
                                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
                                         <Grid x:Name="Grid" IsHitTestVisible="True">
                                             <ScrollContentPresenter  Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" />
-                                            <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Left" Width="13" Height="Auto" VerticalAlignment="Stretch" Style="{DynamicResource ScrollButtonStyle}">
+                                            <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Left" Width="13" Height="Auto" VerticalAlignment="Stretch">
+                                                <!--Style="{DynamicResource ScrollButtonStyle}"-->
                                                 <RepeatButton.Visibility>
                                                     <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="0">
                                                         <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
@@ -135,7 +142,8 @@
                                                 </RepeatButton.Visibility>
                                                 <Path Fill="{DynamicResource BlackBrush}" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M0,0L1,1 1,-1z" />
                                             </RepeatButton>
-                                            <RepeatButton Command="{x:Static ScrollBar.LineRightCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Right" Width="13" Height="Auto" VerticalAlignment="Stretch" Style="{DynamicResource ScrollButtonStyle}">
+                                            <RepeatButton Command="{x:Static ScrollBar.LineRightCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Right" Width="13" Height="Auto" VerticalAlignment="Stretch">
+                                                <!--Style="{DynamicResource ScrollButtonStyle}"-->
                                                 <RepeatButton.Visibility>
                                                     <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="100">
                                                         <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
@@ -171,7 +179,8 @@
                             </ContentControl>
                         </Border>
                         <!--Border Margin="0" VerticalAlignment="Stretch" Grid.Row="2" Background="{Binding Path=SelectedItem.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" /-->
-                        <Grid x:Name="TabsGrid" Background="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.TabsGrid.Background}" TextElement.Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.TabsGrid.Foreground}" HorizontalAlignment="Stretch" Width="Auto" Margin="0" Grid.Row="0" KeyboardNavigation.TabIndex="1">
+                        <Grid x:Name="TabsGrid" HorizontalAlignment="Stretch" Width="Auto" Margin="0" Grid.Row="0" KeyboardNavigation.TabIndex="1">
+                            <!--Background="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.TabsGrid.Background}" TextElement.Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.TabsGrid.Foreground}"-->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -252,11 +261,12 @@
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="{x:Type Fluent:ToggleButton}">
                                                         <Grid Background="{TemplateBinding Background}">
-                                                            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,1,0" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5">
-                                                                <ContentPresenter.RenderTransform>
+                                                            <!--ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,1,0" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5"-->
+                                                            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5">
+                                                                <Path.RenderTransform>
                                                                     <RotateTransform Angle="0"/>
-                                                                </ContentPresenter.RenderTransform>
-                                                            </ContentPresenter>
+                                                                </Path.RenderTransform>
+                                                            </Path>
                                                         </Grid>
                                                         <ControlTemplate.Triggers>
                                                             <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="False">
@@ -276,25 +286,20 @@
                                                                 <Trigger.EnterActions>
                                                                     <BeginStoryboard>
                                                                         <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="RenderTransform.Angle" To="-180" Duration="0:0:0.125"/>
+                                                                            <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="RenderTransform.Angle" To="-180" Duration="0:0:0.125"/>
                                                                         </Storyboard>
                                                                     </BeginStoryboard>
                                                                 </Trigger.EnterActions>
                                                                 <Trigger.ExitActions>
                                                                     <BeginStoryboard>
                                                                         <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="RenderTransform.Angle" To="0" Duration="0:0:0.125"/>
+                                                                            <DoubleAnimation Storyboard.TargetName="Arrow" Storyboard.TargetProperty="RenderTransform.Angle" To="0" Duration="0:0:0.125"/>
                                                                         </Storyboard>
                                                                     </BeginStoryboard>
                                                                 </Trigger.ExitActions>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="Content">
-                                                <Setter.Value>
-                                                    <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}}" StrokeThickness="2"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </Style>
@@ -313,7 +318,8 @@
                                     <RowDefinition Height="20" />
                                     <!-- Needed for overlapping Keytips -->
                                 </Grid.RowDefinitions>
-                                <Border Grid.Row="1" Grid.RowSpan="2" BorderThickness="0,0,0,1" Margin="1,0" BorderBrush="{Binding Path=SelectedItem.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" Background="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.Content.Background}" TextElement.Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.Content.Foreground}" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained">
+                                <Border Grid.Row="1" Grid.RowSpan="2" BorderThickness="0,0,0,1" Margin="1,0" BorderBrush="{Binding Path=SelectedItem.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained">
+                                    <!--Background="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.Content.Background}" TextElement.Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabControl.Content.Foreground}"-->
                                     <ContentControl x:Name="popupContentControl" Focusable="False" Margin="0" />
                                 </Border>
                             </Grid>
@@ -321,7 +327,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMinimized" Value="False">
-                            <Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonCollapse}" />
+                            <!--Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonCollapse}" /-->
                             <Setter TargetName="PART_MinimizeButton" Property="ToolTip">
                                 <Setter.Value>
                                     <Fluent:ScreenTip Title="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeButtonScreenTipTitle, Mode=OneWay}" Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeButtonScreenTipText, Mode=OneWay}" />
@@ -335,7 +341,7 @@
                             <Setter Property="Content" TargetName="mainContentControl" Value="{x:Null}" />
                             <Setter Property="Content" TargetName="popupContentControl" Value="{Binding ElementName=PART_SelectedContentPresenter, Mode=OneWay}" />
                             <!-- Switch content to popup END -->
-                            <Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonExpand}" />
+                            <!--Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonExpand}" /-->
                             <Setter TargetName="PART_MinimizeButton" Property="ToolTip">
                                 <Setter.Value>
                                     <Fluent:ScreenTip Title="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandButtonScreenTipTitle, Mode=OneWay}" Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandButtonScreenTipText, Mode=OneWay}" />
@@ -347,7 +353,7 @@
                                 <Condition Property="IsDropDownOpen" Value="True" />
                                 <Condition Property="IsMinimized" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonPin}" />
+                            <!--Setter TargetName="PART_MinimizeButton" Property="Icon" Value="{DynamicResource Fluent.Ribbon.Images.RibbonPin}" /-->
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -382,7 +388,8 @@
                     <Grid x:Name="grid" Height="Auto">
                         <Grid Visibility="Collapsed">
                             <Border x:Name="mouseOverBorder" Margin="1,0,1,0" Background="{TemplateBinding Background}" />
-                            <Border x:Name="groupBorder" Margin="0,0,0,1" BorderThickness="0" Background="{Binding Group.Background, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" OpacityMask="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.Contextual.Background.OpacityMask}" />
+                            <Border x:Name="groupBorder" Margin="0,0,0,1" BorderThickness="0" Background="{Binding Group.Background, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}"/>
+                            <!--OpacityMask="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.Contextual.Background.OpacityMask}"-->
                             <Border x:Name="selectedBorder" Visibility="Collapsed" Margin="1,0,1,0" VerticalAlignment="Stretch" BorderBrush="{TemplateBinding ActiveTabBorderBrush}" BorderThickness="1,1,1,0" Background="{TemplateBinding ActiveTabBackground}" />
                         </Grid>
                         <Grid ClipToBounds="True" Margin="-2,0,-2,1">
@@ -538,9 +545,9 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="Group" Value="{x:Null}">
+            <!--Trigger Property="Group" Value="{x:Null}">
                 <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.BorderBrush}" />
-            </Trigger>
+            </Trigger-->
             <!--Trigger Property="IsSelected" Value="True">
                 <Setter Property="Fluent:RibbonProperties.MouseOverForeground" Value="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.Selected.MouseOver.Foreground}" />
             </Trigger-->
@@ -558,7 +565,7 @@
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="Auto" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:RibbonTabControl}}}"/> <!--, DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" /-->
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" /><!--Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:RibbonTabControl}}}"/> , DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" /-->
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Fluent:KeyTip.Margin" Value="0,15,0,0" />
@@ -585,7 +592,8 @@
                                                             <ColumnDefinition Width="0.00001*" />
                                                             <ColumnDefinition MaxWidth="18" />
                                                         </Grid.ColumnDefinitions>
-                                                        <Border Grid.ColumnSpan="3" Margin="0" Background="{DynamicResource Fluent.Ribbon.Brushes.ScrollBar.Background}" />
+                                                        <Border Grid.ColumnSpan="3" Margin="0"/>
+                                                        <!-- Background="{DynamicResource Fluent.Ribbon.Brushes.ScrollBar.Background}"-->
                                                         <RepeatButton x:Name="repeatButton" Grid.Column="0" Style="{DynamicResource ScrollBarLineButton}" Width="17" Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z" Margin="1,1,0,1" Background="{DynamicResource WhiteBrush}" />
                                                         <Track Name="PART_Track" Grid.Column="1" IsDirectionReversed="False" Margin="0,1,0,1" ViewportSize="{TemplateBinding ViewportSize}">
                                                             <Track.Resources>
@@ -679,18 +687,23 @@
                                         </Grid.ColumnDefinitions>
                                         <ContentControl Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentTemplate="{TemplateBinding HeaderTemplate}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0" KeyboardNavigation.IsTabStop="False" />
                                         <!--ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Header.Foreground}"-->
-                                        <Fluent:Button Margin="0,0,1,1" x:Name="PART_DialogLauncherButton" HorizontalAlignment="Stretch" Width="15" Height="14" Grid.Column="1" Focusable="False" IsTabStop="False" Template="{DynamicResource DialogLauncherButtonControlTemplate}" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Bottom" Icon="{TemplateBinding LauncherIcon}" Header="{TemplateBinding LauncherText}" Command="{Binding LauncherCommand, RelativeSource={RelativeSource TemplatedParent}}" CommandTarget="{Binding LauncherCommandTarget, RelativeSource={RelativeSource TemplatedParent}}" CommandParameter="{Binding LauncherCommandParameter, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding LauncherToolTip, RelativeSource={RelativeSource TemplatedParent}}" IsEnabled="{Binding IsLauncherEnabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        <Fluent:Button Margin="0,0,1,1" x:Name="PART_DialogLauncherButton" HorizontalAlignment="Stretch" Width="15" Height="14" Grid.Column="1" Focusable="False" IsTabStop="False" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Bottom" Icon="{TemplateBinding LauncherIcon}" Header="{TemplateBinding LauncherText}" Command="{Binding LauncherCommand, RelativeSource={RelativeSource TemplatedParent}}" CommandTarget="{Binding LauncherCommandTarget, RelativeSource={RelativeSource TemplatedParent}}" CommandParameter="{Binding LauncherCommandParameter, RelativeSource={RelativeSource TemplatedParent}}" ToolTip="{Binding LauncherToolTip, RelativeSource={RelativeSource TemplatedParent}}" IsEnabled="{Binding IsLauncherEnabled, RelativeSource={RelativeSource TemplatedParent}}">
+                                            <!--Template="{DynamicResource DialogLauncherButtonControlTemplate}"-->
+                                        </Fluent:Button>
                                     </Grid>
                                 </Grid>
                             </ContentControl>
                             <Grid x:Name="grid1" Margin="0" Width="Auto" Height="Auto" Visibility="Collapsed" Grid.RowSpan="2">
-                                <ContentControl Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Header.Foreground}" Style="{DynamicResource Fluent.Ribbon.Styles.RibbonGroupBox.TwoLineHeaderContentControl}" Fluent:RibbonGroupBox.IsCollapsedHeaderContentPresenter="True" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,38,5,0" KeyboardNavigation.IsTabStop="False" />
-                                <Border HorizontalAlignment="Center" VerticalAlignment="Top" Width="31" Height="31" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Collapsed.BorderBrush}" BorderThickness="1" Margin="5,3,8,0">
+                                <ContentControl Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Fluent:RibbonGroupBox.IsCollapsedHeaderContentPresenter="True" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,38,5,0" KeyboardNavigation.IsTabStop="False" />
+                                <!-- Foreground="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Header.Foreground}" Style="{DynamicResource Fluent.Ribbon.Styles.RibbonGroupBox.TwoLineHeaderContentControl}"-->
+                                <Border HorizontalAlignment="Center" VerticalAlignment="Top" Width="31" Height="31" BorderThickness="1" Margin="5,3,8,0">
+                                    <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Collapsed.BorderBrush}"-->
                                     <ContentPresenter x:Name="iconImage" Height="16" Content="{converters:ObjectToImageConverter {Binding Icon, RelativeSource={RelativeSource TemplatedParent}}, '16,16', {Binding RelativeSource={RelativeSource TemplatedParent}}}" Width="16" SnapsToDevicePixels="True" />
                                 </Border>
                                 <Popup x:Name="PART_Popup" Width="Auto" Height="Auto" AllowsTransparency="True" PlacementTarget="{Binding ElementName=grid1, Mode=OneWay}" IsOpen="{TemplateBinding IsDropDownOpen}">
                                     <Grid Width="Auto" Height="Auto" Margin="0,20">
-                                        <Border x:Name="border" Height="Auto" Background="{DynamicResource Fluent.Ribbon.Brushes.Ribbon.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.BorderBrush}" BorderThickness="1">
+                                        <Border x:Name="border" Height="Auto" BorderThickness="1">
+                                            <!--Background="{DynamicResource Fluent.Ribbon.Brushes.Ribbon.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.RibbonTabItem.BorderBrush}"-->
                                             <!--d:LayoutOverrides="Width"-->
                                             <ContentControl x:Name="popupContent" />
                                         </Border>
@@ -715,11 +728,11 @@
                                 <Condition Property="State" Value="Collapsed" />
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Collapsed.MouseOver.Background}" />
+                            <!--Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.Collapsed.MouseOver.Background}" /-->
                         </MultiTrigger>
-                        <Trigger Property="IsDropDownOpen" Value="True">
+                        <!--Trigger Property="IsDropDownOpen" Value="True">
                             <Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.RibbonGroupBox.DropDownOpen.Background}" />
-                        </Trigger>
+                        </Trigger-->
                         <Trigger Property="IsLauncherVisible" Value="False">
                             <Setter Property="Visibility" TargetName="PART_DialogLauncherButton" Value="Collapsed" />
                         </Trigger>
@@ -820,7 +833,9 @@
                                                                                 <ScrollViewer x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" IsTabStop="False" MaxHeight="{TemplateBinding MaxDropDownHeight}" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                                                                                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Local" Margin="0,0,0,1" />
                                                                                 </ScrollViewer>
-                                                                                <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                                                                <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                                                                    <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"-->
+                                                                                    <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}"-->
                                                                                     <Grid>
                                                                                         <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
                                                                                         <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
@@ -893,10 +908,11 @@
                                 <Fluent:MenuItem x:Name="PART_ShowAbove" CanAddToQuickAccessToolBar="False" Header="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.QuickAccessToolBarMenuShowAbove, Mode=OneWay}" Visibility="Collapsed" />
                             </Fluent:DropDownButton>
                         </ContentControl>
-                        <Fluent:DropDownButton x:Name="PART_ToolbarDownButton" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Stretch" Style="{DynamicResource ToolbarDropDownButtonStyle}" DockPanel.Dock="Right" Fluent:KeyTip.Keys="00" Size="Small" IsEnabled="{TemplateBinding IsEnabled}" Icon="{DynamicResource Fluent.Ribbon.Images.QuickAccessToolbarExtender}" ToolTip="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.QuickAccessToolBarMoreControlsButtonTooltip, Mode=OneWay}" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
+                        <Fluent:DropDownButton x:Name="PART_ToolbarDownButton" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Stretch" Style="{DynamicResource ToolbarDropDownButtonStyle}" DockPanel.Dock="Right" Fluent:KeyTip.Keys="00" Size="Small" IsEnabled="{TemplateBinding IsEnabled}" ToolTip="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.QuickAccessToolBarMoreControlsButtonTooltip, Mode=OneWay}" KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
                             <Fluent:DropDownButton.ContextMenu>
                                 <ContextMenu />
                             </Fluent:DropDownButton.ContextMenu>
+                            <!--Icon="{DynamicResource Fluent.Ribbon.Images.QuickAccessToolbarExtender}" -->
                             <StackPanel Orientation="Horizontal" Background="{TemplateBinding Background}" Width="Auto" Height="26" Margin="-1">
                                 <StackPanel Orientation="Horizontal" x:Name="PART_ToolBarOverflowPanel" HorizontalAlignment="Left" Width="Auto" Height="Auto" VerticalAlignment="Center" Margin="1,0,0,0" />
                                 <ContentControl x:Name="popupContentControl" VerticalAlignment="Center" HorizontalAlignment="Left" Background="{x:Null}" Focusable="False" Padding="0" Margin="1,0" />
@@ -1005,183 +1021,76 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="5" />
                         </Grid.RowDefinitions>
-                        <Border Grid.RowSpan="1"
-                    BorderThickness="1"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    Background="{TemplateBinding Background}">
+                        <Border Grid.RowSpan="1" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
                             <Grid>
                                 <StackPanel x:Name="screenTipPanel">
-                                    <TextBlock x:Name="title"
-                                   TextWrapping="Wrap"
-                                   Margin="7,8,7,10"
-                                   FontWeight="Bold"
-                                   Text="{TemplateBinding Property=Title}" />
+                                    <TextBlock x:Name="title" TextWrapping="Wrap" Margin="7,8,7,10" FontWeight="Bold" Text="{TemplateBinding Property=Title}" />
                                     <Grid x:Name="imageAndTextSection">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Image x:Name="image" 
-                                   Margin="7,5,3,7"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   Stretch="Uniform"
-                                   Source="{TemplateBinding Property=Image}"
-                                   MaxHeight="48" />
-                                        <TextBlock Text="{TemplateBinding Property=Text}"
-                                       TextWrapping="Wrap"
-                                       Margin="8,0,8,6"
-                                       Grid.Column="1" />
+                                        <Image x:Name="image" Margin="7,5,3,7" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform" Source="{TemplateBinding Property=Image}" MaxHeight="48" />
+                                        <TextBlock Text="{TemplateBinding Property=Text}" TextWrapping="Wrap" Margin="8,0,8,6" Grid.Column="1" />
                                     </Grid>
-                                    <Border x:Name="separator"
-                                Height="2"
-                                Width="Auto"
-                                HorizontalAlignment="Stretch"
-                                Visibility="{Binding ElementName=disableReasonSection, Path=Visibility}"
-                                Margin="5"
-                                Background="{DynamicResource GrayBrush6}"
-                                BorderThickness="0,0,0,1"
-                                IsEnabled="{Binding Path=IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Control, AncestorLevel=2}}" />
+                                    <Border x:Name="separator" Height="2" Width="Auto" HorizontalAlignment="Stretch" Visibility="{Binding ElementName=disableReasonSection, Path=Visibility}" Margin="5" Background="{DynamicResource GrayBrush6}" BorderThickness="0,0,0,1" IsEnabled="{Binding Path=IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Control, AncestorLevel=2}}" />
                                     <Grid x:Name="disableReasonSection">
-                                        <Image Width="16"
-                                   Height="16"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   Margin="5,0,0,0"
-                                   Stretch="Uniform"
-                                   Source="{DynamicResource Fluent.Ribbon.Images.Warning}" />
+                                        <Image Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0" Stretch="Uniform" Source="{DynamicResource Fluent.Ribbon.Images.Warning}" />
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock x:Name="disableReasonHeader"
-                                           x:Uid="disableReasonHeader"
-                                           Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ScreenTipDisableReasonHeader, Mode=OneWay}"
-                                           TextWrapping="Wrap"
-                                           Margin="28,0,5,2"
-                                           HorizontalAlignment="Stretch"
-                                           Grid.Row="0"
-                                           FontWeight="Bold" />
-                                            <TextBlock x:Name="disableReasonText"
-                                           Text="{TemplateBinding Property=DisableReason}"
-                                           TextWrapping="Wrap"
-                                           Margin="28,0,5,6"
-                                           HorizontalAlignment="Stretch"
-                                           Grid.Row="1" />
-                                            <TextBlock x:Name="helpText"
-                                           TextWrapping="Wrap"
-                                           Margin="28,0,5,6"
-                                           Grid.RowSpan="1"
-                                           Grid.Row="2"
-                                           HorizontalAlignment="Stretch"
-                                           Text="{Binding Text, ElementName=textBlock, Mode=Default}" />
+                                            <TextBlock x:Name="disableReasonHeader" x:Uid="disableReasonHeader" Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ScreenTipDisableReasonHeader, Mode=OneWay}" TextWrapping="Wrap" Margin="28,0,5,2" HorizontalAlignment="Stretch" Grid.Row="0" FontWeight="Bold" />
+                                            <TextBlock x:Name="disableReasonText" Text="{TemplateBinding Property=DisableReason}" TextWrapping="Wrap" Margin="28,0,5,6" HorizontalAlignment="Stretch" Grid.Row="1" />
+                                            <TextBlock x:Name="helpText" TextWrapping="Wrap" Margin="28,0,5,6" Grid.RowSpan="1" Grid.Row="2" HorizontalAlignment="Stretch" Text="{Binding Text, ElementName=textBlock, Mode=Default}" />
                                         </Grid>
                                     </Grid>
-                                    <Border x:Name="separator2"
-                                Height="2"
-                                Width="Auto"
-                                HorizontalAlignment="Stretch"
-                                Visibility="{TemplateBinding Property=HelpLabelVisibility}"
-                                Margin="5"
-                                Background="{DynamicResource GrayBrush6}"
-                                BorderThickness="0,0,0,1" />
-                                    <Grid x:Name="helpSection"
-                              Visibility="{TemplateBinding Property=HelpLabelVisibility}">
-                                        <Image Width="16"
-                                   Height="16"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   Margin="5,0,0,0"
-                                   Stretch="Uniform"
-                                   Source="{DynamicResource Fluent.Ribbon.Images.Help}" />
-                                        <TextBlock x:Uid="HelpText"
-                                       x:Name="textBlock"
-                                       Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ScreenTipF1LabelHeader, Mode=OneWay}"
-                                       TextWrapping="Wrap"
-                                       Margin="28,0,6,6"
-                                       FontWeight="Bold"
-                                       HorizontalAlignment="Stretch" />
-                                        <ContentControl x:Name="helpTopic"
-                                            Content="{TemplateBinding Property=HelpTopic}"
-                                            Visibility="Collapsed" />
+                                    <Border x:Name="separator2" Height="2" Width="Auto" HorizontalAlignment="Stretch" Visibility="{TemplateBinding Property=HelpLabelVisibility}" Margin="5" Background="{DynamicResource GrayBrush6}" BorderThickness="0,0,0,1" />
+                                    <Grid x:Name="helpSection" Visibility="{TemplateBinding Property=HelpLabelVisibility}">
+                                        <Image Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0" Stretch="Uniform" Source="{DynamicResource Fluent.Ribbon.Images.Help}" />
+                                        <TextBlock x:Uid="HelpText" x:Name="textBlock" Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ScreenTipF1LabelHeader, Mode=OneWay}" TextWrapping="Wrap" Margin="28,0,6,6" FontWeight="Bold" HorizontalAlignment="Stretch" />
+                                        <ContentControl x:Name="helpTopic" Content="{TemplateBinding Property=HelpTopic}" Visibility="Collapsed" />
                                     </Grid>
                                 </StackPanel>
                             </Grid>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled"
-                     SourceName="separator"
-                     Value="False">
-                            <Setter Property="Visibility"
-                        TargetName="disableReasonSection"
-                        Value="Visible" />
+                        <Trigger Property="IsEnabled" SourceName="separator" Value="False">
+                            <Setter Property="Visibility" TargetName="disableReasonSection" Value="Visible" />
                         </Trigger>
-                        <Trigger Property="IsEnabled"
-                     SourceName="separator"
-                     Value="True">
-                            <Setter Property="Visibility"
-                        TargetName="disableReasonSection"
-                        Value="Collapsed" />
+                        <Trigger Property="IsEnabled" SourceName="separator" Value="True">
+                            <Setter Property="Visibility" TargetName="disableReasonSection" Value="Collapsed" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="Content"
-                               SourceName="helpTopic"
-                               Value="{x:Null}" />
-                                <Condition Property="Text"
-                               Value=""
-                               SourceName="disableReasonText" />
+                                <Condition Property="Content" SourceName="helpTopic" Value="{x:Null}" />
+                                <Condition Property="Text" Value="" SourceName="disableReasonText" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Visibility"
-                        TargetName="separator"
-                        Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="separator" Value="Collapsed" />
                         </MultiTrigger>
-                        <Trigger Property="Text"
-                     SourceName="disableReasonText"
-                     Value="">
-                            <Setter Property="Visibility"
-                        TargetName="disableReasonSection"
-                        Value="Collapsed" />
+                        <Trigger Property="Text" SourceName="disableReasonText" Value="">
+                            <Setter Property="Visibility" TargetName="disableReasonSection" Value="Collapsed" />
                         </Trigger>
-                        <Trigger Property="Content"
-                     SourceName="helpTopic"
-                     Value="{x:Null}">
-                            <Setter Property="Visibility"
-                        TargetName="helpText"
-                        Value="Collapsed" />
-                            <Setter Property="Visibility"
-                        TargetName="helpSection"
-                        Value="Collapsed" />
-                            <Setter Property="Visibility"
-                        TargetName="separator2"
-                        Value="Collapsed" />
+                        <Trigger Property="Content" SourceName="helpTopic" Value="{x:Null}">
+                            <Setter Property="Visibility" TargetName="helpText" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="helpSection" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="separator2" Value="Collapsed" />
                         </Trigger>
-                        <Trigger Property="Visibility"
-                     SourceName="disableReasonSection"
-                     Value="Visible">
-                            <Setter Property="Visibility"
-                        TargetName="helpText"
-                        Value="Collapsed" />
+                        <Trigger Property="Visibility" SourceName="disableReasonSection" Value="Visible">
+                            <Setter Property="Visibility" TargetName="helpText" Value="Collapsed" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="Text"
-                               Value="" />
-                                <Condition Property="Image"
-                               Value="{x:Null}" />
+                                <Condition Property="Text" Value="" />
+                                <Condition Property="Image" Value="{x:Null}" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Visibility"
-                        TargetName="imageAndTextSection"
-                        Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="imageAndTextSection" Value="Collapsed" />
                         </MultiTrigger>
-                        <Trigger Property="Image"
-                     Value="{x:Null}">
-                            <Setter Property="Visibility"
-                        TargetName="image"
-                        Value="Collapsed" />
+                        <Trigger Property="Image" Value="{x:Null}">
+                            <Setter Property="Visibility" TargetName="image" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1213,11 +1122,12 @@
                                 <Border BorderThickness="0,1,0,2" CornerRadius="2" Background="{DynamicResource ToolbarButtonHoverTertiaryBackgroundBrush}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
                             </Border>
                         </Border-->
+                        <Rectangle x:Name="SizingAidRectangle" Fill="#01000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Border x:Name="HoverBackground" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3" UseLayoutRounding="True">
                             <Border.Background>
                                 <VisualBrush>
                                     <VisualBrush.Visual>
-                                        <Grid Background="#01000000" Width="{Binding ActualWidth, ElementName=HoverBackground}" Height="{Binding ActualHeight, ElementName=HoverBackground}">
+                                        <Grid Background="#01000000" Width="{Binding ActualWidth, Source={x:Reference Name=SizingAidRectangle}}" Height="{Binding ActualHeight, Source={x:Reference Name=SizingAidRectangle}}">
                                             <Border CornerRadius="3" Effect="{DynamicResource TertiaryDropShadow}" Margin="3" UseLayoutRounding="True">
                                                 <Border.Background>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource CardListViewSelectedBackgroundGradientStops}"/>
@@ -1331,7 +1241,8 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" />
+        <!--Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" /-->
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="SnapsToDevicePixels" Value="False" />
         <Setter Property="Margin" Value="2,-3,2,-4"/>
         <Setter Property="Padding" Value="6"/>
@@ -1355,11 +1266,12 @@
                             <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 2" HasGlyph="{TemplateBinding HasTriangle}" />
                         </StackPanel-->
                         <Grid x:Name="PART_ButtonBorder">
+                            <Rectangle x:Name="SizingAidRectangle" Fill="#01000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             <Border x:Name="HoverBackground" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3" UseLayoutRounding="True">
                                 <Border.Background>
                                     <VisualBrush>
                                         <VisualBrush.Visual>
-                                            <Grid Background="#01000000" Width="{Binding ActualWidth, ElementName=HoverBackground}" Height="{Binding ActualHeight, ElementName=HoverBackground}">
+                                            <Grid Background="#01000000" Width="{Binding ActualWidth, Source={x:Reference Name=SizingAidRectangle}}" Height="{Binding ActualHeight, Source={x:Reference Name=SizingAidRectangle}}">
                                                 <Border CornerRadius="3" Effect="{DynamicResource TertiaryDropShadow}" Margin="3" UseLayoutRounding="True">
                                                     <Border.Background>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource CardListViewSelectedBackgroundGradientStops}"/>
@@ -1371,7 +1283,8 @@
                                 </Border.Background>
                             </Border>
                             <StackPanel x:Name="stackPanel" Margin="{TemplateBinding Padding}" Width="Auto" Orientation="Vertical">
-                                <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" Height="32" VerticalAlignment="Center" Content="{converters:ObjectToImageConverter {Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}}, '32,32', {Binding RelativeSource={RelativeSource TemplatedParent}}}" Width="32" Margin="0,2,0,0" SnapsToDevicePixels="True" />
+                                <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" Height="32" VerticalAlignment="Center" Content="{Binding LargeIcon, RelativeSource={RelativeSource Mode=TemplatedParent}}" Width="32" Margin="0,2,0,0" SnapsToDevicePixels="True" />
+                                <!--{converters:ObjectToImageConverter {Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}}, '32,32', {Binding RelativeSource={RelativeSource TemplatedParent}}}-->
                                 <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 2" HasGlyph="{TemplateBinding HasTriangle}" />
                             </StackPanel>
                         </Grid>
@@ -1384,7 +1297,8 @@
                                         </Border.Background>
                                         <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BorderBrush}" BorderThickness="1"-->
                                         <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                                            <Border VerticalAlignment="Top" Width="Auto" Height="Auto" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderThickness="1" />
+                                            <Border VerticalAlignment="Top" Width="Auto" Height="Auto" BorderThickness="1" />
+                                            <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}"-->
                                             <Grid Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*" />
@@ -1393,7 +1307,9 @@
                                                 <ScrollViewer x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" IsTabStop="False" Margin="1" MaxHeight="{TemplateBinding MaxDropDownHeight}" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                                                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Local" Margin="2,2,2,0"/>
                                                 </ScrollViewer>
-                                                <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                                <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                                    <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"-->
+                                                    <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}"-->
                                                     <Grid>
                                                         <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
                                                         <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
@@ -1563,10 +1479,10 @@
                         <Trigger Property="InputGestureText" Value="">
                             <Setter Property="Visibility" TargetName="gestureTextBlock" Value="Collapsed" />
                         </Trigger>
-                        <Trigger Property="IsChecked" Value="True">
+                        <!--Trigger Property="IsChecked" Value="True">
                             <Setter Property="Background" TargetName="iconImageBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.ToggleButton.Checked.Background}" />
                             <Setter Property="BorderBrush" TargetName="iconImageBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.ToggleButton.Checked.BorderBrush}" />
-                        </Trigger>
+                        </Trigger-->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Icon" Value="{x:Null}" />
@@ -1630,13 +1546,15 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Rectangle Grid.Column="2" HorizontalAlignment="Right" Margin="0,4,23,4" Stroke="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" Width="1" />
+                                <Rectangle Grid.Column="2" HorizontalAlignment="Right" Margin="0,4,23,4" Width="1" />
+                                <!--Stroke="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}"-->
                                 <Grid HorizontalAlignment="Stretch" Margin="0" Width="Auto" Grid.Column="0" Grid.ColumnSpan="3">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="0.905*" />
                                         <ColumnDefinition x:Name="columnDefinition" Width="23" />
                                     </Grid.ColumnDefinitions>
-                                    <Border x:Name="PART_ButtonBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" BorderThickness="1" Margin="0,0,-1,0">
+                                    <Border x:Name="PART_ButtonBorder" Visibility="Collapsed" BorderThickness="1" Margin="0,0,-1,0">
+                                        <!--Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}"-->
                                         <!--Background="#01000000"-->
                                     </Border>
                                     <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1,1,0,1" Opacity="0" IsHitTestVisible="False" Grid.Column="0">
@@ -1659,7 +1577,8 @@
                                             </Border.Background>
                                         </Border>
                                     </Border>
-                                    <Border x:Name="Submenu_Border" HorizontalAlignment="Stretch" Margin="0" Width="Auto" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" BorderThickness="1" Grid.Column="1" />
+                                    <Border x:Name="Submenu_Border" HorizontalAlignment="Stretch" Margin="0" Width="Auto" Visibility="Collapsed" BorderThickness="1" Grid.Column="1" />
+                                    <!--Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}"-->
                                     <Border x:Name="SubmenuHoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,3,3,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0" IsHitTestVisible="False" Grid.Column="1">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1"  GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
@@ -1693,17 +1612,21 @@
                                     <Grid x:Name="DropDown" SnapsToDevicePixels="True" Margin="0" VerticalAlignment="Stretch">
                                         <Border x:Name="DropDownBorder" SnapsToDevicePixels="True" Background="#01000000" BorderBrush="{DynamicResource HorizontalPanelBorderBrush}" BorderThickness="1,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                             <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                <Border VerticalAlignment="Stretch" Width="Auto" Height="Auto" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" />
+                                                <Border VerticalAlignment="Stretch" Width="Auto" Height="Auto"/>
+                                                <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}"-->
                                                 <Grid Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="*" />
                                                         <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
-                                                    <Path Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" HorizontalAlignment="Left" Margin="24,0,0,0" Width="1" Height="Auto" Data="M0,0L0,1" Grid.RowSpan="2" Visibility="Visible" />
+                                                    <Path Fill="{x:Null}" Stretch="Fill" HorizontalAlignment="Left" Margin="24,0,0,0" Width="1" Height="Auto" Data="M0,0L0,1" Grid.RowSpan="2" Visibility="Visible" />
+                                                    <!--Stroke="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}"-->
                                                     <ScrollViewer Margin="1" x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" SnapsToDevicePixels="True">
                                                         <StackPanel x:Name="PART_MenuPanel" Orientation="Vertical" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                                     </ScrollViewer>
-                                                    <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                                    <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                                        <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"-->
+                                                        <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}"-->
                                                         <Grid>
                                                             <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
                                                             <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
@@ -1866,7 +1789,9 @@
                                         <!--Style="{DynamicResource MenuScrollViewer}"-->
                                         <StackPanel IsItemsHost="True" Orientation="Vertical" Margin="0,0,0,9" Width="Auto" Height="Auto" x:Name="PART_ItemsHost" HorizontalAlignment="Left" VerticalAlignment="Top" />
                                     </ScrollViewer>
-                                    <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                    <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                        <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"-->
+                                        <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}"-->
                                         <Grid>
                                             <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
                                             <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
@@ -1900,7 +1825,7 @@
     </Style>
 
     <Style TargetType="{x:Type Fluent:ApplicationMenu}">
-        <Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.AccentBaseColorBrush}" />
+        <!--Setter Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.AccentBaseColorBrush}" /-->
         <Setter Property="Foreground" Value="{DynamicResource TitlebarIdleForegroundBrush}" />
         <!--Setter Property="Header" Value="{DynamicResource Fluent.Ribbon.Images.ApplicationMenu}" /-->
         <!--Setter Property="ItemContainerStyleSelector" Value="{x:Static styleSelectors:ApplicationMenuItemContainerStyleSelector.Instance}" /-->
@@ -1970,12 +1895,14 @@
                                                     <ScrollViewer Style="{DynamicResource MenuScrollViewer}" Grid.Row="0" Grid.Column="0" IsTabStop="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                                                         <StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Auto" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                                                     </ScrollViewer>
-                                                    <Border Grid.Row="0" Grid.Column="1" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" Width="{TemplateBinding RightPaneWidth}">
+                                                    <Border Grid.Row="0" Grid.Column="1" BorderThickness="1,0,0,0" Width="{TemplateBinding RightPaneWidth}">
+                                                        <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}"-->
                                                         <ScrollViewer x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" IsTabStop="False" Margin="1" SnapsToDevicePixels="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                                                             <ContentPresenter ContentSource="RightPaneContent" x:Name="PART_RightContentPresenter" />
                                                         </ScrollViewer>
                                                     </Border>
-                                                    <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" Background="{DynamicResource Fluent.Ribbon.Brushes.Ribbon.Background}" Margin="0">
+                                                    <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" Margin="0">
+                                                        <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" Background="{DynamicResource Fluent.Ribbon.Brushes.Ribbon.Background}"-->
                                                         <ContentPresenter ContentSource="FooterPaneContent" />
                                                     </Border>
                                                 </Grid>
@@ -2026,7 +1953,8 @@
     <Style x:Key="{x:Type Fluent:SplitButton}" TargetType="{x:Type Fluent:SplitButton}">
         <!--Setter Property="Height" Value="68" /-->
         <Setter Property="Width" Value="Auto" />
-        <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" />
+        <!--Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" /-->
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="SnapsToDevicePixels" Value="False" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Fluent:KeyTip.AutoPlacement" Value="False" />
@@ -2039,11 +1967,12 @@
                         <Style BasedOn="{StaticResource MenuSeparatorStyle}" TargetType="{x:Type Separator}" />
                     </ControlTemplate.Resources-->
                     <Grid>
+                        <Rectangle x:Name="SizingAidRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="#01000000"/>
                         <Border x:Name="HoverBackground" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3,-3,-3,-11" UseLayoutRounding="True">
                             <Border.Background>
                                 <VisualBrush>
                                     <VisualBrush.Visual>
-                                        <Grid Background="#01000000" Width="{Binding ActualWidth, ElementName=HoverBackground}" Height="{Binding ActualHeight, ElementName=HoverBackground}">
+                                        <Grid Background="#01000000" Width="{Binding ActualWidth, Source={x:Reference Name=SizingAidRectangle}}" Height="{Binding ActualHeight, Source={x:Reference Name=SizingAidRectangle}}">
                                             <Border CornerRadius="3" Effect="{DynamicResource TertiaryDropShadow}" Margin="3" UseLayoutRounding="True">
                                                 <Border.Background>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
@@ -2173,8 +2102,10 @@
                         </Border>
                         <Popup x:Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Margin="0,0,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
                             <Grid Name="DropDown" IsEnabled="{TemplateBinding IsEnabled}" SnapsToDevicePixels="True" Margin="0" VerticalAlignment="Top">
-                                <Border x:Name="PART_DropDownBorder" MinWidth="{TemplateBinding ActualWidth}" SnapsToDevicePixels="True" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"> <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                                        <Border VerticalAlignment="Top" Width="Auto" Height="Auto" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderThickness="1" />
+                                <Border x:Name="PART_DropDownBorder" MinWidth="{TemplateBinding ActualWidth}" SnapsToDevicePixels="True" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"> <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                        <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BorderBrush}"-->
+                                        <Border VerticalAlignment="Top" Width="Auto" Height="Auto" BorderThickness="1" />
+                                        <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}"-->
                                         <Grid Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*" />
@@ -2183,7 +2114,9 @@
                                             <ScrollViewer x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" Margin="1" MaxHeight="{TemplateBinding MaxDropDownHeight}" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                                                 <StackPanel x:Name="PART_MenuPanel" Orientation="Vertical" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                                             </ScrollViewer>
-                                            <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                            <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                                <!--BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}"-->
+                                                <!--Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}"-->
                                                 <Grid>
                                                     <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
                                                     <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
@@ -2209,10 +2142,10 @@
                             <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Visible" />
                             <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
                         </Trigger>
-                        <Trigger Property="IsChecked" Value="True">
+                        <!--Trigger Property="IsChecked" Value="True">
                             <Setter Property="BorderBrush" TargetName="PART_ButtonBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.BorderBrush}" />
                             <Setter Property="Background" TargetName="PART_ButtonBorder" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
-                        </Trigger>
+                        </Trigger-->
                         <Trigger Property="Size" Value="Small">
                             <Setter Property="Size" TargetName="PART_Button" Value="Small" />
                             <Setter Property="Orientation" TargetName="stackPanel" Value="Horizontal" />
@@ -2341,7 +2274,8 @@
     <Style x:Key="{x:Type Fluent:ToggleButton}" TargetType="{x:Type Fluent:ToggleButton}">
         <!--Setter Property="Height" Value="68" /-->
         <Setter Property="Width" Value="Auto" />
-        <Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" />
+        <!--Setter Property="Foreground" Value="{DynamicResource Fluent.Ribbon.Brushes.LabelTextBrush}" /-->
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="2,-3,2,-4"/>
         <Setter Property="Padding" Value="6"/>
@@ -2350,11 +2284,12 @@
                 <ControlTemplate TargetType="{x:Type Fluent:ToggleButton}">
                     <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" Height="Auto">
                         <Grid>
+                            <Rectangle x:Name="SizingAidRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="#01000000"/>
                             <Border x:Name="HoverBackground" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="-3" UseLayoutRounding="True">
                                 <Border.Background>
                                     <VisualBrush>
                                         <VisualBrush.Visual>
-                                            <Grid Background="#01000000" Width="{Binding ActualWidth, ElementName=HoverBackground}" Height="{Binding ActualHeight, ElementName=HoverBackground}">
+                                            <Grid Background="#01000000" Width="{Binding ActualWidth, Source={x:Reference Name=SizingAidRectangle}}" Height="{Binding ActualHeight, Source={x:Reference Name=SizingAidRectangle}}">
                                                 <Border CornerRadius="3" Effect="{DynamicResource TertiaryDropShadow}" Margin="3" UseLayoutRounding="True">
                                                     <Border.Background>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource CardListViewSelectedBackgroundGradientStops}"/>
@@ -2492,6 +2427,282 @@
         </StackPanel>
     </DataTemplate>
 
+    <Style x:Key="{x:Type Fluent:GalleryItem}" TargetType="{x:Type Fluent:GalleryItem}">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Fluent:GalleryItem}">
+                    <Grid Background="Transparent">
+                        <Border x:Name="hoverBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.MouseOver}" />
+                        <Border x:Name="selectedBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.Selected}" />
+                        <!--ContentPresenter x:Name="contentPresenter" Margin="1" Opacity="1" /-->
+                        <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        <Border x:Name="pressedBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.Pressed}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="contentPresenter" Value="0.5" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Visibility" TargetName="selectedBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Visibility" TargetName="hoverBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Visibility" TargetName="pressedBorder" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type Fluent:InRibbonGallery}" TargetType="{x:Type Fluent:InRibbonGallery}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Margin" Value="2,3,3,0" />
+        <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonForegroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ToolbarDarkBackgroundBrush}"/>
+        <!--Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Type Fluent:GalleryItem}}"/-->
+        <Setter Property="Width" Value="250"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Fluent:InRibbonGallery}">
+                    <!--ControlTemplate.Resources>
+                        <Style TargetType="{x:Type ScrollViewer}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                        <Grid x:Name="Grid" Background="{TemplateBinding Background}" IsHitTestVisible="True">
+                                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Width="{TemplateBinding ActualWidth}" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" ClipToBounds="False" />
+                                            <RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Top" Style="{DynamicResource ScrollButtonStyle}" Tag="0,11,0,0">
+                                                <RepeatButton.Template>
+                                                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                        <Grid>
+                                                            <Border x:Name="SelectedBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverPrimaryBorderBrush}" BorderThickness="1,1,1,0" CornerRadius="0,11,0,0" Opacity="0.5">
+                                                                <Border BorderThickness="1" CornerRadius="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                                                    <Border BorderThickness="0,1,0,2" CornerRadius="0,9,0,0" Background="{DynamicResource ToolbarToggleButtonSelectedBackground}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
+                                                                </Border>
+                                                            </Border>
+                                                            <Border x:Name="HoverBackground" Background="Transparent" BorderBrush="{DynamicResource ToolbarButtonHoverBorderBrush}" BorderThickness="1,1,1,0" CornerRadius="0,11,0,0" Opacity="0">
+                                                                <Border BorderThickness="1" CornerRadius="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource ToolbarButtonHoverSecondaryBorderBrush}">
+                                                                    <Border BorderThickness="0,1,0,2" CornerRadius="0,9,0,0" Background="{DynamicResource ToolbarButtonHoverTertiaryBackgroundBrush}" BorderBrush="{DynamicResource ToolbarButtonHoverTertiaryBorderBrush}"/>
+                                                                </Border>
+                                                            </Border>
+                                                            <ContentPresenter x:Name="contentPresenter" />
+                                                        </Grid>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                                <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.5" />
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                                <Setter Property="Foreground" Value="{DynamicResource ToolbarButtonHoverForegroundBrush}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter Property="Opacity" Value="0.5" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </RepeatButton.Template>
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RepeatButton}}}" Stretch="Fill" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M 0 1 L 0.5 0 L 1 1 Z" />
+                                            </RepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.LineDownCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" Style="{DynamicResource ScrollButtonStyle}">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RepeatButton}}}" Stretch="Fill" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M 0 0 L 0.5 1 L 1 0 Z" />
+                                            </RepeatButton>
+                                            <Rectangle x:Name="bottomSeparator" Height="1" VerticalAlignment="Bottom" Fill="{DynamicResource SeparatorHorizontalBackgroundBrush}"/>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsMinimized, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:RibbonTabControl}}}" Value="True">
+                                                <Setter TargetName="bottomSeparator" Property="Visibility" Value="Hidden"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ControlTemplate.Resources-->
+                    <Grid Width="Auto" Height="Auto" x:Name="PART_LayoutRoot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Border x:Name="border" Width="Auto" Height="{TemplateBinding GalleryPanelContainerHeight}" BorderThickness="1,1,1,1" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Control.BorderBrush}" ClipToBounds="True" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid Width="Auto" Height="Auto">
+                                <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
+                                    <!--ScrollViewer.Resources>
+                                        <Style TargetType="{x:Type ScrollBar}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                        <StackPanel HorizontalAlignment="Right"
+                                                        Margin="0,-1,-1,0">
+                                                            <RepeatButton x:Name="upButton"
+                                                              Width="15"
+                                                              Height="21"
+                                                              Command="ScrollBar.PageUpCommand"
+                                                              Margin="0,0,0,0"
+                                                              Style="{DynamicResource InRibbonGalleryRepeatButton}">
+                                                                <Path RenderOptions.EdgeMode="Aliased"
+                                                          Data="M0,0 L1,-1 2,0z"
+                                                          Fill="{DynamicResource BlackBrush}"
+                                                          Width="5"
+                                                          Height="3"
+                                                          Stretch="Fill" />
+                                                            </RepeatButton>
+                                                            <RepeatButton x:Name="downButton"
+                                                              Width="15"
+                                                              Height="21"
+                                                              Command="ScrollBar.PageDownCommand"
+                                                              Margin="0,-1,0,0"
+                                                              Style="{DynamicResource InRibbonGalleryRepeatButton}">
+                                                                <Path RenderOptions.EdgeMode="Aliased"
+                                                          Data="M0,0 L1,1 2,0z"
+                                                          Fill="{DynamicResource BlackBrush}"
+                                                          Width="5"
+                                                          Height="3"
+                                                          Stretch="Fill" />
+                                                            </RepeatButton>
+                                                        </StackPanel>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ContextMenu"
+                                        Value="{x:Null}" />
+                                        </Style>
+                                    </ScrollViewer.Resources-->
+                                    <Grid>
+                                        <ContentControl x:Name="PART_ContentPresenter" Focusable="False">
+                                            <Fluent:GalleryPanel x:Name="PART_GalleryPanel" Width="{TemplateBinding Width}" ItemContainerGenerator="{Binding ItemContainerGenerator, RelativeSource={RelativeSource TemplatedParent}}" Background="{DynamicResource WhiteBrush}" IsItemsHost="True" ItemHeight="{TemplateBinding ItemHeight}" ItemWidth="{TemplateBinding ItemWidth}" Orientation="{TemplateBinding Orientation}" Filter="{TemplateBinding SelectedFilterGroups}" GroupBy="{TemplateBinding GroupBy}" GroupByAdvanced="{TemplateBinding GroupByAdvanced}" IsGrouped="False" MinItemsInRow="{TemplateBinding MinItemsInRow}" MaxItemsInRow="{TemplateBinding MaxItemsInRow}"/>
+                                        </ContentControl>
+                                        <Image x:Name="PART_FakeImage" Stretch="Uniform" Visibility="Collapsed" />
+                                    </Grid>
+                                </ScrollViewer>
+                                <Fluent:ToggleButton IsDefinitive="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="15" Height="20" x:Name="PART_ExpandButton" Margin="0,0,-1,-1" ClickMode="Press" CanAddToQuickAccessToolBar="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource = {RelativeSource TemplatedParent}}" />
+                                <!--Style="{DynamicResource InRibbonGalleryButton}"-->
+                                <Popup x:Name="PART_Popup" Placement="Custom" CustomPopupPlacementCallback="{x:Static FluentHelpers:PopupHelper.SimplePlacementCallback}" PlacementTarget="{Binding ElementName=PART_LayoutRoot}" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Margin="0,0,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                                    <!--Popup.Resources>
+                                        <ResourceDictionary>
+                                            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ScrollBarWhite}" />
+                                        </ResourceDictionary>
+                                    </Popup.Resources-->
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True" Margin="0" VerticalAlignment="Top">
+                                        <Border x:Name="PART_DropDownBorder" MinWidth="{Binding ActualWidth, ElementName=PART_LayoutRoot}" SnapsToDevicePixels="True" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                            <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top" KeyboardNavigation.DirectionalNavigation="Cycle">
+                                                <Border VerticalAlignment="Stretch" Width="Auto" Height="Auto" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.BackgroundBrush}" BorderThickness="1" />
+                                                <Grid Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Rectangle Fill="{x:Null}" Stretch="Fill" Stroke="{DynamicResource Fluent.Ribbon.Brushes.Separator.BorderBrush}" HorizontalAlignment="Left" Margin="24,0,0,0" Width="1" Height="Auto" Grid.RowSpan="2" Visibility="Visible" VerticalAlignment="Stretch" />
+                                                    <Grid x:Name="PART_MenuPanel" MinWidth="{Binding MinWidth, ElementName=PART_DropDownBorder}" MaxHeight="{TemplateBinding MaxDropDownHeight}" VerticalAlignment="Top">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Control.BorderBrush}" x:Name="layoutRoot">
+                                                            <Grid Width="Auto">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="*" />
+                                                                </Grid.RowDefinitions>
+                                                                <Border Grid.Row="0" x:Name="border_" BorderBrush="{x:Null}" BorderThickness="0" Height="13" Background="{DynamicResource Fluent.Ribbon.Brushes.Gallery.Header.Background}">
+                                                                    <Fluent:DropDownButton x:Name="PART_FilterDropDownButton" Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Header="{TemplateBinding SelectedFilterTitle}" />
+                                                                    <!--Style="{DynamicResource GalleryDropDownButtonStyle}"-->
+                                                                </Border>
+                                                                <ScrollViewer x:Name="PART_ScrollViewer" Grid.Row="1" MinHeight="{Binding ActualHeight, ElementName=PART_LayoutRoot}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Control.BorderBrush}" BorderThickness="0,0,0,1" Margin="1">
+                                                                    <ContentControl x:Name="PART_PopupContentPresenter" Content="{x:Null}" />
+                                                                </ScrollViewer>
+                                                            </Grid>
+                                                        </Border>
+                                                        <ContentPresenter x:Name="menuPresenter" ContentSource="Menu" Grid.Row="1" KeyboardNavigation.DirectionalNavigation="None" VerticalAlignment="Top" />
+                                                    </Grid>
+                                                    <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BorderBrush}" BorderThickness="0,1,0,0" Grid.Row="2" Background="{DynamicResource Fluent.Ribbon.Brushes.DropDown.Resize.BackgroundBrush}">
+                                                        <Grid>
+                                                            <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
+                                                            <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
+                                                        </Grid>
+                                                    </Border>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <Fluent:ToggleButton IsDefinitive="False" Margin="0,0,0,0" Visibility="Collapsed" x:Name="PART_DropDownButton" Icon="{Binding Path=Icon, RelativeSource={RelativeSource TemplatedParent}}" LargeIcon="{Binding Path=LargeIcon, RelativeSource={RelativeSource TemplatedParent}}" Header="{Binding Path=Header, RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding Path=Size, RelativeSource={RelativeSource TemplatedParent}}" SizeDefinition="{Binding Path=SizeDefinition, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" VerticalAlignment="Top" ClickMode="Press" CanAddToQuickAccessToolBar="False" />
+                        <!--Style="{DynamicResource InRibbonGalleryToggleButtonStyle}"-->
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasFilter" Value="False">
+                            <Setter Property="Visibility" TargetName="border_" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="IsEnabled" TargetName="PART_DropDownButton" Value="False" />
+                            <Setter Property="IsEnabled" TargetName="PART_ExpandButton" Value="False" />
+                        </Trigger>
+                        <Trigger Property="IsCollapsed" Value="True">
+                            <Setter Property="Visibility" TargetName="border" Value="Collapsed" />
+                            <Setter Property="Placement" TargetName="PART_Popup" Value="Bottom" />
+                            <Setter Property="Visibility" TargetName="PART_DropDownButton" Value="Visible" />
+                            <Setter Property="VerticalAlignment" TargetName="PART_LayoutRoot" Value="Top" />
+                            <Setter Property="HorizontalAlignment" TargetName="PART_LayoutRoot" Value="Left" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="None">
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Both">
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Vertical">
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="Menu" Value="{x:Null}">
+                            <Setter Property="BorderThickness" TargetName="PART_ScrollViewer" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsCollapsed" Value="True">
+                <Setter Property="Margin" Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--#endregion Ribbon Control Styles-->
 
     <!--#region Main Ribbon Icons-->
@@ -2509,7 +2720,7 @@
     <LinearGradientBrush x:Key="IconRedForegroundBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource RedIconGradientStops}"/>
     <LinearGradientBrush x:Key="IconGreenForegroundBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource GreenIconGradientStops}"/>
 
-    <Grid x:Key="CopyButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="CopyButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#01000000">
         <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
@@ -2522,7 +2733,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="CopyButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="CopyButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="15" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 0 L 7 0 L 9 2 L 9 12 L 0 12 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
@@ -2535,7 +2746,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="PasteButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="PasteButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="24" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="3" CornerRadius="1" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 6 L 7 0 L 14 6 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-6" Effect="{DynamicResource IconAltInnerShadow}"/>
@@ -2543,7 +2754,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="PasteButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="PasteButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="12" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1.5" CornerRadius="1" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 2 L 3 0 L 7 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconAltInnerShadow}"/>
@@ -2551,7 +2762,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="CutButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconStrongOuterShadow}">
+    <Grid x:Key="CutButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconStrongOuterShadow}">
         <Canvas Effect="{DynamicResource IconStrongOuterShadow}">
             <Canvas.RenderTransform>
                 <TransformGroup>
@@ -2572,13 +2783,13 @@
         </Canvas>
     </Grid>
 
-    <Grid x:Key="CopyPathButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="CopyPathButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Border Height="12" VerticalAlignment="Center" Background="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="1" Effect="{DynamicResource IconStrongOuterShadow}">
             <TextBlock Foreground="{DynamicResource IconForegroundBrush}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="7" Text="\\..."/>
         </Border>
     </Grid>
 
-    <Grid x:Key="PasteShortcutButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#01000000">
+    <Grid x:Key="PasteShortcutButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#01000000">
         <Border Width="14" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="{DynamicResource IconPrimaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="2" CornerRadius="1" Effect="{DynamicResource IconStrongOuterShadow}">
             <Grid>
                 <Path Data="M 0 2 L 2 0 L 4 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconAltInnerShadow}"/>
@@ -2598,7 +2809,7 @@
         </Border>
     </Grid>
 
-    <Grid x:Key="MoveToButtonLargeIcon" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="MoveToButtonLargeIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Path Data="M 0 0 L 20 4 L 20 18 L 22 20 L 22 28 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Path Data="M 0 0 L 7 5 L 8 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
@@ -2606,7 +2817,7 @@
         <Path Data="M 0 8 L 8 0 L 8 5 L 16 5 L 16 11 L 8 11 L 8 16 Z" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Effect="{DynamicResource IconInnerShadow}"/>
     </Grid>
 
-    <Grid x:Key="CopyToButtonLargeIcon" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="CopyToButtonLargeIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Path Data="M 0 0 L 20 4 L 20 18 L 22 20 L 22 28 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Path Data="M 0 0 L 7 5 L 8 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
@@ -2626,12 +2837,12 @@
         </Grid>
     </Grid>
 
-    <!--Grid x:Key="DeleteButtonLargeIcon" Width="28" Height="28" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"-->
-    <Grid x:Key="DeleteButtonLargeIcon" Width="32" Height="32">
+    <!--Grid x:Key="DeleteButtonLargeIcon" x:Shared="False" Width="28" Height="28" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"-->
+    <Grid x:Key="DeleteButtonLargeIcon" x:Shared="False" Width="32" Height="32">
         <Path Data="M 0 0 L 24 24 M 0 24 L 24 0" UseLayoutRounding="True" StrokeThickness="4" Stroke="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 
-    <Grid x:Key="RenameButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="RenameButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Border Height="12" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconForegroundBrush}" BorderThickness="3,3,13,3" CornerRadius="0" Effect="{DynamicResource IconOuterShadow}"/>
         <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="3,0" Effect="{DynamicResource IconInnerShadow}">
             <Canvas.OpacityMask>
@@ -2646,21 +2857,21 @@
         </Canvas>
     </Grid>
 
-    <Grid x:Key="NewFolderButtonLargeIcon" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="NewFolderButtonLargeIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Path Data="M 0 0 L 20 4 L 20 18 L 22 20 L 22 28 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Path Data="M 0 0 L 7 5 L 8 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconGreenForegroundBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
         </Grid>
     </Grid>
 
-    <Grid x:Key="NewItemButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="NewItemButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid>
             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Width="12" Height="10" Background="{DynamicResource IconPrimaryFillBrush}" BorderBrush="{DynamicResource IconTertiaryFillBrush}" BorderThickness="0,3,0,0" CornerRadius="2" Effect="{DynamicResource IconOuterShadow}"/>
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="10" Height="12" Background="{DynamicResource IconGreenForegroundBrush}" BorderThickness="0" CornerRadius="0,3,0,0" Effect="{DynamicResource IconOuterShadow}"/>
         </Grid>
     </Grid>
 
-    <Grid x:Key="EasyAccessButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="EasyAccessButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Canvas UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="13" Height="16" Background="{DynamicResource IconSecondaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="0,3,0,0" Canvas.Left="3"/>
             <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="6" Height="1" Canvas.Top="3" Canvas.Left="4"/>
@@ -2669,7 +2880,7 @@
         </Canvas>
     </Grid>
 
-    <Grid x:Key="PropertiesButtonLargeIcon" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="PropertiesButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
@@ -2679,7 +2890,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="EditButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="EditButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Canvas UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="13" Height="16" Background="{DynamicResource IconSecondaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="0,3,0,0" Canvas.Left="2"/>
             <!--Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="6" Height="1" Canvas.Top="3" Canvas.Left="4"/>
@@ -2689,7 +2900,7 @@
         </Canvas>
     </Grid>
 
-    <Grid x:Key="HistoryButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="HistoryButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid>
             <!--Border HorizontalAlignment="Left" VerticalAlignment="Top" Width="12" Height="10" Background="{DynamicResource IconPrimaryFillBrush}" BorderBrush="{DynamicResource IconTertiaryFillBrush}" BorderThickness="0,3,0,0" CornerRadius="2" Effect="{DynamicResource IconOuterShadow}"/-->
             <Border HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="12" Background="{DynamicResource IconSecondaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0" CornerRadius="0,3,0,0" Effect="{DynamicResource IconOuterShadow}"/>
@@ -2700,7 +2911,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="SelectAllButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+    <Grid x:Key="SelectAllButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <UniformGrid Rows="2" Columns="2">
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1"/>
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1"/>
@@ -2709,7 +2920,7 @@
         </UniformGrid>
     </Grid>
 
-    <Grid x:Key="SelectNoneButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+    <Grid x:Key="SelectNoneButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <UniformGrid Rows="2" Columns="2">
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="Transparent" BorderThickness="1"/>
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="Transparent" BorderThickness="1"/>
@@ -2718,7 +2929,7 @@
         </UniformGrid>
     </Grid>
 
-    <Grid x:Key="InvertSelectionButtonIcon" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+    <Grid x:Key="InvertSelectionButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <UniformGrid Rows="2" Columns="2">
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="Transparent" BorderThickness="1"/>
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1"/>
@@ -2732,7 +2943,7 @@
 
     <!--#region Ribbon ApplicationMenu Icons-->
 
-    <Grid x:Key="NewWindowMenuItemIcon" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
+    <Grid x:Key="NewWindowMenuItemIcon" x:Shared="False" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
         <Border Background="{DynamicResource WindowBackgroundBrush}" BorderBrush="{DynamicResource WindowBorderBrush}" BorderThickness="1" CornerRadius="2">
             <DockPanel>
                 <Border BorderBrush="{DynamicResource TitlebarBorderBrush}" BorderThickness="1" CornerRadius="1,1,0,0" Height="6" DockPanel.Dock="Top">
@@ -2753,7 +2964,7 @@
         </Border>
     </Grid>
 
-    <Grid x:Key="CommandPromptMenuItemIcon" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
+    <Grid x:Key="CommandPromptMenuItemIcon" x:Shared="False" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
         <Border Background="{DynamicResource WindowBackgroundBrush}" BorderBrush="{DynamicResource WindowBorderBrush}" BorderThickness="1" CornerRadius="2">
             <DockPanel>
                 <Border BorderBrush="{DynamicResource TitlebarBorderBrush}" BorderThickness="1" CornerRadius="1,1,0,0" Height="6" DockPanel.Dock="Top">
@@ -2773,7 +2984,7 @@
         </Border>
     </Grid>
 
-    <Grid x:Key="PowerShellMenuItemIcon" Width="30" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1,5">
+    <Grid x:Key="PowerShellMenuItemIcon" x:Shared="False" Width="30" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1,5">
         <Rectangle Width="10" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,2">
             <Rectangle.Effect>
                 <BlurEffect Radius="2"/>
@@ -2801,7 +3012,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="DeleteHistoryMenuItemIcon" Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
+    <Grid x:Key="DeleteHistoryMenuItemIcon" x:Shared="False" Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
         <Ellipse Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="{DynamicResource IconPrimaryFillBrush}" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <Border Width="9" Height="11" BorderBrush="{DynamicResource IconForegroundBrush}" BorderThickness="1,0,0,1" Margin="0,4,6,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         <Path Data="M 1 1 L 13 13 M 1 13 L 13 1" UseLayoutRounding="True" StrokeThickness="1" Stroke="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="1"/>
@@ -2813,79 +3024,93 @@
     <!--#region Navigation Bar Styles-->
 
     <Style x:Key="NavigationBarBackgroundStyle" TargetType="{x:Type ContentControl}">
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Height" Value="45"/>
         <Setter Property="Padding" Value="6"/>
         <Setter Property="Margin" Value="0,0,0,-5"/>
-        <Setter Property="Panel.ZIndex" Value="9999"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <Grid>
-                        <Rectangle VerticalAlignment="Top" Height="18" IsHitTestVisible="False" Grid.Column="0">
+                        <Rectangle x:Name="ShadowRectangle" VerticalAlignment="Top" Height="18" IsHitTestVisible="False" Grid.Column="0">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
                             </Rectangle.Fill>
                         </Rectangle>
-                        <Border CornerRadius="3" UseLayoutRounding="True" Margin="5" Effect="{DynamicResource TertiaryDropShadow}">
+                        <Border x:Name="BackgroundBorder" CornerRadius="3" UseLayoutRounding="True" Margin="5" Effect="{DynamicResource TertiaryDropShadow}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                             </Border.Background>
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
                         </Border>
+                        <Grid x:Name="ContainerGrid" Margin="5">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
                     </Grid>
-                    <!--ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="CommandBar">
                             <Setter TargetName="ShadowRectangle" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="BackgroundBorder" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="ContainerGrid" Property="Margin" Value="0,0,0,5"/>
                         </DataTrigger>
-                    </ControlTemplate.Triggers-->
+                        <!--DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                            <Setter TargetName="ShadowRectangle" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger-->
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
+                <Setter Property="Panel.ZIndex" Value="9999"/>
+                <Setter Property="Height" Value="50"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="NavigationButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
         <Setter Property="Height" Value="Auto"/>
         <Setter Property="Margin" Value="0"/>
         <Style.Triggers>
+            <!--DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
+                <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+            </DataTrigger-->
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}, FallbackValue=True}" Value="False"/>
+                    <Condition Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon"/>
+                    <!--Condition Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}, FallbackValue=True}" Value="False"/-->
                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}, FallbackValue=False}" Value="False"/>
+                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Mode=Self}, FallbackValue=False}" Value="False"/>
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
             </MultiDataTrigger>
         </Style.Triggers>
     </Style>
 
+
+    <Path x:Key="NavigationBackButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 6 0 L 0 6 L 6 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
+
     <Style x:Key="NavigationBackButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content">
-            <Setter.Value>
-                <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 6 0 L 0 6 L 6 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Content" Value="{DynamicResource NavigationBackButtonIcon}"/>
     </Style>
 
-    <Style x:Key="SmallNavigationButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
+    <Path x:Key="NavigationForwardButtonIcon" x:Shared="False"  HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
+
+    <Style x:Key="NavigationForwardButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
+        <Setter Property="Content" Value="{DynamicResource NavigationForwardButtonIcon}"/>
     </Style>
+
+    <Path x:Key="NavigationHistoryButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}"/>
+    <!--M 0 0 L 6 6 L 12 0-->
 
     <Style x:Key="NavigationHistoryButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
         <Setter Property="Width" Value="16"/>
         <Setter Property="Margin" Value="0,0,8,0"/>
-        <Setter Property="Content">
-            <Setter.Value>
-                <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}"/>
-                <!--M 0 0 L 6 6 L 12 0-->
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Content" Value="{DynamicResource NavigationHistoryButtonIcon}"/>
     </Style>
-
+    
+    <Path x:Key="NavigationUpButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
+    
     <Style x:Key="NavigationUpButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content">
-            <Setter.Value>
-                <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Content" Value="{DynamicResource NavigationUpButtonIcon}"/>
     </Style>
 
     <Style x:Key="NavigationSearchBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -2893,14 +3118,6 @@
     </Style>
 
     <Style x:Key="NavigationAddressBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource NavigationSearchBoxStyle}"/>
-
-    <Style x:Key="NavigationForwardButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content">
-            <Setter.Value>
-                <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
     <!--#endregion Navigation Bar Styles-->
     
@@ -2910,6 +3127,25 @@
     <Style x:Key="ToolbarBackgroundContentControlStyle" TargetType="ContentControl">
         <Setter Property="Panel.ZIndex" Value="9999"/>
     </Style>
+
+    <!--Style x:Key="FileLabelStyle" TargetType="Label">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Label">
+                    <Border>
+                        <AccessText Text="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextWrapping="Wrap" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style-->
 
     <Style x:Key="CurrentDirectoryListViewStyle" TargetType="{x:Type ListView}">
         <Setter Property="Panel.ZIndex" Value="-100"/>
@@ -2934,7 +3170,7 @@
             <!--Style x:Key="CurrentDirItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource CurrentDirectoryListViewItemStyle}"/-->
         </Style.Resources>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Icons">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Icons">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -2943,14 +3179,14 @@
                                     <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundBrush}"/>
                                 </Style-->
                             </DataTemplate.Resources>
-                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}">
+                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
                                 <e:Interaction.Behaviors>
-                                    <mgrbase:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                 </e:Interaction.Behaviors>
                                 <StackPanel.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
                                         <e:Interaction.Behaviors>
-                                            <mgrbase:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
                                         </e:Interaction.Behaviors>
                                         <!-- Opened="TouchableContextMenu_Opened"-->
                                         <MenuItem x:Name="OpenMenuItem" Header="Open"/>
@@ -2979,14 +3215,16 @@
                                 <MenuItem Header="Properties"/>
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
-                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <!--Width="48" Height="48"-->
-                                <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}">
-                                    <Grid>
-                                        <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" MaxHeight="44"/>
-                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}">
+                                <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
+                                    <Grid Margin="-3,3,-3,0" MaxHeight="57">
+                                        <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                        <!-- Style="{DynamicResource FileLabelStyle}"-->
+                                        <!--TextElement.TextWrapping="Wrap"-->
+                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
                                             <e:Interaction.Behaviors>
-                                                <mgrbase:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}"/>
+                                                <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
                                             </e:Interaction.Behaviors>
                                         </TextBox>
                                     </Grid>
@@ -3005,7 +3243,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
@@ -3025,7 +3263,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Tiles">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -3046,11 +3284,28 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
                             <StackPanel Orientation="Horizontal" Height="16">
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
                                 <!--StackPanel.ContextMenu>
                                     <ui:TouchableContextMenu>
                                         <MenuItem Header="Open"/>
@@ -3058,7 +3313,14 @@
                                     </ui:TouchableContextMenu>
                                 </StackPanel.ContextMenu-->
                                 <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
-                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Margin="5,0,0,0"/>
+                                <Grid HorizontalAlignment="Left" Margin="5,0,0,0">
+                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                        </e:Interaction.Behaviors>
+                                    </TextBox>
+                                </Grid>
                             </StackPanel>
                         </DataTemplate>
                     </Setter.Value>
@@ -3073,11 +3335,28 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Content">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
                             <Grid Height="32">
+                                <Grid.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32"/>
                                     <ColumnDefinition/>
@@ -3094,7 +3373,14 @@
                                     </ui:TouchableContextMenu>
                                 </Grid.ContextMenu-->
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
-                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Grid.Column="1" Grid.Row="0"/>
+                                <Grid HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
+                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                        </e:Interaction.Behaviors>
+                                    </TextBox>
+                                </Grid>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1">
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Type:</TextBlock>
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemType}"/>
@@ -3216,7 +3502,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="FavoritesTreeViewFavoritesItemStyle" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}"/>
+    <!--Style x:Key="FavoritesTreeViewFavoritesItemStyle" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}"/-->
 
     <LinearGradientBrush x:Key="EmblemPathFillBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource DarkIconGradientStops}"/>
 
@@ -3272,7 +3558,7 @@
         </Setter>
     </Style>
 
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}">
+    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}" ItemsSource="{Binding SubItems, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}}">
         <StackPanel Orientation="Horizontal" Height="16">
             <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>
             <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
@@ -3324,13 +3610,13 @@
                 <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible"/>
                 <Setter TargetName="PART_GridViewRowPesenter" Property="Visibility" Value="Hidden"/>
             </Trigger>
-            <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="True">
+            <DataTrigger Binding="{Binding ShowItemCheckboxes, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="True">
                 <Setter TargetName="SelectorCheckBox" Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="Details">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
                 <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type mgrbase:FileManagerBase}}}" Value="List">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                 <Setter TargetName="SelectorCheckBoxGrid" Property="VerticalAlignment" Value="Center"/>
             </DataTrigger>
             <MultiTrigger>
@@ -3426,4 +3712,58 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!--#region Settings UI Styles-->
+
+    <Style x:Key="{x:Type local:SettingsWindow}" TargetType="{x:Type local:SettingsWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
+        <Setter Property="Height" Value="592"/>
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="BorderThickness" Value="0,58,0,0"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource LineTabControlStyle}"/>
+
+            <Style x:Key="{x:Type ui:ToggleSwitch}" TargetType="{x:Type ui:ToggleSwitch}" BasedOn="{StaticResource {x:Type ui:ToggleSwitch}}">
+                <Setter Property="Margin" Value="0,5"/>
+            </Style>
+
+            <Style x:Key="OptionSideLabelTextBlockStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Width" Value="160"/>
+            </Style>
+
+            <Style x:Key="OptionButtonsRowPanelStyle" TargetType="{x:Type Panel}">
+                <Setter Property="Margin" Value="1,5,1,6"/>
+            </Style>
+
+            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                <Setter Property="Margin" Value="0,0,-1,-1"/>
+            </Style>
+
+            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource {x:Type GroupBox}}">
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            </Style>
+
+            <Style x:Key="FooterContentControlStyle" TargetType="{x:Type ContentControl}" BasedOn="{StaticResource {x:Type ContentControl}}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Margin" Value="0,0,5,0"/>
+                        <Setter Property="UseLayoutRounding" Value="True"/>
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Padding" Value="5,5,0,5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                            <Border Style="{DynamicResource HorizontalBarBorderStyle}" BorderThickness="0,1,0,0" CornerRadius="0,0,2,2">
+                                <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!--#endregion Settings UI Styles-->    
 </ResourceDictionary>
