@@ -118,6 +118,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SearchBox.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>

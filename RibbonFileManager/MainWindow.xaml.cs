@@ -50,6 +50,7 @@ namespace RibbonFileManager
                 CommandBarControl.Visibility = Visibility.Visible;
                 MenuBar.IsEnabled = true;
                 Ribbon.Visibility = Visibility.Collapsed;
+                RibbonTitleBar.Visibility = Visibility.Collapsed;
             }
             else if (InterfaceMode == Config.InterfaceModeType.Ribbon)
             {
@@ -57,6 +58,7 @@ namespace RibbonFileManager
                 MenuBar.IsEnabled = false;
                 MenuBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Visible;
+                RibbonTitleBar.Visibility = Visibility.Visible;
             }
         }
 
@@ -66,21 +68,27 @@ namespace RibbonFileManager
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MainWindow), new FrameworkPropertyMetadata(typeof(DecoratableWindow)));
         }*/
 
+        public static RoutedCommand CloseWindowCommand = new RoutedCommand();
         public static RoutedCommand MenuBarCommand = new RoutedCommand();
-        public static RoutedCommand RenameCommand = new RoutedCommand();
+
         public static RoutedCommand BackCommand = new RoutedCommand();
         public static RoutedCommand ForwardCommand = new RoutedCommand();
         public static RoutedCommand UpLevelCommand = new RoutedCommand();
+
+        public static RoutedCommand RenameCommand = new RoutedCommand();
 
         void Initialize()
         {
             InitializeComponent();
 
+            CloseWindowCommand.InputGestures.Add(new KeyGesture(Key.W, ModifierKeys.Control));
             MenuBarCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Alt));
-            RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
+
             BackCommand.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Alt));
             ForwardCommand.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Alt));
             UpLevelCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Alt));
+
+            RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
 
             Binding interfaceModeBinding = new Binding()
             {
@@ -951,6 +959,7 @@ namespace RibbonFileManager
             }
             CurrentDirectoryListView_SelectionChanged(null, null);
             //Navigated?.Invoke(this, null);
+            SearchTextBox.WatermarkText = "Search " + item.ItemDisplayName;
             ValidateNavButtonStates();
         }
 
@@ -1016,41 +1025,52 @@ namespace RibbonFileManager
                 DetailsFileNameTextBlock.Text = item.ItemDisplayName;
 
 
-
-            if (item.ItemPath.ToLowerInvariant() == CurrentPath.ToLowerInvariant())
+            if (item.ItemCategory != DiskItem.DiskItemCategory.Directory)
             {
-                SetPreviewPaneLayer(0);
-            }
-            else
-            {
-                string ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
-                if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg")
+                if (item.ItemPath.ToLowerInvariant() == CurrentPath.ToLowerInvariant())
                 {
-                    (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
-                    SetPreviewPaneLayer(2);
+                    SetPreviewPaneLayer(0);
                 }
                 else
                 {
-                    bool isMediaFile = true;
-                    PreviewPlayer.Source = new Uri(item.ItemPath, UriKind.RelativeOrAbsolute);
-                    PreviewPlayer.MediaFailed += (sneder, args) =>
+                    string ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
+                    if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg")
                     {
-                        isMediaFile = false;
-                    };
-
-                    if (isMediaFile)
-                        SetPreviewPaneLayer(3);
+                        (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
+                        SetPreviewPaneLayer(2);
+                    }
                     else
-                        SetPreviewPaneLayer(1);
-                }
-                /*else if (ext == "wav" || ext == "wma" || ext == "mp3" || ext == "m4a")
-                {
+                    {
+                        /*bool isMediaFile = true;
+                        PreviewPlayer.Source = new Uri(item.ItemPath, UriKind.RelativeOrAbsolute);
+                        PreviewPlayer.MediaFailed += (sneder, args) =>
+                        {
+                            isMediaFile = false;
+                        };
 
-                }
-                else if (ext == "mp4" || ext == "wmv" || ext == "mp3" || ext == "m4a")
-                {
+                        if (isMediaFile)
+                            SetPreviewPaneLayer(3);
+                        else //if (ext == "txt" || ext == "xml" || ext = "")
+                        {*/
+                        string content = File.ReadAllText(item.ItemPath);
+                        if (content.Contains("\0\0"))
+                            SetPreviewPaneLayer(1);
+                        else
+                        {
+                            ((PreviewPaneGrid.Children[4] as ScrollViewer).Content as TextBlock).Text = content;
+                            SetPreviewPaneLayer(4);
+                        }
+                        //}
+                    }
+                    /*else if (ext == "wav" || ext == "wma" || ext == "mp3" || ext == "m4a")
+                    {
 
-                }*/
+                    }
+                    else if (ext == "mp4" || ext == "wmv" || ext == "mp3" || ext == "m4a")
+                    {
+
+                    }*/
+                }
             }
         }
 
@@ -1312,13 +1332,18 @@ namespace RibbonFileManager
                 else
                 {
                     var failText = expText;
-                    Start9.UI.Wpf.Windows.MessageBox<Start9.UI.Wpf.Windows.MessageBoxEnums.OkButton>.Show("Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
+                    MessageBox<MessageBoxEnums.OkButton>.Show("Ribbon File Browser can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
                 }
             }
             else if (e.Key == Key.Escape)
             {
                 CurrentDirectoryListView.Focus();
             }
+        }
+
+        private void CloseWindowCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

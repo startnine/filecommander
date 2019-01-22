@@ -47,7 +47,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty ShowStatusBarProperty =
-            DependencyProperty.Register("ShowStatusBar", typeof(bool), typeof(Config), new PropertyMetadata(false));
+            DependencyProperty.Register("ShowStatusBar", typeof(bool), typeof(Config), new PropertyMetadata(true));
 
         public bool ShowTitlebarText
         {
