@@ -14,9 +14,6 @@
     <win:DecoratableWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </win:DecoratableWindow.Resources>
-    <win:DecoratableWindow.TitleBarContent>
-        <Fluent:RibbonTitleBar x:Name="RibbonTitleBar"/>
-    </win:DecoratableWindow.TitleBarContent>
     <!--win:DecoratableWindow.FullWindowContent-->
     <win:DecoratableWindow.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.CloseWindowCommand}" Executed="CloseWindowCommandBinding_Executed"/>
@@ -28,10 +25,10 @@
 
         <CommandBinding Command="{x:Static local:MainWindow.RenameCommand}" Executed="RenameCommandBinding_Executed"/>
     </win:DecoratableWindow.CommandBindings>
-    <win:DecoratableWindow.FullWindowContent>
         <Grid Style="{DynamicResource RootGridStyle}">
             <DockPanel>
-                <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
+            <Fluent:RibbonTitleBar x:Name="RibbonTitleBar" DockPanel.Dock="Top"/>
+            <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
                     <DockPanel>
                         <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
                         <ui:CommandBar x:Name="CommandBarControl" DockPanel.Dock="Bottom">
@@ -86,7 +83,9 @@
                                 <!--Fluent:Backstage x:Name="RibbonBackstage" IsOpen="False"/-->
                                 <!--IsOpenChanged="RibbonBackstage_IsOpenChanged"-->
                                 <Fluent:ApplicationMenu Header="File">
+                                    <!---->
                                     <Fluent:MenuItem x:Name="NewWindowMenuItem" Header="Open New Window" Icon="{DynamicResource NewWindowMenuItemIcon}" IsSplited="True" Click="NewWindowButton_Click">
+                                        <!--MouseLeftButtonUp="NewWindowMenuItem_MouseLeftButtonUp"-->
                                         <Fluent:MenuItem x:Name="NewWindowSubmenuItem" Header="Open New Window" Click="NewWindowButton_Click"/>
                                         <Fluent:MenuItem Header="Open New Window in default location" Click="NewWindowDefaultLocationButton_Click"/>
                                         <!--Fluent:MenuItem Header="Open New Window in new Process"/-->
@@ -150,8 +149,8 @@
                                     <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
                                     <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
                                 </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
-                                    <Fluent:InRibbonGallery MinItemsInRow="1" Header="Share with..." SizeDefinition="Large" IsCollapsed="False">
+                                <Fluent:RibbonGroupBox x:Name="ShareWith"  Header="Share with">
+                                    <Fluent:InRibbonGallery x:Name="ShareWithGallery" Header="Share with..." SizeDefinition="Large">
                                         <!--Style="{DynamicResource ShareWithGalleryStyle}"-->
                                         <Fluent:GalleryItem>UpdatusUser</Fluent:GalleryItem>
                                         <Fluent:GalleryItem>Specific people...</Fluent:GalleryItem>
@@ -172,7 +171,8 @@
                                     <!--Fluent:Button Header="Test"/-->
                                 </Fluent:RibbonGroupBox>
                                 <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
-                                    <Fluent:InRibbonGallery x:Name="FolderViewsGallery" ItemWidth="110" ItemHeight="20" MinItemsInRow="1" MaxItemsInRow="5" Header="Folder Views" ResizeMode="Both" SelectionChanged="FolderViewsGallery_SelectionChanged">
+                                    <!--ItemWidth="110" ItemHeight="20" MinItemsInRow="1" MaxItemsInRow="5" ResizeMode="Both"-->
+                                    <Fluent:InRibbonGallery x:Name="FolderViewsGallery" Header="Folder Views" SizeDefinition="Large,Large" SelectionChanged="FolderViewsGallery_SelectionChanged">
                                         <!--MinItemsInRow="2" MaxItemsInRow="3"-->
                                         <!-- Style="{DynamicResource LayoutGalleryStyle}"-->
                                         <Fluent:GalleryItem x:Name="ExtraLargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Extra large icons</Fluent:GalleryItem>
@@ -259,7 +259,7 @@
                         </TreeViewItem.Header>
                     </TreeViewItem>
                 </TreeView>
-                <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Right">
+                <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="{Binding DetailsPanePlacement, Source={x:Static local:Config.Instance}}">
                     <StackPanel Orientation="Vertical">
                         <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
                             <Rectangle x:Name="DetailsFileIconRectangle"/>
@@ -329,6 +329,5 @@
             <Fluent:BackstageTabItem Header="History" />
         </Fluent:BackstageTabControl-->
         </Grid>
-    </win:DecoratableWindow.FullWindowContent>
     <!--/win:DecoratableWindow.FullWindowContent-->
 </win:DecoratableWindow>

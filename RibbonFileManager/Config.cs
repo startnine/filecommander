@@ -58,6 +58,15 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ShowTitlebarTextProperty =
             DependencyProperty.Register("ShowTitlebarText", typeof(bool), typeof(Config), new PropertyMetadata(true));
 
+        public System.Windows.Controls.Dock DetailsPanePlacement
+        {
+            get => (System.Windows.Controls.Dock)GetValue(DetailsPanePlacementProperty);
+            set => SetValue(DetailsPanePlacementProperty, value);
+        }
+
+        public static readonly DependencyProperty DetailsPanePlacementProperty =
+            DependencyProperty.Register("DetailsPanePlacement", typeof(System.Windows.Controls.Dock), typeof(Config), new PropertyMetadata(System.Windows.Controls.Dock.Right));
+
         public static bool ShowItemCheckboxes { get; set; } = false;
 
         static string _favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\" + Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location) + "_Favorites.txt");
@@ -68,7 +77,6 @@ namespace RibbonFileManager
             {
                 ObservableCollection<DiskItem> items = new ObservableCollection<DiskItem>();
                 //string favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\RibbonFileManager_Favorites.txt");
-
                 if (!File.Exists(_favoritesPath))
                 {
                     string dir = Path.GetDirectoryName(_favoritesPath);

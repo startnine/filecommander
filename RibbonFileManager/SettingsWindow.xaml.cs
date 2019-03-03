@@ -45,6 +45,15 @@ namespace RibbonFileManager
 
                 StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
                 TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
+
+                /*if (Config.Instance.DetailsPanePlacement == Dock.Left)
+                    DetailsPanePositionComboBox.SelectedIndex = 1;
+                else if (Config.Instance.DetailsPanePlacement == Dock.Right)
+                    DetailsPanePositionComboBox.SelectedIndex = 2;
+                else if (Config.Instance.DetailsPanePlacement == Dock.Top)
+                    DetailsPanePositionComboBox.SelectedIndex = 3;
+                else
+                    DetailsPanePositionComboBox.SelectedIndex = 0;*/
             }
         }
 
@@ -69,6 +78,15 @@ namespace RibbonFileManager
                 Config.Instance.ShowTitlebarText = true;
             else
                 Config.Instance.ShowTitlebarText = false;
+
+            /*if (DetailsPanePositionComboBox.SelectedIndex == 1)
+                Config.Instance.DetailsPanePlacement = Dock.Left;
+            else if (DetailsPanePositionComboBox.SelectedIndex == 2)
+                Config.Instance.DetailsPanePlacement = Dock.Right;
+            else if (DetailsPanePositionComboBox.SelectedIndex == 3)
+                Config.Instance.DetailsPanePlacement = Dock.Top;
+            else
+                Config.Instance.DetailsPanePlacement = Dock.Bottom;*/
 
             if (sender == OkButton)
                 Close();

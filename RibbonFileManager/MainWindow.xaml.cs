@@ -227,10 +227,16 @@ namespace RibbonFileManager
             ValidateNavButtonStates((HistoryIndex == 0), (HistoryIndex >= (HistoryList.Count - 1)), (HistoryList.Count > 1), (Directory.Exists(Path.GetDirectoryName(CurrentPath))));
         }
 
+        /*private void NewWindowMenuItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            WindowManager.CloneWindow(this);
+        }*/
+
         bool _newWindowSubmenuItemClick = false;
 
         private void NewWindowButton_Click(object sender, RoutedEventArgs e)
         {
+            WindowManager.CloneWindow(this);
             if (sender == NewWindowMenuItem)
             {
                 if (_newWindowSubmenuItemClick)
@@ -243,8 +249,6 @@ namespace RibbonFileManager
                 _newWindowSubmenuItemClick = true;
                 WindowManager.CloneWindow(this);
             }
-            else
-                WindowManager.CloneWindow(this);
         }
 
         private void NewWindowDefaultLocationButton_Click(object sender, RoutedEventArgs e)
@@ -343,6 +347,29 @@ namespace RibbonFileManager
                 {
                     CommandBarControl.CommandBarLayers[2].IsVisible = true;
                     CommandBarControl.CommandBarLayers[3].IsVisible = false;
+                }
+
+
+                var sel = CurrentDirectoryListView.SelectedItem as DiskItem;
+                if ((sel.ItemCategory != DiskItem.DiskItemCategory.Directory) && (sel.ItemCategory != DiskItem.DiskItemCategory.App))
+                {
+                    /*var assoc = sel.GetAssociatedProgram();
+                    if (assoc != null)
+                        Debug.WriteLine("ASSOCIATED PROGRAM: " + assoc.ItemPath);
+                    else
+                        Debug.WriteLine("COULD NOT FIND ASSOCIATED PROGRAM");*/
+
+                    //MessageBox.Show("waiting");
+                    //Debug.WriteLine("\n");
+
+                    var openWith = sel.GetOpenWithPrograms();
+                    foreach (DiskItem d in openWith)
+                    {
+                        if (d != null)
+                            Debug.WriteLine("OPEN WITH: " + d.ItemPath);
+                        else
+                            Debug.WriteLine("OPEN WITH NULL");
+                    }
                 }
             }
 
