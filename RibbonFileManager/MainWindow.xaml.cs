@@ -20,6 +20,7 @@ using Microsoft.VisualBasic.FileIO;
 //using NT6FileManagerBase;
 using Start9.UI.Wpf.Windows;
 using WindowsSharp.DiskItems;
+using System.Media;
 
 namespace RibbonFileManager
 {
@@ -50,7 +51,7 @@ namespace RibbonFileManager
                 CommandBarControl.Visibility = Visibility.Visible;
                 MenuBar.IsEnabled = true;
                 Ribbon.Visibility = Visibility.Collapsed;
-                RibbonTitleBar.Visibility = Visibility.Collapsed;
+                RibbonTitle.Visibility = Visibility.Collapsed;
             }
             else if (InterfaceMode == Config.InterfaceModeType.Ribbon)
             {
@@ -58,7 +59,7 @@ namespace RibbonFileManager
                 MenuBar.IsEnabled = false;
                 MenuBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Visible;
-                RibbonTitleBar.Visibility = Visibility.Visible;
+                RibbonTitle.Visibility = Visibility.Visible;
             }
         }
 
@@ -111,6 +112,8 @@ namespace RibbonFileManager
 
             WindowManager.OpenWindows.Add(this);
             //FileManagerControl.Resources.MergedDictionaries.Add(Resources);
+
+            //System.Media.SoundPlayer player = new System.Media.SoundPlayer();
         }
 
         private void RenameCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -118,18 +121,18 @@ namespace RibbonFileManager
             RenameSelection();
         }
 
+        string _firstNavigationPath = WindowManager.WindowDefaultPath;
+
         public MainWindow()
         {
             Initialize();
-            Navigate(WindowManager.WindowDefaultPath, true);
-            InitialNavigate(WindowManager.WindowDefaultPath);
         }
 
         public MainWindow(string path)
         {
             Initialize();
-            Navigate(path, true);
-            InitialNavigate(path);
+            _firstNavigationPath = path; /*, true);
+            InitialNavigate(path);*/
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -148,6 +151,17 @@ namespace RibbonFileManager
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             BindingOperations.SetBinding(FileManagerControl.StatusBar, VisibilityProperty, statusBarBinding);*/
+
+            Navigate(_firstNavigationPath, true);
+            InitialNavigate(_firstNavigationPath);
+
+            AddressBox.PathUpdated += (sneder, args) =>
+            {
+                if (AddressBox.BreadcrumbPath.ToLowerInvariant() != CurrentPath.ToLowerInvariant())
+                    Navigate(AddressBox.BreadcrumbPath);
+            };
+
+            AddressBox.NavigationCancelled += (sneder, args) => CurrentDirectoryListView.Focus();
 
             ResetFavorites();
 
@@ -219,6 +233,7 @@ namespace RibbonFileManager
             //FileManagerControl.CurrentDirectoryListView.ItemsSource = item.SubItems;
             //AddressBox.Text = currentPath;
             //BreadcrumbsBar.Path = @"Computer\" + path;
+
             Title = Path.GetFileName(CurrentPath);
         }
 
@@ -979,6 +994,9 @@ namespace RibbonFileManager
                 }
 
                 HistoryIndex = HistoryList.IndexOf(path);
+
+                if (AddressBox.BreadcrumbPath != null || (AddressBox.BreadcrumbPath.ToLowerInvariant() != path.ToLowerInvariant()))
+                    AddressBox.BreadcrumbPath = path;
 
                 SetPanes(item);
 

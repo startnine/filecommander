@@ -37,13 +37,13 @@
         <!--Setter Property="ShowTitlebarText" Value="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"/-->
         <Style.Triggers>
             <Trigger Property="InterfaceMode" Value="Ribbon">
-                <Setter Property="TitlebarHeight" Value="54"/>
+                <Setter Property="TitlebarHeight" Value="62"/><!--54-->
                 <Setter Property="Padding" Value="0"/>
                 <!--Setter Property="Padding" Value="0,-24,0,0"/-->
                 <!--Setter Property="BorderThickness" Value="0,54,0,0"/-->
             </Trigger>
             <Trigger Property="InterfaceMode" Value="CommandBar">
-                <Setter Property="TitlebarHeight" Value="64"/>
+                <Setter Property="TitlebarHeight" Value="71"/><!--64-->
                 <Setter Property="ShowTitlebarIcon" Value="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"/>
                 <!--Setter Property="Padding" Value="0,-24,0,0"/-->
             </Trigger>
@@ -794,7 +794,7 @@
     <Style x:Key="{x:Type Fluent:QuickAccessToolBar}" TargetType="{x:Type Fluent:QuickAccessToolBar}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Height" Value="31"/>
-        <Setter Property="Margin" Value="41,0"/>
+        <Setter Property="Margin" Value="21,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:QuickAccessToolBar}">
@@ -957,7 +957,7 @@
         <Setter Property="Focusable" Value="False" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Height" Value="24"/>
+        <Setter Property="Height" Value="31"/><!--24-->
         <Setter Property="HeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -969,7 +969,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:RibbonTitleBar}">
                     <Grid>
-                        <ContentPresenter x:Name="PART_QuickAccessToolbarHolder" ContentSource="QuickAccessToolBar" />
+                        <ContentPresenter x:Name="PART_QuickAccessToolbarHolder" Content="{TemplateBinding QuickAccessToolBar}" HorizontalAlignment="Left" />
                         <ContentPresenter x:Name="PART_HeaderHolder" ContentSource="Header" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" IsHitTestVisible="False" />
                         <Fluent:RibbonContextualGroupsContainer x:Name="PART_ItemsContainer" IsItemsHost="True" />
                     </Grid>
@@ -3393,6 +3393,7 @@
     </Style>
 
     <Style x:Key="NavigationButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Width" Value="32"/>
         <Setter Property="Height" Value="Auto"/>
         <Setter Property="Margin" Value="0"/>
         <Style.Triggers>
@@ -3753,12 +3754,65 @@
     </Style-->
 
     <Style x:Key="CurrentDirectoryListViewStyle" TargetType="{x:Type ListView}">
+        <Style.Resources>
+            <Style x:Key="{x:Type ScrollViewer}" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Type ScrollViewer}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <ScrollContentPresenter Margin="{TemplateBinding Padding}" Grid.Column="0" Grid.Row="0"/>
+                                <Rectangle x:Name="BottomShadow" VerticalAlignment="Bottom" Height="9" IsHitTestVisible="False" Grid.Column="0" Grid.Row="0">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush Opacity="0.625" StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <ScrollBar x:Name="PART_VerticalScrollBar" Value="{TemplateBinding VerticalOffset}" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Grid.Column="1" Grid.Row="0">
+                                    <tic:AttachedProperties.CornerCurves>
+                                        <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                                    </tic:AttachedProperties.CornerCurves>
+                                </ScrollBar>
+                                <ScrollBar x:Name="PART_HorizontalScrollBar" Orientation="Horizontal" Value="{TemplateBinding HorizontalOffset}" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="1">
+                                    <tic:AttachedProperties.CornerCurves>
+                                        <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                                    </tic:AttachedProperties.CornerCurves>
+                                </ScrollBar>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="ComputedHorizontalScrollBarVisibility" Value="Visible"/>
+                                        <Condition Property="ComputedVerticalScrollBarVisibility" Value="Visible"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="BottomShadow" Property="Grid.Column" Value="1"/>
+                                    <Setter TargetName="BottomShadow" Property="Grid.Row" Value="1"/>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
         <Setter Property="Panel.ZIndex" Value="-100"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="GridView.AllowsColumnReorder" Value="True"/>
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
@@ -3771,9 +3825,6 @@
                 </Style>
             </Setter.Value>
         </Setter>
-        <Style.Resources>
-            <!--Style x:Key="CurrentDirItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource CurrentDirectoryListViewItemStyle}"/-->
-        </Style.Resources>
         <Style.Triggers>
             <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
                 <Setter Property="tic:AttachedProperties.CornerCurves">
@@ -3790,6 +3841,22 @@
                 </Setter>
             </DataTrigger>
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Icons">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid>
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                                <!--Rectangle x:Name="ShadowRectangle" VerticalAlignment="Bottom" Margin="0" Height="18" IsHitTestVisible="False">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
+                                    </Rectangle.Fill>
+                                </Rectangle-->
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -3853,7 +3920,7 @@
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Template">
+                <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
                             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
@@ -3861,18 +3928,28 @@
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
-                </Setter>
+                </Setter-->
             </DataTrigger>
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
                 <!--Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate>
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                                <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
-                            </ScrollViewer>
+                        <ControlTemplate TargetType="{x:Type ListView}">
+                            <DockPanel>
+                                <GridViewHeaderRowPresenter Columns="{Binding Path=TemplatedParent.View.Columns,RelativeSource={RelativeSource Mode=TemplatedParent}}" ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip, RelativeSource={RelativeSource TemplatedParent}}" DockPanel.Dock="Top"/>
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </DockPanel>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter-->
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="View">
                     <Setter.Value>
                         <GridView>
@@ -3894,7 +3971,14 @@
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Template">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
                             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
@@ -3902,12 +3986,27 @@
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
-                </Setter>
+                </Setter-->
             </DataTrigger>
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
+                            <DockPanel>
+                                <e:Interaction.Behaviors>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                </e:Interaction.Behaviors>
+                                <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
+                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                                <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                    <e:Interaction.Behaviors>
+                                        <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                    </e:Interaction.Behaviors>
+                                </TextBox>
+                            </DockPanel>
+                        </DataTemplate>
+                        <!--DataTemplate DataType="{x:Type disk:DiskItem}">
                             <StackPanel Orientation="Horizontal" Height="16">
                                 <StackPanel.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
@@ -3926,12 +4025,6 @@
                                         <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
                                     </ContextMenu>
                                 </StackPanel.ContextMenu>
-                                <!--StackPanel.ContextMenu>
-                                    <ui:TouchableContextMenu>
-                                        <MenuItem Header="Open"/>
-                                        <MenuItem Header="Properties"/>
-                                    </ui:TouchableContextMenu>
-                                </StackPanel.ContextMenu-->
                                 <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <Grid HorizontalAlignment="Left" Margin="5,0,0,0">
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
@@ -3942,7 +4035,7 @@
                                     </TextBox>
                                 </Grid>
                             </StackPanel>
-                        </DataTemplate>
+                        </DataTemplate-->
                     </Setter.Value>
                 </Setter>
                 <Setter Property="Template">
@@ -3959,6 +4052,44 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
+                            <Grid>
+                                <e:Interaction.Behaviors>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                </e:Interaction.Behaviors>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="192"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
+                                <Grid HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
+                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                        </e:Interaction.Behaviors>
+                                    </TextBox>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1">
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Type:</TextBlock>
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemType}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="0">
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Date modified:</TextBlock>
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="NYI"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1">
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Size:</TextBlock>
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemSize}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                        <!--DataTemplate DataType="{x:Type disk:DiskItem}">
                             <Grid Height="32">
                                 <Grid.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
@@ -3986,12 +4117,6 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <!--Grid.ContextMenu>
-                                    <ui:TouchableContextMenu>
-                                        <MenuItem Header="Open"/>
-                                        <MenuItem Header="Properties"/>
-                                    </ui:TouchableContextMenu>
-                                </Grid.ContextMenu-->
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
                                 <Grid HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
@@ -4014,10 +4139,17 @@
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemSize}"/>
                                 </StackPanel>
                             </Grid>
-                        </DataTemplate>
+                        </DataTemplate-->
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Template">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
                             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
@@ -4025,7 +4157,7 @@
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
-                </Setter>
+                </Setter-->
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -4108,6 +4240,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeView}">
                     <Grid>
+                        <Rectangle x:Name="BottomShadow" VerticalAlignment="Bottom" Height="9" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush Opacity="0.625" StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <Border CornerRadius="3,4,4,3" UseLayoutRounding="True" Margin="5" Effect="{DynamicResource TertiaryDropShadow}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
@@ -4178,7 +4315,8 @@
         </Setter>
     </Style>
 
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}" ItemsSource="{Binding SubItems, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}}">
+    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}" ItemsSource="{Binding SubItems}">
+        <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
         <StackPanel Orientation="Horizontal" Height="16">
             <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>
             <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
@@ -4198,6 +4336,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <Grid>
+                        <Rectangle x:Name="BottomShadow" VerticalAlignment="Bottom" Height="9" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush Opacity="0.625" StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ShadowGradientStops}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
                         <Border CornerRadius="3,4,4,3" UseLayoutRounding="True" Margin="5" Effect="{DynamicResource TertiaryDropShadow}">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
@@ -4380,23 +4523,23 @@
                         <Border Style="{DynamicResource HorizontalBarBorderStyle}" HorizontalAlignment="Stretch" BorderThickness="{TemplateBinding BorderThickness}" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                             <StackPanel Orientation="Horizontal" IsItemsHost="True" Margin="{TemplateBinding Padding}"/>
                         </Border>
-                        <Rectangle x:Name="ShadowRectangle" VerticalAlignment="Bottom" Margin="0,-18" Height="18" IsHitTestVisible="False">
+                        <!--Rectangle x:Name="ShadowRectangle" VerticalAlignment="Bottom" Margin="0,-18" Height="18" IsHitTestVisible="False">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
                             </Rectangle.Fill>
-                        </Rectangle>
+                        </Rectangle-->
                     </Grid>
-                    <ControlTemplate.Triggers>
+                    <!--ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=(ScrollViewer.ComputedVerticalScrollBarVisibility), ElementName=CurrentDirectoryListView}" Value="Visible">
                             <Setter TargetName="ShadowRectangle" Property="Margin" Value="0,-18,18,-18"/>
                         </DataTrigger>
-                    </ControlTemplate.Triggers>
+                    </ControlTemplate.Triggers-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="{x:Type StatusBar}" TargetType="{x:Type StatusBar}" BasedOn="{StaticResource ShadowedStatusBarStyle}">
+    <!--Style x:Key="{x:Type StatusBar}" TargetType="{x:Type StatusBar}" BasedOn="{StaticResource ShadowedStatusBarStyle}">
         <Setter Property="Panel.ZIndex" Value="999"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -4419,7 +4562,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style-->
 
     <!--#endregion Main Content Styles-->
     
@@ -4429,7 +4572,8 @@
     <Style x:Key="{x:Type local:SettingsWindow}" TargetType="{x:Type local:SettingsWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
         <Setter Property="Height" Value="592"/>
         <Setter Property="Width" Value="500"/>
-        <Setter Property="BorderThickness" Value="0,58,0,0"/>
+        <!--Setter Property="BorderThickness" Value="0,58,0,0"/-->
+        <Setter Property="TitlebarHeight" Value="62"/>
         <Style.Resources>
             <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource LineTabControlStyle}"/>
 

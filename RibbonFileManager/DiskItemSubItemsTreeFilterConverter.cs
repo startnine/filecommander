@@ -18,7 +18,7 @@ namespace RibbonFileManager
             return collection.All(
             folder => (
             (folder.ItemCategory == DiskItem.DiskItemCategory.Directory)
-            | (
+            || (
             (folder.ItemCategory == DiskItem.DiskItemCategory.Directory)
             && Directory.Exists(folder.ItemPath)
             )));
