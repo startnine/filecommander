@@ -28,7 +28,7 @@ namespace RibbonFileManager
         static void OnParentListViewItemChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
         {
             var sned = sender as ClickToOpenBehavior;
-            Debug.WriteLine("(e.NewValue != null): " + e.NewValue != null);
+            //Debug.WriteLine("(e.NewValue != null): " + e.NewValue != null);
             if (e.NewValue != null)
                 sned.ParentListViewItem.PreviewMouseDoubleClick += sned.ParentListViewItem_PreviewMouseDoubleClick;
 
@@ -53,7 +53,7 @@ namespace RibbonFileManager
 
         private void ParentListViewItem_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Debug.WriteLine("DOUBLE CLICK");
+            //Debug.WriteLine("DOUBLE CLICK");
             ManagerBase.OpenSelection();
         }
     }

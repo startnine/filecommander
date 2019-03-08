@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Data;
-using WindowsSharp.DiskItems;
+//using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {

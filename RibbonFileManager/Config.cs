@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {
@@ -127,8 +126,8 @@ namespace RibbonFileManager
             {
                 List<string> paths = new List<string>();
                 //string favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\RibbonFileManager_Favorites.txt");
-
-                foreach (DiskItem d in value)
+                DiskItem[] itemsArray = value.ToArray();
+                foreach (DiskItem d in itemsArray)
                 {
                     paths.Add(d.ItemPath);
                 }
@@ -143,7 +142,7 @@ namespace RibbonFileManager
             get
             {
                 var collection = new ObservableCollection<DiskItem>();
-                var _userFolders = new ObservableCollection<String>() { @"%userprofile%\Desktop", @"%userprofile%\Documents", @"%userprofile%\Downloads", @"%userprofile%\Music", @"%userprofile%\Pictures", @"%userprofile%\Videos" };
+                string[] _userFolders = { @"%userprofile%\Desktop", @"%userprofile%\Documents", @"%userprofile%\Downloads", @"%userprofile%\Music", @"%userprofile%\Pictures", @"%userprofile%\Videos" };
                 foreach (var s in _userFolders)
                     collection.Add(new DiskItem(Environment.ExpandEnvironmentVariables(s)));
 
@@ -164,62 +163,56 @@ namespace RibbonFileManager
         public static ObservableCollection<DiskItem> CopyTo(String targetPath)
         {
             var success = new ObservableCollection<DiskItem>();
-            foreach (var d in ClipboardContents)
+            DiskItem[] clipboard = ClipboardContents.ToArray();
+            foreach (var d in clipboard)
             {
-                try
+                var baseFilename = targetPath + @"\" + Path.GetFileName(d.ItemPath);
+                var outFilename = baseFilename;
+
+                var interval = 1;
+
+                var ext = Path.GetExtension(baseFilename);
+                while ((File.Exists(outFilename)) | (Directory.Exists(outFilename)))
                 {
-                    var baseFilename = targetPath + @"\" + Path.GetFileName(d.ItemPath);
-                    var outFilename = baseFilename;
-
-                    var interval = 1;
-
-                    var ext = Path.GetExtension(baseFilename);
-                    while ((File.Exists(outFilename)) | (Directory.Exists(outFilename)))
+                    outFilename = baseFilename + " (" + interval.ToString() + ")";
+                    if (!(String.IsNullOrEmpty(ext)))
                     {
-                        outFilename = baseFilename + " (" + interval.ToString() + ")";
-                        if (!(String.IsNullOrEmpty(ext)))
+                        if (!(outFilename.EndsWith(ext)))
                         {
-                            if (!(outFilename.EndsWith(ext)))
+                            if (outFilename.Contains(ext))
                             {
-                                if (outFilename.Contains(ext))
-                                {
-                                    outFilename = outFilename.Replace(ext, "");
-                                    outFilename = outFilename + ext;
-                                }
+                                outFilename = outFilename.Replace(ext, "");
+                                outFilename = outFilename + ext;
                             }
                         }
-                        interval += 1;
                     }
-                    Debug.WriteLine("outFilename: " + outFilename);
+                    interval += 1;
+                }
+                //Debug.WriteLine("outFilename: " + outFilename);
 
-                    if (Cut)
+                if (Cut)
+                {
+                    if (File.Exists(d.ItemPath))
                     {
-                        if (File.Exists(d.ItemPath))
-                        {
-                            File.Move(d.ItemPath, outFilename);
-                        }
-                        else
-                        {
-                            Directory.Move(d.ItemPath, outFilename);
-                        }
+                        File.Move(d.ItemPath, outFilename);
                     }
                     else
                     {
-                        if (File.Exists(d.ItemPath))
-                        {
-                            File.Copy(d.ItemPath, outFilename);
-                        }
-                        else
-                        {
-                            CopyDirectory(d.ItemPath, outFilename, true);
-                        }
+                        Directory.Move(d.ItemPath, outFilename);
                     }
-                    success.Add(new DiskItem(outFilename));
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine(ex);
+                    if (File.Exists(d.ItemPath))
+                    {
+                        File.Copy(d.ItemPath, outFilename);
+                    }
+                    else
+                    {
+                        CopyDirectory(d.ItemPath, outFilename, true);
+                    }
                 }
+                success.Add(new DiskItem(outFilename));
             }
             return success;
         }

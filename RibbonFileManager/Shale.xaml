@@ -2437,7 +2437,7 @@
         </Style.Triggers>
     </Style>
 
-    <DataTemplate x:Key="TransferToDataTemplate" DataType="{x:Type disk:DiskItem}">
+    <DataTemplate x:Key="TransferToDataTemplate" DataType="{x:Type local:DiskItem}">
         <StackPanel Orientation="Horizontal" Margin="-24,0,0,0">
             <Rectangle Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" VerticalAlignment="Center"/>
             <TextBlock Text="{Binding ItemDisplayName}" Margin="6,0" VerticalAlignment="Center"/>
@@ -3859,7 +3859,7 @@
                 </Setter>
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DataTemplate.Resources>
                                 <!--Style x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
                                     <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundBrush}"/>
@@ -3971,7 +3971,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DockPanel Width="240" Height="42">
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
@@ -3999,7 +3999,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DockPanel>
                                 <e:Interaction.Behaviors>
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
@@ -4014,7 +4014,7 @@
                                 </TextBox>
                             </DockPanel>
                         </DataTemplate>
-                        <!--DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <!--DataTemplate DataType="{x:Type local:DiskItem}">
                             <StackPanel Orientation="Horizontal" Height="16">
                                 <StackPanel.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
@@ -4059,7 +4059,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <Grid>
                                 <e:Interaction.Behaviors>
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
@@ -4097,7 +4097,7 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
-                        <!--DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <!--DataTemplate DataType="{x:Type local:DiskItem}">
                             <Grid Height="32">
                                 <Grid.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
@@ -4323,7 +4323,7 @@
         </Setter>
     </Style>
 
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}" ItemsSource="{Binding SubItems}">
+    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type local:DiskItem}" ItemsSource="{Binding SubItems}">
         <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
         <StackPanel Orientation="Horizontal" Height="16">
             <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>

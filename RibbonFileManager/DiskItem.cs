@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -9,26 +10,28 @@ using System.Text;
 
 namespace RibbonFileManager
 {
-    public class FileSystemItem : INotifyPropertyChanged
+    public class DiskItem : INotifyPropertyChanged
     {
         FileSystemInfo _info;
 
-        ObservableCollection<FileSystemItem> _subItems = new ObservableCollection<FileSystemItem>();
+        ObservableCollection<DiskItem> _subItems = new ObservableCollection<DiskItem>();
 
-        public ObservableCollection<FileSystemItem> SubItems
+        public ObservableCollection<DiskItem> SubItems
         {
-            get => _subItems;
-            /*{
-                _subItems = new ObservableCollection<FileSystemItem>();
-                if (_info is DirectoryInfo)
+            get// => _subItems;
+            {
+                if (_subItems.Count == 0)
+                    PopulateSubItems();
+                //_subItems = new ObservableCollection<DiskItem>();
+                /*if (_info is DirectoryInfo)
                 {
                     var info = _info as DirectoryInfo;
                     foreach (FileSystemInfo f in info.EnumerateFileSystemInfos())
-                        _subItems.Add(new FileSystemItem(f));
-                }
+                        _subItems.Add(new DiskItem(f));
+                }*/
 
                 return _subItems;
-            }*/
+            }
             set
             {
                 _subItems = value;
@@ -203,18 +206,22 @@ namespace RibbonFileManager
             }
         }
 
-        public FileSystemItem(String path)
+        public DiskItem(String path)
         {
             ItemPath = Environment.ExpandEnvironmentVariables(path);
+            if (Directory.Exists(ItemPath))
+                ItemCategory = DiskItemCategory.Directory;
 
-            SetFSInfo(ItemPath);
+            //SetFSInfo(ItemPath);
 
             //WatchFileSystem();
         }
 
-        public FileSystemItem(FileSystemInfo info)
+        public DiskItem(FileSystemInfo info)
         {
             _info = info;
+            if (info is DirectoryInfo)
+                ItemCategory = DiskItemCategory.Directory;
 
             //WatchFileSystem();
         }
@@ -226,8 +233,18 @@ namespace RibbonFileManager
             if (_info is DirectoryInfo)
             {
                 var info = _info as DirectoryInfo;
-                foreach (FileSystemInfo f in info.EnumerateFileSystemInfos())
-                    _subItems.Add(new FileSystemItem(f));
+                int lastDirectoryIndex = 0;
+                var infos = info.GetFileSystemInfos();
+                foreach (FileSystemInfo f in infos)
+                {
+                    if (f is DirectoryInfo)
+                    {
+                        _subItems.Insert(lastDirectoryIndex, new DiskItem(f));
+                        lastDirectoryIndex++;
+                    }
+                    else
+                        _subItems.Add(new DiskItem(f));
+                }
             }
         }
 
@@ -249,6 +266,178 @@ namespace RibbonFileManager
                 returnValue = null;
 
             return returnValue;
+        }
+
+        public void Open()
+        {
+            Open(OpenVerbs.Normal);
+        }
+
+        public enum OpenVerbs
+        {
+            Normal,
+            Admin
+        }
+
+        public void Open(OpenVerbs verb)
+        {
+            if (verb == OpenVerbs.Admin)
+                Process.Start(new ProcessStartInfo(ItemPath)
+                {
+                    Verb = "runas",
+                    UseShellExecute = true
+                });
+            else
+                Process.Start(new ProcessStartInfo(ItemPath)
+                {
+                    UseShellExecute = true
+                });
+        }
+
+        public List<DiskItem> GetOpenWithPrograms()
+        {
+            List<DiskItem> assoc = new List<DiskItem>();
+            string ext = Path.GetExtension(ItemPath);
+
+            string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + ext + @"\OpenWithList";
+
+            using (Microsoft.Win32.RegistryKey openWithListKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath))
+            {
+                if (openWithListKey != null)
+                {
+                    var mruListVal = openWithListKey.GetValue("MRUList");
+                    if (mruListVal != null)
+                    {
+                        char[] mruList = mruListVal.ToString().ToCharArray();
+                        foreach (char c in mruList)
+                        {
+                            var charVal = openWithListKey.GetValue(c.ToString());
+                            if (charVal != null)
+                            {
+                                string exePath = ConvertProgIdToExecutablePath(charVal.ToString());
+                                if (exePath != null)
+                                    assoc.Add(new DiskItem(exePath));
+                                else
+                                    Debug.WriteLine("COULD NOT GET EXE PATH FROM PROGID: " + charVal.ToString());
+                            }
+                            else
+                                Debug.WriteLine("COULD NOT GET PROGID: " + c.ToString());
+                        }
+                    }
+                }
+            }
+
+            return assoc;
+        }
+
+        string ConvertProgIdToExecutablePath(string progId)
+        {
+            string outPath = null;
+            using (Microsoft.Win32.RegistryKey appPathKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId))
+            {
+                if (appPathKey != null)
+                {
+                    var pathVal = appPathKey.GetValue("Path");
+                    if (pathVal != null)
+                    {
+                        outPath = GetAssociatedProgramItemFromRegistry(pathVal);
+                    }
+
+                    if (outPath == null)
+                    {
+                        var defaultVal = appPathKey.GetValue(null);
+                        if (defaultVal != null)
+                        {
+                            outPath = GetAssociatedProgramItemFromRegistry(defaultVal);
+                            /*string defaultValue = defaultVal.ToString();
+                            if (defaultValue != null)
+                            {
+                                Debug.WriteLine("pathValue: " + defaultValue);
+                                defaultValue = Environment.ExpandEnvironmentVariables(defaultValue);
+
+                                if (File.Exists(defaultValue))
+                                    assoc = new DiskItem(defaultValue);
+                            }*/
+                        }
+                    }
+                }
+            }
+
+            return outPath;
+        }
+
+        string GetAssociatedProgramItemFromRegistry(object targetObject)
+        {
+            string item = null;
+            string targetValue = targetObject.ToString();
+            if (targetValue != null)
+            {
+                //Debug.WriteLine("targetValue: " + targetValue);
+                targetValue = Environment.ExpandEnvironmentVariables(targetValue);
+
+                if (File.Exists(targetValue))
+                    item = targetValue;
+            }
+            return item;
+        }
+
+        public bool? RenameItem(string newName)
+        {
+            bool? returnValue = null;
+            string oldPath = ItemPath;
+            string newPath = Path.Combine(Directory.GetParent(ItemPath).ToString(), newName);
+            if ((!File.Exists(newPath)) && (!Directory.Exists(newPath)))
+            {
+                if ((ItemCategory == DiskItemCategory.File) || (ItemCategory == DiskItemCategory.Shortcut))
+                {
+                    try
+                    {
+                        File.Move(oldPath, newPath);
+                        returnValue = true;
+                    }
+                    catch (IOException ex)
+                    {
+                        returnValue = false;
+                    }
+                }
+                else if (ItemCategory == DiskItemCategory.Directory)
+                {
+                    try
+                    {
+                        Directory.Move(oldPath, newPath);
+                        returnValue = true;
+                    }
+                    catch (IOException ex)
+                    {
+                        returnValue = false;
+                    }
+                }
+                else
+                    returnValue = false;
+            }
+
+            if (returnValue == true)
+            {
+                ItemPath = newPath;
+            }
+
+            return returnValue;
+        }
+
+        public void ShowProperties()
+        {
+            var info = new NativeMethods.SHELLEXECUTEINFO()
+            {
+                lpVerb = "properties",
+                nShow = 1,
+                fMask = 0x00000040 | 0x0000000C
+            };
+            if (ItemCategory == DiskItemCategory.Directory)
+                info.lpDirectory = ItemPath;
+            else if ((ItemCategory == DiskItemCategory.File) | (ItemCategory == DiskItemCategory.Shortcut))
+                info.lpFile = ItemPath;
+
+            info.cbSize = Marshal.SizeOf(info);
         }
 
         private class NativeMethods
@@ -467,6 +656,29 @@ namespace RibbonFileManager
                 public String szDisplayName;
                 [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
                 public String szTypeName;
+            }
+
+            [DllImport("shell32.dll")]
+            public static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+
+            [StructLayout(LayoutKind.Sequential)]//, CharSet = CharSet.Auto)]
+            public struct SHELLEXECUTEINFO
+            {
+                public int cbSize;
+                public uint fMask;
+                public IntPtr hwnd;
+                public String lpVerb;
+                public String lpFile;
+                public String lpParameters;
+                public String lpDirectory;
+                public int nShow;
+                public IntPtr hInstApp; //int
+                public IntPtr lpIDList; //int
+                public String lpClass;
+                public IntPtr hkeyClass; //int
+                public uint dwHotKey;
+                public IntPtr hIcon; //int
+                public IntPtr hProcess; //int
             }
         }
     }

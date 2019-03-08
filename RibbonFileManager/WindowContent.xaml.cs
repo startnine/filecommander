@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {
@@ -217,7 +216,9 @@ namespace RibbonFileManager
 
         public void ShowPropertiesForSelection()
         {
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
+            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
+            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
+            foreach (DiskItem i in itemsArray)
             {
                 i.ShowProperties();
                 /*string path = i.ItemPath;
@@ -281,10 +282,13 @@ namespace RibbonFileManager
         public void OpenSelection(DiskItem.OpenVerbs verb)
         {
             //var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
+            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
+            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
+            foreach (DiskItem i in itemsArray)
             {
                 //string path = i.ItemPath;
 
+                //Debug.WriteLine(path);
                 if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1)
@@ -345,7 +349,9 @@ namespace RibbonFileManager
         {
             var items = Config.CopyTo(HistoryList[HistoryIndex]);
             var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            foreach (var d in items)
+            DiskItem[] itemsArray = new DiskItem[items.Count];
+            items.CopyTo(itemsArray, 0);
+            foreach (var d in itemsArray)
             {
                 if (source.Contains(d))
                 {
@@ -363,7 +369,9 @@ namespace RibbonFileManager
         public void SetClipboard()
         {
             Config.ClipboardContents.Clear();
-            foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
+            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
+            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
+            foreach (DiskItem d in itemsArray)
             {
                 Config.ClipboardContents.Add(d);
             }

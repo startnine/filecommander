@@ -19,7 +19,7 @@ using System.Windows.Navigation;
 using Microsoft.VisualBasic.FileIO;
 //using NT6FileManagerBase;
 using Start9.UI.Wpf.Windows;
-using WindowsSharp.DiskItems;
+//using WindowsSharp.DiskItems;
 using System.Media;
 
 namespace RibbonFileManager
@@ -57,7 +57,7 @@ namespace RibbonFileManager
 
         static void OnInterfaceModeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine("interface mode updated");
+            //Debug.WriteLine("interface mode updated");
             (d as MainWindow).UpdateInterface();
         }
 
@@ -295,10 +295,10 @@ namespace RibbonFileManager
                     var openWith = activeItem.GetOpenWithPrograms();
                     foreach (DiskItem d in openWith)
                     {
-                        if (d != null)
+                        /*if (d != null)
                             Debug.WriteLine("OPEN WITH: " + d.ItemPath);
                         else
-                            Debug.WriteLine("OPEN WITH NULL");
+                            Debug.WriteLine("OPEN WITH NULL");*/
                     }
                 }
             }
@@ -596,15 +596,7 @@ namespace RibbonFileManager
                 if (Directory.Exists(path))
                     Navigate(path);
                 else
-                    try
-                    {
-                        //Process.Start(path);
-                        ((List<DiskItem>)ActiveContent.CurrentDirectoryListView.ItemsSource)[ActiveContent.CurrentDirectoryListView.SelectedIndex].Open();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
+                    ((List<DiskItem>)ActiveContent.CurrentDirectoryListView.ItemsSource)[ActiveContent.CurrentDirectoryListView.SelectedIndex].Open();
             }
             else if (ActiveContent.CurrentDirectoryListView.SelectedItems.Count > 1)
             {
@@ -618,15 +610,7 @@ namespace RibbonFileManager
                         ////////WindowManager.CreateWindow(path);
                     }
                     else
-                        try
-                        {
-                            //Process.Start(path);
-                            i.Open();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine(ex);
-                        }
+                        i.Open();
                 }
             }
         }
@@ -657,31 +641,15 @@ namespace RibbonFileManager
             else
                 NavForwardButton.IsEnabled = false;
 
-            try
-            {
-                if (listCount)
-                    NavHistoryButton.IsEnabled = true;
-                else
-                    NavHistoryButton.IsEnabled = false;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
+            if (listCount)
+                NavHistoryButton.IsEnabled = true;
+            else
                 NavHistoryButton.IsEnabled = false;
-            }
 
-            try
-            {
-                if (dirExists)
-                    NavUpButton.IsEnabled = true;
-                else
-                    NavUpButton.IsEnabled = false;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
+            if (dirExists)
+                NavUpButton.IsEnabled = true;
+            else
                 NavUpButton.IsEnabled = false;
-            }
         }
 
         private void NavBackButton_Click(object sender, RoutedEventArgs e)
@@ -698,7 +666,7 @@ namespace RibbonFileManager
 
         private void NavHistoryButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("HISTORY: ");
+            //Debug.WriteLine("HISTORY: ");
             foreach (string s in ActiveContent.HistoryList)
                 Debug.WriteLine(ActiveContent.HistoryList.IndexOf(s).ToString() + ": " + s);
         }
