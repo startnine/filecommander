@@ -283,13 +283,13 @@ namespace RibbonFileManager
             //var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
             foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
             {
-                string path = i.ItemPath;
+                //string path = i.ItemPath;
 
-                if (Directory.Exists(path))
+                if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1)
                     {
-                        Navigate(path);
+                        Navigate(i.ItemPath);
                         break;
                     }
                     else
@@ -298,15 +298,14 @@ namespace RibbonFileManager
                     }
                 }
                 else
-                    try
+                {
+                    ProcessStartInfo info = new ProcessStartInfo()
                     {
-                        //Process.Start(path);
-                        i.Open(verb);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
+                        FileName = i.ItemPath,
+                        UseShellExecute = true
+                    };
+                    Process.Start(info);
+                }
             }
         }
 

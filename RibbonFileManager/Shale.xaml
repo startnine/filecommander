@@ -3873,7 +3873,7 @@
                                 <StackPanel.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
                                         <e:Interaction.Behaviors>
-                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
                                         </e:Interaction.Behaviors>
                                         <!-- Opened="TouchableContextMenu_Opened"-->
                                         <MenuItem x:Name="OpenMenuItem" Header="Open"/>
