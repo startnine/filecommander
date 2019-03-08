@@ -21,14 +21,14 @@ namespace RibbonFileManager
         public static readonly DependencyProperty TargetItemProperty =
             DependencyProperty.Register("TargetItem", typeof(DiskItem), typeof(ItemRenameBehavior), new PropertyMetadata(null));
 
-        public MainWindow ManagerBase
+        public WindowContent ManagerBase
         {
-            get => (MainWindow)GetValue(ManagerBaseProperty);
+            get => (WindowContent)GetValue(ManagerBaseProperty);
             set => SetValue(ManagerBaseProperty, value);
         }
 
         public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(MainWindow), typeof(ItemRenameBehavior), new PropertyMetadata(null));
+            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ItemRenameBehavior), new PropertyMetadata(null));
 
         public bool IsRenaming
         {
@@ -44,8 +44,8 @@ namespace RibbonFileManager
             {
                 var sned = sender as ItemRenameBehavior;
 
-                if ((sned.TargetItem != null) && (sned.ManagerBase.CurrentDirectoryListView.SelectedItem == sned.TargetItem)) //(sned.ManagerBase.CurrentDirectoryListView.SelectedItems.Contains(sned.TargetItem))
-                    sned._box.Visibility = Visibility.Visible;
+                /*if ((sned.TargetItem != null) && (sned.ManagerBase.CurrentDirectoryListView.SelectedItem == sned.TargetItem)) //(sned.ManagerBase.CurrentDirectoryListView.SelectedItems.Contains(sned.TargetItem))
+                    sned._box.Visibility = Visibility.Visible;*/
             }
         }
 

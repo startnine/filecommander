@@ -49,6 +49,15 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ShowStatusBarProperty =
             DependencyProperty.Register("ShowStatusBar", typeof(bool), typeof(Config), new PropertyMetadata(true));
 
+        public bool EnableTabs
+        {
+            get => (bool)GetValue(EnableTabsProperty);
+            set => SetValue(EnableTabsProperty, value);
+        }
+
+        public static readonly DependencyProperty EnableTabsProperty =
+            DependencyProperty.Register("EnableTabs", typeof(bool), typeof(Config), new PropertyMetadata(true));
+
         public bool ShowTitlebarText
         {
             get => (bool)GetValue(ShowTitlebarTextProperty);

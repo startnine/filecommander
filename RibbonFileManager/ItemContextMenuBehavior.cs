@@ -28,14 +28,14 @@ namespace RibbonFileManager
             }
         }
 
-        public MainWindow ManagerBase
+        public WindowContent ManagerBase
         {
-            get => (MainWindow)GetValue(ManagerBaseProperty);
+            get => (WindowContent)GetValue(ManagerBaseProperty);
             set => SetValue(ManagerBaseProperty, value);
         }
 
         public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(MainWindow), typeof(ItemContextMenuBehavior), new PropertyMetadata(null));
+            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ItemContextMenuBehavior), new PropertyMetadata(null));
 
         /*static void OnManagerBaseChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -76,7 +76,7 @@ namespace RibbonFileManager
 
         private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ManagerBase.OpenSelection();
+            //ManagerBase.OpenSelection();
         }
 
         public MenuItem RunAsAdminMenuItem
@@ -96,7 +96,7 @@ namespace RibbonFileManager
 
         private void RunAsAdminMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ManagerBase.OpenSelection(DiskItem.OpenVerbs.Admin);
+            //ManagerBase.OpenSelection(DiskItem.OpenVerbs.Admin);
         }
 
         public MenuItem CopyMenuItem
@@ -208,7 +208,7 @@ namespace RibbonFileManager
         private void PropertiesMenuItem_Click(object sender, RoutedEventArgs e)
         {
             //Debug.WriteLine("Showing Properties for: " + TargetItem.ItemDisplayName);
-            ManagerBase.ShowPropertiesForSelection();
+            //ManagerBase.ShowPropertiesForSelection();
         }
 
         ContextMenu _menu;

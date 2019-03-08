@@ -8,7 +8,7 @@
                     xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
                     xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
                     xmlns:FluentHelpers="clr-namespace:Fluent.Helpers;assembly=Fluent">
-    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
     <converters:ApplicationMenuRightScrollViewerExtractorConverter x:Key="ApplicationMenuRightScrollViewerExtractorConverter" />
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>

@@ -9,13 +9,11 @@
         xmlns:Fluent="urn:fluent-ribbon"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}" Loaded="MainWindow_Loaded">
+        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp">
+    <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
     <!--InterfaceMode="{Binding InterfaceMode, Source={x:Static local:Config.Instance}}"-->
-    <win:DecoratableWindow.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </win:DecoratableWindow.Resources>
     <!--win:DecoratableWindow.FullWindowContent-->
-    <win:DecoratableWindow.CommandBindings>
+    <!--win:DecoratableWindow.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.CloseWindowCommand}" Executed="CloseWindowCommandBinding_Executed"/>
         <CommandBinding Command="{x:Static local:MainWindow.MenuBarCommand}" Executed="MenuBarCommandBinding_Executed"/>
         
@@ -24,10 +22,16 @@
         <CommandBinding Command="{x:Static local:MainWindow.UpLevelCommand}" Executed="UpLevelCommandBinding_Executed"/>
 
         <CommandBinding Command="{x:Static local:MainWindow.RenameCommand}" Executed="RenameCommandBinding_Executed"/>
-    </win:DecoratableWindow.CommandBindings>
+    </win:DecoratableWindow.CommandBindings-->
         <Grid Style="{DynamicResource RootGridStyle}">
         <DockPanel>
-            <Fluent:RibbonTitleBar x:Name="RibbonTitle" DockPanel.Dock="Top"/>
+            <Grid DockPanel.Dock="Top">
+                <Fluent:RibbonTitleBar x:Name="RibbonTitle" Opacity="0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TabControl x:Name="ContentTabControl" Style="{DynamicResource TitleBarTabControlStyle}" SelectionChanged="ContentTabControl_SelectionChanged"/>
+                    <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab"/>
+                </StackPanel>
+            </Grid>
             <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
                 <DockPanel>
                     <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
@@ -74,7 +78,7 @@
                             <local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right"/>
                             <Grid>
                                 <!--TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/-->
-                                <ui:BreadcrumbsBar x:Name="AddressBox"/>
+                                <ui:BreadcrumbsBar x:Name="AddressBox" PathUpdated="AddressBox_PathUpdated"/>
                             </Grid>
                         </DockPanel>
                     </ContentControl>
@@ -89,7 +93,7 @@
                                     <Fluent:MenuItem x:Name="NewWindowMenuItem" Header="Open New Window" Icon="{DynamicResource NewWindowMenuItemIcon}" IsSplited="True" Click="NewWindowButton_Click">
                                         <!--MouseLeftButtonUp="NewWindowMenuItem_MouseLeftButtonUp"-->
                                 <Fluent:MenuItem x:Name="NewWindowSubmenuItem" Header="Open New Window" Click="NewWindowButton_Click"/>
-                                <Fluent:MenuItem Header="Open New Window in default location" Click="NewWindowDefaultLocationButton_Click"/>
+                                <Fluent:MenuItem x:Name="NewWindowDefaultLocationButton" Header="Open New Window in default location" Click="NewWindowButton_Click"/>
                                 <!--Fluent:MenuItem Header="Open New Window in new Process"/-->
                                 </Fluent:MenuItem>
                                 <Fluent:MenuItem Header="Open Command prompt" Icon="{DynamicResource CommandPromptMenuItemIcon}" IsSplited="True">
@@ -166,10 +170,10 @@
                         <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide" KeyTip="V">
                             <Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
                                 <Fluent:DropDownButton Header="Navigation Pane" SizeDefinition="Large,Small">
-                                    <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" IsChecked="{Binding ShowNavigationPane, Mode=TwoWay}"  Header="Navigation Pane"/>
+                                    <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" Header="Navigation Pane" Click="NavigationPaneMenuItem_Click"/>
                                 </Fluent:DropDownButton>
-                                <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview Pane" IsChecked="{Binding ShowPreviewPane}" SizeDefinition="Middle,Small"/>
-                                <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details Pane" IsChecked="{Binding ShowDetailsPane}" SizeDefinition="Middle,Small"/>
+                                <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview Pane" Click="PreviewPaneToggleButton_Click" SizeDefinition="Middle,Small"/>
+                                <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details Pane" Click="DetailsPaneToggleButton_Click" SizeDefinition="Middle,Small"/>
                                 <!--Fluent:Button Header="Test"/-->
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
@@ -223,7 +227,7 @@
                                 <Fluent:Button Header="Size all columns to fit" SizeDefinition="Middle,Small"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="ShowHide" Header="Show/hide">
-                                <Fluent:CheckBox Header="Item check boxes" IsChecked="{Binding Path=ShowItemCheckboxes}" SizeDefinition="Large,Small"/>
+                                <Fluent:CheckBox x:Name="ShowItemCheckBoxesCheckBox" Header="Item check boxes" SizeDefinition="Large,Small" Click="ShowItemCheckBoxesCheckBox_Click"/>
                                 <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small"/>
                                 <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small"/>
                                 <Fluent:Button Header="Hide selected items" SizeDefinition="Large,Small"/>
@@ -238,7 +242,7 @@
                 </DockPanel>
             </ContentControl>
             <!--DockPanel-->
-            <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Bottom">
+            <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Bottom">
                 <StatusBarItem x:Name="ItemCounter" HorizontalAlignment="Left"/>
                 <StatusBarItem x:Name="SelectedItemCounter" HorizontalAlignment="Left" Visibility="Hidden"/>
                 <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Stretch">
@@ -248,71 +252,12 @@
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
-            <TreeView x:Name="NavigationPaneTreeView" Visibility="{Binding ShowNavigationPane}" Width="175" DockPanel.Dock="Left" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                    <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
-                    <TreeViewItem.Header>
-                        <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
-                    </TreeViewItem.Header>
-                </TreeViewItem>
-                <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                    <TreeViewItem.Header>
-                        <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
-                    </TreeViewItem.Header>
-                </TreeViewItem>
-            </TreeView>
-            <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="{Binding DetailsPanePlacement, Source={x:Static local:Config.Instance}}">
-                <StackPanel Orientation="Vertical">
-                    <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
-                        <Rectangle x:Name="DetailsFileIconRectangle"/>
-                    </ContentControl>
-                    <TextBlock x:Name="DetailsFileNameTextBlock"/>
-                </StackPanel>
-            </ContentControl>
-            <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="{Binding ShowPreviewPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Right">
-                <Grid x:Name="PreviewPaneGrid">
-                    <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
-                    <TextBlock Text="No preview available." Visibility="Collapsed"/>
-                    <Rectangle Visibility="Collapsed"/>
-                    <StackPanel Orientation="Vertical" Visibility="Collapsed">
-                        <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
-                        <UniformGrid/>
-                    </StackPanel>
-                    <ScrollViewer Visibility="Collapsed">
-                        <TextBlock/>
-                    </ScrollViewer>
-                </Grid>
-            </ContentControl>
-            <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown">
-                <ListView.Resources>
-                    <ContextMenu x:Key="ItemContextMenu" Opened="TouchableContextMenu_Opened">
-                        <MenuItem x:Name="OpenMenuItem" Header="Open" Click="OpenMenuItem_Click"/>
-                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
-                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator" Click="RunAsAdminMenuItem_Click"/>
-                        <Separator/>
-                        <MenuItem x:Name="CopyMenuItem" Header="Copy" Click="CopyMenuItem_Click"/>
-                        <MenuItem x:Name="CutMenuItem" Header="Cut" Click="CutMenuItem_Click"/>
-                        <Separator/>
-                        <MenuItem x:Name="DeleteMenuItem" Header="Delet" Click="DeleteMenuItem_Click"/>
-                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
-                        <Separator/>
-                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties" Click="PropertiesMenuItem_Click"/>
-                    </ContextMenu>
-
-                    <!--Style TargetType="{x:Type ListViewItem}">
-                    <!-BasedOn="{StaticResource {x:Type ListViewItem}}"->
-                    <EventSetter Event="Control.MouseDoubleClick" Handler="CurrentDirectoryListView_Item_MouseDoubleClick"/>
-                    <!-EventSetter Event="Loaded" Handler="CurrentDirectoryListViewItem_Loaded"/->
-                    <Setter Property="ContextMenu" Value="{DynamicResource ItemContextMenu}"/>
-                    <Setter Property="Template" Value="{DynamicResource CurrentDirectoryListViewItemControlTemplate}"/>
-                </Style-->
-                </ListView.Resources>
-            </ListView>
+            <ContentControl Content="{Binding Path=SelectedContent, Source={x:Reference ContentTabControl}, Mode=OneWay}"/>
             <!--/DockPanel-->
             <!--mgrbase:FileManagerBase x:Name="FileManagerControl"/-->
         </DockPanel>
         <!--Fluent:BackstageTabControl x:Name="RibbonBackstageTabs" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}">
-            <!-Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=False}"->
+            <!-Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=False}"->
             <Fluent:Button x:Name="NewWindowButton" Header="New Window" Click="NewWindowButton_Click"/>
             <Fluent:Button x:Name="CloseWindowButton" Header="Close" Click="CloseWindowButton_Click"/>
             <!-Fluent:Button Header="New Window in New Process"/->

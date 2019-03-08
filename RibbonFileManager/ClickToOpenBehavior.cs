@@ -34,14 +34,14 @@ namespace RibbonFileManager
                 (e.OldValue as ListViewItem).PreviewMouseDoubleClick -= sned.ParentListViewItem_PreviewMouseDoubleClick;
         }
 
-        public MainWindow ManagerBase
+        public WindowContent ManagerBase
         {
-            get => (MainWindow)GetValue(ManagerBaseProperty);
+            get => (WindowContent)GetValue(ManagerBaseProperty);
             set => SetValue(ManagerBaseProperty, value);
         }
 
         public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(MainWindow), typeof(ClickToOpenBehavior), new PropertyMetadata(null));
+            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ClickToOpenBehavior), new PropertyMetadata(null));
 
         //ListViewItem _item;
         /*protected override void OnAttached()

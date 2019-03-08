@@ -3840,7 +3840,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Icons">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Icons">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
@@ -3865,9 +3865,9 @@
                                     <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundBrush}"/>
                                 </Style-->
                             </DataTemplate.Resources>
-                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
+                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical" Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}">
                                 <e:Interaction.Behaviors>
-                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <StackPanel.ContextMenu>
@@ -3902,21 +3902,29 @@
                                 <MenuItem Header="Properties"/>
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
-                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <!--Width="48" Height="48"-->
-                                <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
-                                    <Grid Margin="-3,3,-3,0" MaxHeight="57">
+                                <Grid x:Name="NameGrid" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}">
+                                    <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
                                         <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
                                         <!-- Style="{DynamicResource FileLabelStyle}"-->
                                         <!--TextElement.TextWrapping="Wrap"-->
-                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                             <e:Interaction.Behaviors>
-                                                <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                                <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
                                             </e:Interaction.Behaviors>
                                         </TextBox>
                                     </Grid>
                                 </Grid>
                             </StackPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="16">
+                                    <Setter TargetName="RootStackPanel" Property="Orientation" Value="Horizontal"/>
+                                    <Setter TargetName="RootStackPanel" Property="Width" Value="225"/>
+                                    <Setter TargetName="NameGrid" Property="Width" Value="Auto"/>
+                                    <Setter TargetName="InnerNameGrid" Property="Margin" Value="3,0,0,0"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
@@ -3930,7 +3938,7 @@
                     </Setter.Value>
                 </Setter-->
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Details">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Details">
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListView}">
@@ -3960,7 +3968,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Tiles">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
@@ -3988,20 +3996,20 @@
                     </Setter.Value>
                 </Setter-->
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
                             <DockPanel>
                                 <e:Interaction.Behaviors>
-                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
-                                <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                     <e:Interaction.Behaviors>
-                                        <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                        <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
                                     </e:Interaction.Behaviors>
                                 </TextBox>
                             </DockPanel>
@@ -4048,13 +4056,13 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Content">
+            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type disk:DiskItem}">
                             <Grid>
                                 <e:Interaction.Behaviors>
-                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <Grid.ColumnDefinitions>
@@ -4069,9 +4077,9 @@
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
                                 <Grid HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
-                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" TextWrapping="Wrap">
+                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                         <e:Interaction.Behaviors>
-                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
                                         </e:Interaction.Behaviors>
                                     </TextBox>
                                 </Grid>
@@ -4477,22 +4485,20 @@
                 <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
             </Setter.Value>
         </Setter>
-        <Setter Property="Content">
-            <Setter.Value>
-                <UniformGrid Width="15" Height="15" Rows="3" Columns="3" SnapsToDevicePixels="True">
-                    <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="1,0"/>
-                    <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="1,0"/>
-                    <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,0,1,0"/>
-                    <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,0,1,0"/>
-                </UniformGrid>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Content" Value="{DynamicResource StatusBarDetailsViewToggleButtonIcon}"/>
     </Style>
+
+    <UniformGrid x:Key="StatusBarDetailsViewToggleButtonIcon" x:Shared="false" Width="15" Height="15" Rows="3" Columns="3" SnapsToDevicePixels="True">
+        <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="1,0"/>
+        <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="1,0"/>
+        <Rectangle Fill="{DynamicResource IconPrimaryFillBrush}" Margin="1"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,0,1,0"/>
+        <Rectangle Height="1" VerticalAlignment="Center" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,0,1,0"/>
+    </UniformGrid>
 
     <Style x:Key="StatusBarIconsViewToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
         <Setter Property="Width" Value="24"/>
@@ -4506,11 +4512,179 @@
                 <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="True" BottomLeft="False"/>
             </Setter.Value>
         </Setter>
+        <Setter Property="Content" Value="{DynamicResource StatusBarIconsViewToggleButtonIcon}"/>
+    </Style>
+
+    <Border x:Key="StatusBarIconsViewToggleButtonIcon" x:Shared="false" Width="15" Height="12" Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconTertiaryFillBrush}" BorderThickness="1">
+        <Path Data="M 0 0 L 5 2 L 10 3 L 12 5 L 0 5 Z" Fill="{DynamicResource IconPrimaryFillBrush}" VerticalAlignment="Bottom"/>
+    </Border>
+
+    <Style x:Key="TitleBarTabControlStyle" TargetType="{x:Type TabControl}" BasedOn="{StaticResource LineTabControlStyle}">
+        <Setter Property="Height" Value="31"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LineTabItemStyle}">
+                    <Setter Property="Padding" Value="10,0"/>
+                    <Setter Property="Width" Value="250"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="0" ScaleY="1"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Grid Background="#01000000">
+                                    <Grid ClipToBounds="True" Margin="-2,0">
+                                        <Border x:Name="HoverBorder" Margin="4,0" BorderThickness="0,2,0,0" BorderBrush="{DynamicResource HoverHighlightBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0">
+                                            <Border.RenderTransform>
+                                                <ScaleTransform ScaleX="0" ScaleY="1"/>
+                                            </Border.RenderTransform>
+                                            <Rectangle Fill="{Binding BorderBrush, ElementName=HoverBorder}" Opacity="1" Height="2" VerticalAlignment="Top" Margin="0,-2">
+                                                <Rectangle.Effect>
+                                                    <BlurEffect Radius="5"/>
+                                                </Rectangle.Effect>
+                                            </Rectangle>
+                                        </Border>
+                                    </Grid>
+                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" Effect="{DynamicResource DropShadow}" TextElement.Foreground="{DynamicResource TitlebarIdleForegroundBrush}"/>
+                                    <Button HorizontalAlignment="Right" Margin="0" Style="{DynamicResource CaptionButtonStyle}">
+                                        <e:Interaction.Behaviors>
+                                            <local:ClosableTabItemBehavior OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                        </e:Interaction.Behaviors>
+                                        <Path Data="M 0 -1 L 2 -1 L 4.5 2 L 7 -1 L 9 -1 L 9 1 L 6 3.5 L 9 6 L 9 8 L 7 8 L 4.5 5 L 2 8 L 0 8 L 0 6 L 3 3.5 L 0 1 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                    </Button>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True"/>
+                                            <Condition Property="IsSelected" Value="False"/>
+                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.125">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </MultiTrigger.EnterActions>
+                                        <MultiTrigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0" Duration="0:0:0.125">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </MultiTrigger.ExitActions>
+                                        <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource TitlebarHoverForegroundBrush}" />
+                                    </MultiTrigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource TitlebarHoverForegroundBrush}" />
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="False">
+                                        <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource TitlebarInactiveIdleForegroundBrush}" />
+                                    </DataTrigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetName="ContentSite" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.125" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetName="ContentSite" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+                                        <!--Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource TitlebarInactiveIdleForegroundBrush}" /-->
+                                    </Trigger>
+                                    <Trigger Property="IsVisible" Value="True">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="1" Duration="0:0:0.125">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="0" Duration="0:0:0.125">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseIn"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid Margin="0,1,0,0">
+                        <ui:TravellingSelector TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" SelectedObjectIndex="{TemplateBinding SelectedIndex}" AnimationDuration="0:0:0.250" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}">
+                            <ui:TravellingSelector.AnimationEase>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </ui:TravellingSelector.AnimationEase>
+                            <ui:TravellingSelector.Template>
+                                <ControlTemplate TargetType="{x:Type ui:TravellingSelector}">
+                                    <Grid Background="#01000000">
+                                        <Border x:Name="PART_Selector" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{TemplateBinding SelectionWidth}" Height="{TemplateBinding SelectionHeight}">
+                                            <Border Margin="-2,0" ClipToBounds="True">
+                                                <Border x:Name="SelectedBorder" Margin="4,0" BorderBrush="{DynamicResource SelectedHighlightBrush}" BorderThickness="0,2,0,0" RenderTransformOrigin="0.5,1">
+                                                    <Border.RenderTransform>
+                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                    </Border.RenderTransform>
+                                                    <Rectangle Fill="{Binding BorderBrush, ElementName=SelectedBorder}" Opacity="1" Height="2" VerticalAlignment="Top" Margin="0,-2">
+                                                        <Rectangle.Effect>
+                                                            <BlurEffect Radius="5"/>
+                                                        </Rectangle.Effect>
+                                                    </Rectangle>
+                                                </Border>
+                                            </Border>
+                                        </Border>
+                                    </Grid>
+                                </ControlTemplate>
+                            </ui:TravellingSelector.Template>
+                        </ui:TravellingSelector>
+                        <TabPanel Name="HeaderPanel" HorizontalAlignment="Left" IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NewTabButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
         <Setter Property="Content">
             <Setter.Value>
-                <Border Width="15" Height="12" Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconTertiaryFillBrush}" BorderThickness="1">
-                    <Path Data="M 0 0 L 5 2 L 10 3 L 12 5 L 0 5 Z" Fill="{DynamicResource IconPrimaryFillBrush}" VerticalAlignment="Bottom"/>
-                </Border>
+                <Path Data="M 0 4 L 8 4 M 4 0 L 4 8" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
             </Setter.Value>
         </Setter>
     </Style>

@@ -13,7 +13,7 @@
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;Component/Themes/Plex.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
     <converters:ApplicationMenuRightScrollViewerExtractorConverter x:Key="ApplicationMenuRightScrollViewerExtractorConverter" />
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>
@@ -1077,7 +1077,7 @@
                             <StackPanel HorizontalAlignment="Right" Grid.Column="3" Orientation="Horizontal" Margin="0,0,0,-1">
                                 <Grid>
                                     <Image x:Name="image" Width="22" Height="22" Stretch="None" Visibility="Collapsed" />
-                                    <Fluent:ToggleButton x:Name="PART_MinimizeButton" Margin="0" Width="22" VerticalAlignment="Stretch" Size="Small" IsChecked="{Binding Path=IsMinimized, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding CanMinimize, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Fluent:ToggleButton x:Name="PART_MinimizeButton" Margin="0" Width="22" VerticalAlignment="Stretch" Size="Small" IsChecked="{Binding Path=IsMinimized, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding CanMinimize, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Fluent:ToggleButton.Style>
                                             <Style TargetType="{x:Type Fluent:ToggleButton}">
                                                 <Setter Property="Width" Value="22" />
@@ -1189,7 +1189,7 @@
                                         </Fluent:ToggleButton.Style>
                                     </Fluent:ToggleButton>
                                 </Grid>
-                                <StackPanel x:Name="PART_ToolbarPanel" Visibility="{Binding IsQuickAccessToolBarVisible, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal" />
+                                <StackPanel x:Name="PART_ToolbarPanel" Visibility="{Binding IsQuickAccessToolBarVisible, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}, Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal" />
                             </StackPanel>
                         </Grid>
                         <Grid Margin="35,0,0,0" ClipToBounds="True" VerticalAlignment="Bottom" Grid.Row="0">

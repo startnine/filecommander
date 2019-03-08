@@ -13,22 +13,22 @@ namespace RibbonFileManager
 {
     public static class WindowManager
     {
-        public static string WindowDefaultPath = @"%userprofile%";
+        public static string WindowDefaultPath = Environment.ExpandEnvironmentVariables(@"%userprofile%");
 
         public static List<MainWindow> OpenWindows = new List<MainWindow>();
 
-        public static void CreateWindow()
+        public static MainWindow CreateWindow()
         {
-            CreateWindow(WindowDefaultPath);
+            return CreateWindow(WindowDefaultPath);
         }
 
-        public static void CreateWindow(string targetPath)
+        public static MainWindow CreateWindow(string targetPath)
         {
             string path = Environment.ExpandEnvironmentVariables(targetPath);
             bool found = false;
             if (path != Environment.ExpandEnvironmentVariables(WindowDefaultPath))
             {
-                foreach (MainWindow w in OpenWindows)
+                /*foreach (MainWindow w in OpenWindows)
                 {
                     if (w.CurrentPath == path)
                     {
@@ -40,7 +40,7 @@ namespace RibbonFileManager
 
                     if (found)
                         break;
-                }
+                }*/
             }
 
             if (!found)
@@ -49,15 +49,21 @@ namespace RibbonFileManager
                 win.Show();
                 win.Focus();
                 win.Activate();
+                return win;
             }
+            else
+                return null;
         }
 
         public static void CloneWindow(MainWindow targetWindow)
         {
-            var win = new MainWindow();
+            var win = new MainWindow(targetWindow);
 
-            win.HistoryList = targetWindow.HistoryList;
-            win.HistoryIndex = targetWindow.HistoryIndex;
+            /*foreach (WindowContent w in targetWindow.WindowContents)
+                win.AddTab(w.CurrentPath);*/
+
+            //win.HistoryList = targetWindow.HistoryList;
+            //win.HistoryIndex = targetWindow.HistoryIndex;
 
             win.Show();
             win.Focus();
