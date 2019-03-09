@@ -291,7 +291,7 @@ namespace RibbonFileManager
                 //Debug.WriteLine(path);
                 if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
                 {
-                    if (CurrentDirectoryListView.SelectedItems.Count == 1)
+                    if (CurrentDirectoryListView.SelectedItems.Count == 1) //
                     {
                         Navigate(i.ItemPath);
                         break;

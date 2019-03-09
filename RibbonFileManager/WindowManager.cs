@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using WindowsSharp.DiskItems;
+//using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {

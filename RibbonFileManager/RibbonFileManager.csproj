@@ -28,9 +28,6 @@
     <Reference Include="Start9.UI.Wpf">
       <HintPath>..\..\start9-ui\Start9.UI.Wpf\bin\Debug\netcoreapp3.0\Start9.UI.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsSharp">
-      <HintPath>..\..\windows-sharp\WindowsSharp\bin\Debug\netcoreapp3.0\WindowsSharp.dll</HintPath>
-    </Reference>
     <COMReference Include="Shell32">
       <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
       <VersionMajor>1</VersionMajor>

@@ -379,7 +379,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Icons">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DataTemplate.Resources>
                                 <!--Style x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
                                     <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundBrush}"/>
@@ -435,7 +435,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DockPanel Width="240" Height="42">
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
@@ -456,7 +456,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <StackPanel Orientation="Horizontal" Height="16">
                                 <!--StackPanel.ContextMenu>
                                     <ui:TouchableContextMenu>
@@ -483,7 +483,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <Grid Height="32">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32"/>
@@ -684,7 +684,7 @@
         </Setter>
     </Style>
 
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}">
+    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type local:DiskItem}">
         <StackPanel Orientation="Horizontal" Height="16">
             <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>
             <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
-using WindowsSharp.DiskItems;
+//using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {

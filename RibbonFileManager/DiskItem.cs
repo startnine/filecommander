@@ -14,14 +14,18 @@ namespace RibbonFileManager
     {
         FileSystemInfo _info;
 
+        bool _populated = false;
         ObservableCollection<DiskItem> _subItems = new ObservableCollection<DiskItem>();
 
         public ObservableCollection<DiskItem> SubItems
         {
             get// => _subItems;
             {
-                if (_subItems.Count == 0)
+                if (!_populated)
+                {
                     PopulateSubItems();
+                    _populated = true;
+                }
                 //_subItems = new ObservableCollection<DiskItem>();
                 /*if (_info is DirectoryInfo)
                 {
@@ -134,34 +138,27 @@ namespace RibbonFileManager
 
         System.Drawing.Icon GetIcon(UInt32 flags)
         {
-            return GetIcon(flags, 0);
+            NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
+            NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
+            //return System.Drawing.Icon.FromHandle(shInfo.hIcon);
+            System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
+            NativeMethods.DestroyIcon(shInfo.hIcon);
+            return result;
         }
 
         System.Drawing.Icon GetIcon(UInt32 flags, int imageList)
         {
-            if (imageList != 0)
-            {
-                NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
-                NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
-                System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
-                NativeMethods.DestroyIcon(shInfo.hIcon);
+            NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
+            NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
+            /*System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
+            NativeMethods.DestroyIcon(shInfo.hIcon);*/
 
-                var hres = NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out NativeMethods.IImageList list);
-                IntPtr resultHandle = IntPtr.Zero;
-                list.GetIcon(shInfo.iIcon, 1, ref resultHandle);
-                System.Drawing.Icon finalResult = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(resultHandle).Clone());
-                NativeMethods.DestroyIcon(resultHandle);
-                return finalResult;
-            }
-            else
-            {
-                NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
-                NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
-                //return System.Drawing.Icon.FromHandle(shInfo.hIcon);
-                System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
-                NativeMethods.DestroyIcon(shInfo.hIcon);
-                return result;
-            }
+            NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out NativeMethods.IImageList list);
+            IntPtr resultHandle = IntPtr.Zero;
+            list.GetIcon(shInfo.iIcon, 1, ref resultHandle);
+            System.Drawing.Icon finalResult = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(resultHandle).Clone());
+            NativeMethods.DestroyIcon(resultHandle);
+            return finalResult;
         }
 
         public double ItemSize
