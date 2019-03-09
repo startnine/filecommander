@@ -146,7 +146,7 @@ namespace RibbonFileManager
                 foreach (var s in _userFolders)
                     collection.Add(new DiskItem(Environment.ExpandEnvironmentVariables(s)));
 
-                foreach (var s in System.IO.DriveInfo.GetDrives())
+                foreach (var s in DriveInfo.GetDrives().Where(d => Directory.Exists(d.Name)))
                 {
                     collection.Add(new DiskItem(Environment.ExpandEnvironmentVariables(s.Name)));
                 }

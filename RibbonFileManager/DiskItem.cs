@@ -260,7 +260,7 @@ namespace RibbonFileManager
             else if (File.Exists(path))
                 _info = new FileInfo(path);
             else
-                returnValue = null;
+                throw new IOException("File does not exist: " + path);
 
             return returnValue;
         }
@@ -293,12 +293,12 @@ namespace RibbonFileManager
 
         public List<DiskItem> GetOpenWithPrograms()
         {
-            List<DiskItem> assoc = new List<DiskItem>();
+            var assoc = new List<DiskItem>();
             string ext = Path.GetExtension(ItemPath);
 
             string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + ext + @"\OpenWithList";
 
-            using (Microsoft.Win32.RegistryKey openWithListKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath))
+            using (var openWithListKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath))
             {
                 if (openWithListKey != null)
                 {
@@ -330,7 +330,7 @@ namespace RibbonFileManager
         string ConvertProgIdToExecutablePath(string progId)
         {
             string outPath = null;
-            using (Microsoft.Win32.RegistryKey appPathKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId))
+            using (var appPathKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId))
             {
                 if (appPathKey != null)
                 {
@@ -392,7 +392,7 @@ namespace RibbonFileManager
                         File.Move(oldPath, newPath);
                         returnValue = true;
                     }
-                    catch (IOException ex)
+                    catch (IOException)
                     {
                         returnValue = false;
                     }
@@ -404,7 +404,7 @@ namespace RibbonFileManager
                         Directory.Move(oldPath, newPath);
                         returnValue = true;
                     }
-                    catch (IOException ex)
+                    catch (IOException)
                     {
                         returnValue = false;
                     }

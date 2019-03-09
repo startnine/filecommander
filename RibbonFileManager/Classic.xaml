@@ -4,8 +4,6 @@
                     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
                     xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
-                    xmlns:disk="clr-namespace:WindowsSharp.DiskItems;assembly=WindowsSharp"
-                    xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
                     xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
                     xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Classic"
                     xmlns:FluentHelpers="clr-namespace:Fluent.Helpers;assembly=Fluent">

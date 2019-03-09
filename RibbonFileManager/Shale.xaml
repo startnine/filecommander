@@ -4,15 +4,11 @@
                     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                     xmlns:FluentHelpers="clr-namespace:Fluent.Helpers;assembly=Fluent"
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
-                    xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
-                    xmlns:disk="clr-namespace:WindowsSharp.DiskItems;assembly=WindowsSharp"
                     xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
                     xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
                     xmlns:tic="clr-namespace:Start9.UI.Wpf.Statics;assembly=Start9.UI.Wpf"
-                    xmlns:styleSelectors="clr-namespace:Fluent.StyleSelectors;assembly=Fluent"
-                    xmlns:templateSelectors="clr-namespace:Fluent.TemplateSelectors;assembly=Fluent"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-                    xmlns:e="http://schemas.microsoft.com/expression/2010/interactivity">
+                    xmlns:e="http://schemas.microsoft.com/xaml/behaviors">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Fluent;Component/Themes/Generic.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Shale.xaml"/>
