@@ -1,26 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using Microsoft.VisualBasic.FileIO;
-//using NT6FileManagerBase;
 using Start9.UI.Wpf.Windows;
-//using WindowsSharp.DiskItems;
-using System.Media;
 
 namespace RibbonFileManager
 {
@@ -34,17 +23,7 @@ namespace RibbonFileManager
             get => ((this.ContentTabControl.SelectedItem as TabItem).Content) as WindowContent;
         }
 
-        public List<WindowContent> WindowContents
-        {
-            get
-            {
-                List<WindowContent> list = new List<WindowContent>();
-                foreach (TabItem t in ContentTabControl.Items)
-                    list.Add((t.Content) as WindowContent);
-
-                return list;
-            }
-        }
+        public List<WindowContent> WindowContents => ContentTabControl.Items.OfType<WindowContent>().ToList();
 
         public Config.InterfaceModeType InterfaceMode
         {
@@ -761,6 +740,31 @@ namespace RibbonFileManager
         {
             if ((e.Key == Key.System) && (!_altActionTaken))
                 ToggleMenuBar();
+        }
+
+        private async void SearchTextBox_SearchSubmitted(Object sender, SearchSubmittedEventArgs e)
+        {
+            var cts = new CancellationTokenSource();
+            var sb = (SearchBox)sender;
+
+            void Cancellation(Object sender, RoutedEventArgs e)
+            {
+                cts.Cancel();
+                sb.CancelSearch();
+            }
+
+            sb.SearchCanceled += Cancellation;
+            try
+            {
+                await ActiveContent.SearchAsync(e.Query, cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // do nothing, user canceled search
+            }
+
+            sb.SearchCanceled -= Cancellation;
+            sb.CancelSearch();
         }
     }
 }

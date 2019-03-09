@@ -265,18 +265,13 @@ namespace RibbonFileManager
             return returnValue;
         }
 
-        public void Open()
-        {
-            Open(OpenVerbs.Normal);
-        }
-
         public enum OpenVerbs
         {
             Normal,
             Admin
         }
 
-        public void Open(OpenVerbs verb)
+        public void Open(OpenVerbs verb = OpenVerbs.Normal)
         {
             if (verb == OpenVerbs.Admin)
                 Process.Start(new ProcessStartInfo(ItemPath)

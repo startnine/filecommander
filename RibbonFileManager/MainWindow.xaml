@@ -75,7 +75,7 @@
                                     <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Click="NavUpButton_Click"/>
                                 </StackPanel>
                             </StackPanel>
-                            <local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right"/>
+                            <local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" SearchSubmitted="SearchTextBox_SearchSubmitted" SearchType="Instant" />
                             <Grid>
                                 <!--TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/-->
                                 <ui:BreadcrumbsBar x:Name="AddressBox" PathUpdated="AddressBox_PathUpdated"/>

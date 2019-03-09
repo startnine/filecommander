@@ -2,9 +2,13 @@
 using Start9.UI.Wpf.Windows;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,6 +40,8 @@ namespace RibbonFileManager
 
         public static event EventHandler<EventArgs> CurrentDirectorySelectionChanged;
 
+        CancellationTokenSource _source;
+
         public string CurrentFolderTitle
         {
             get
@@ -46,7 +52,7 @@ namespace RibbonFileManager
                 }
                 catch
                 {
-                    return string.Empty;
+                    return String.Empty;
                 }
             }
         }
@@ -162,10 +168,58 @@ namespace RibbonFileManager
             Navigate(_initPath);
         }
 
+        async IAsyncEnumerable<DiskItem> GetSearchResults(String query, CancellationToken token)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(CurrentPath, query, new EnumerationOptions { RecurseSubdirectories = true, ReturnSpecialDirectories = true });
+            var enumer = entries.GetEnumerator();
+            while (await Task.Run(enumer.MoveNext))
+            {
+                token.ThrowIfCancellationRequested();
+                yield return await Task.Run(() => new DiskItem(enumer.Current));
+                token.ThrowIfCancellationRequested();
+            }
+        }
+
+        public async Task SearchAsync(String query, CancellationToken token = default)
+        {
+            _source?.Cancel();
+            if (String.IsNullOrEmpty(query))
+            {
+                CurrentDirectoryListView.ItemsSource = new DiskItem(CurrentPath).SubItems;
+            }
+            else
+            {
+                var old = CurrentDirectoryListView.ItemsSource;
+
+                _source = new CancellationTokenSource();
+                var source = CancellationTokenSource.CreateLinkedTokenSource(_source.Token, token);
+
+                try
+                {
+                    var results = new ObservableCollection<DiskItem>();
+                    CurrentDirectoryListView.ItemsSource = results;
+                    await foreach (var path in GetSearchResults(query, source.Token))
+                    {
+                        results.Add(path);
+                        source.Token.ThrowIfCancellationRequested();
+                    }
+                }
+                catch (OperationCanceledException) // if the user canceled search, then preserve what's been searched
+                {
+                }
+                catch // else, don't do anything
+                {
+                    CurrentDirectoryListView.ItemsSource = old;
+                }
+            }
+
+        }
+
         public void Navigate(string path)
         {
             if (Directory.Exists(path))
             {
+                _source?.Cancel();
                 CurrentDirectoryListView.ItemsSource = new DiskItem(path).SubItems;
                 CurrentDirectoryName = Path.GetFileName(path);
 
@@ -177,6 +231,7 @@ namespace RibbonFileManager
                 }
 
                 OwnerWindow.Navigate(path);
+                OwnerWindow.SearchTextBox.Clear();
 
                 //OwnerWindow.ValidateNavButtonStates();
             }
