@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Start9.UI.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -17,7 +18,7 @@ namespace RibbonFileManager
 
         public abstract String Name { get; }
 
-        public abstract IReadOnlyCollection<String> BreadcrumbsSegments { get; }
+        public abstract BreadcrumbItem[] BreadcrumbsSegments { get; }
 
         public abstract Icon Icon { get; }
 
@@ -39,7 +40,7 @@ namespace RibbonFileManager
 
         public override String Name => Item.ItemDisplayName;
 
-        public override IReadOnlyCollection<String> BreadcrumbsSegments => Item.ItemPath.Split('\\');
+        public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Item.ItemPath);
 
         public override Icon Icon => Item.ItemJumboIcon;
     }
@@ -62,8 +63,8 @@ namespace RibbonFileManager
 
         public override String Name => $"{Query} - Search results in {Path}";
 
-        public override IReadOnlyCollection<String> BreadcrumbsSegments => new[] { Name };
-
+        public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Name);
+            
         public override Icon Icon { get; }
 
     }
