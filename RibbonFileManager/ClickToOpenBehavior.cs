@@ -7,15 +7,6 @@ namespace RibbonFileManager
 {
     public class ClickToOpenBehavior : Behavior<Panel>
     {
-        /*public DiskItem TargetItem
-        {
-            get => (DiskItem)GetValue(TargetItemProperty);
-            set => SetValue(TargetItemProperty, value);
-        }
-
-        public static readonly DependencyProperty TargetItemProperty =
-            DependencyProperty.Register("TargetItem", typeof(DiskItem), typeof(ClickToOpenBehavior), new PropertyMetadata(null));*/
-
         public ListViewItem ParentListViewItem
         {
             get => (ListViewItem)GetValue(ParentListViewItemProperty);
@@ -28,7 +19,6 @@ namespace RibbonFileManager
         static void OnParentListViewItemChangedCallback(System.Object sender, DependencyPropertyChangedEventArgs e)
         {
             var sned = sender as ClickToOpenBehavior;
-            //Debug.WriteLine("(e.NewValue != null): " + e.NewValue != null);
             if (e.NewValue != null)
                 sned.ParentListViewItem.PreviewMouseDoubleClick += sned.ParentListViewItem_PreviewMouseDoubleClick;
 
@@ -45,15 +35,9 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ManagerBaseProperty =
             DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ClickToOpenBehavior), new PropertyMetadata(null));
 
-        //ListViewItem _item;
-        /*protected override void OnAttached()
-        {
-            base.OnAttached();
-        }*/
 
         private async void ParentListViewItem_PreviewMouseDoubleClick(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //Debug.WriteLine("DOUBLE CLICK");
             await ManagerBase.OpenSelectionAsync();
         }
     }

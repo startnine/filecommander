@@ -210,7 +210,6 @@ namespace RibbonFileManager
         {
             if (selectedCount == 0)
             {
-                //SetDetailsPane(HistoryList[HistoryIndex]);
                 CopyButton.IsEnabled = false;
                 CopyPathButton.IsEnabled = false;
                 CutButton.IsEnabled = false;
@@ -273,7 +272,6 @@ namespace RibbonFileManager
 
         private void NewWindowButton_Click(Object sender, RoutedEventArgs e)
         {
-            //WindowManager.CloneWindow(this);
             if (sender == NewWindowMenuItem)
             {
                 if (_newWindowSubmenuItemClick)
