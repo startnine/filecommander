@@ -603,7 +603,7 @@ namespace RibbonFileManager
         {
             NavBackButton.IsEnabled = canGoBack;
             NavForwardButton.IsEnabled = canGoForward;
-            NavHistoryButton.IsEnabled = canGoBack;
+            NavHistoryButton.IsEnabled = canGoBack || canGoForward;
             NavUpButton.IsEnabled = canGoUp;
         }
 

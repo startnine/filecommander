@@ -71,7 +71,7 @@
                                     <!--IsEnabled="{TemplateBinding IsBackButtonEnabled}"-->
                                     <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" IsEnabled="False" Click="NavForwardButton_Click"/>
                                     <!--IsEnabled="{TemplateBinding IsForwardButtonEnabled}"-->
-                                    <Fluent:DropDownButton x:Name="NavHistoryButton" Icon="{DynamicResource NavigationHistoryButtonIcon}" SizeDefinition="Small" ItemsSource="{Binding ActiveContent.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
+                                    <Fluent:DropDownButton x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Size="Small" SizeDefinition="Small" ItemsSource="{Binding ActiveContent.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
                                     <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Click="NavUpButton_Click"/>
                                 </StackPanel>
                             </StackPanel>

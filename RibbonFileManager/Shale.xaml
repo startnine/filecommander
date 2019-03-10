@@ -3429,7 +3429,110 @@
         <Setter Property="Content" Value="{DynamicResource NavigationForwardButtonIcon}"/>
     </Style>
 
-    <Path x:Key="NavigationHistoryButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}"/>
+    <Style x:Key="NavigationHistoryButtonStyle" TargetType="{x:Type Fluent:DropDownButton}">
+        <Setter Property="Icon" Value="{DynamicResource NavigationHistoryButtonIcon}"/>
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource TitlebarIdleForegroundBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Effect" Value="{DynamicResource DropShadow}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Fluent:DropDownButton}">
+                    <Grid Background="#01000000">
+                        <!--Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#01000000" Margin="{TemplateBinding Padding}">
+                                <Label x:Name="Glyph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{TemplateBinding Content}"  FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" RenderOptions.EdgeMode="Aliased" IsTabStop="False" Margin="0" Padding="0" />
+                            </Grid-->
+                        <Grid x:Name="PART_ButtonBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#01000000">
+                            <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" Height="16" VerticalAlignment="Center" Content="{converters:ObjectToImageConverter {Binding Icon, RelativeSource={RelativeSource TemplatedParent}}, '16,16', {Binding RelativeSource={RelativeSource TemplatedParent}}}" Width="16" Margin="0" SnapsToDevicePixels="True" TextElement.Foreground="{TemplateBinding Foreground}"/>
+                            <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 2" HasGlyph="{TemplateBinding HasTriangle}" Visibility="Collapsed"/>
+                        </Grid>
+                        <!--{converters:ObjectToImageConverter {Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}}, '32,32', {Binding RelativeSource={RelativeSource TemplatedParent}}}-->
+                        <Popup x:Name="PART_Popup" Placement="Left" VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource Mode=TemplatedParent}}" HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource Mode=TemplatedParent}}" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Margin="0,0,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                            <Grid Name="DropDown" SnapsToDevicePixels="True" Margin="0" VerticalAlignment="Top">
+                                <Border x:Name="PART_DropDownBorder" MinWidth="{TemplateBinding ActualWidth}" SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                    <Border CornerRadius="3" Margin="4,3,4,5" Effect="{DynamicResource DropShadow}">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
+                                        </Border.Background>
+                                        <Grid Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                            <Border VerticalAlignment="Top" Width="Auto" Height="Auto" BorderThickness="1" />
+                                            <Grid Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <ScrollViewer x:Name="PART_ScrollViewer" Style="{DynamicResource MenuScrollViewer}" IsTabStop="False" Margin="1" MaxHeight="{TemplateBinding MaxDropDownHeight}" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Local" Margin="2,2,2,0"/>
+                                                </ScrollViewer>
+                                                <Border x:Name="resizeBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="11" BorderThickness="0,1,0,0" Grid.Row="1">
+                                                    <Grid>
+                                                        <Thumb x:Name="PART_ResizeVerticalThumb" HorizontalAlignment="Stretch" Margin="0,0,0,-90" Width="Auto" Height="10" VerticalAlignment="Top" Cursor="SizeNS" Template="{DynamicResource ResizeVerticalThumbControlTemplate}" />
+                                                        <Thumb x:Name="PART_ResizeBothThumb" HorizontalAlignment="Right" Margin="0,0,0,-90" Width="10" Height="10" VerticalAlignment="Top" Cursor="SizeNWSE" Template="{DynamicResource ResizeBothThumbControlTemplate}" />
+                                                    </Grid>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ResizeMode" Value="None">
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Both">
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="Vertical">
+                            <Setter Property="Visibility" TargetName="PART_ResizeBothThumb" Value="Collapsed" />
+                            <Setter Property="Visibility" TargetName="PART_ResizeVerticalThumb" Value="Visible" />
+                            <Setter Property="Visibility" TargetName="resizeBorder" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon"/>
+                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}, FallbackValue=False}" Value="False"/>
+                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Mode=Self}, FallbackValue=False}" Value="False"/>
+                    <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource Mode=Self}, FallbackValue=False}" Value="False"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+            </MultiDataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource TitlebarHoverForegroundBrush}" />
+            </Trigger>
+            <!--Trigger Property="IsDropDownOpen" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource TitlebarPressedForegroundBrush}" />
+            </Trigger-->
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Path x:Key="NavigationHistoryButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:DropDownButton}}}"/>
     <!--M 0 0 L 6 6 L 12 0-->
     
     <Path x:Key="NavigationUpButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
@@ -3820,6 +3923,29 @@
                             <tic:CornerCurves TopLeft="True" TopRight="True" BottomRight="True" BottomLeft="True"/>
                         </Setter.Value>
                     </Setter>
+                    <!--Setter Property="Opacity" Value="0"/>
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="0" ScaleY="1"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsVisible" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="1" Duration="0:0:0.125">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                    </Style.Triggers-->
                 </Style>
             </Setter.Value>
         </Setter>
@@ -4641,8 +4767,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
-                    <Grid Margin="0,1,0,0">
-                        <ui:TravellingSelector TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" SelectedObjectIndex="{TemplateBinding SelectedIndex}" AnimationDuration="0:0:0.250" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}">
+                    <Grid x:Name="RootGrid" Margin="0,1,0,0">
+                        <ui:TravellingSelector AnimationDuration="0:0:0.250" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}" TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" CollectionSize="{Binding Items.Count, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" SelectedObjectIndex="{Binding SelectedIndex, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                             <ui:TravellingSelector.AnimationEase>
                                 <CubicEase EasingMode="EaseOut"/>
                             </ui:TravellingSelector.AnimationEase>
@@ -4670,6 +4796,9 @@
                         <TabPanel Name="HeaderPanel" HorizontalAlignment="Left" IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}, Mode=OneWay}" Value="Maximized">
+                            <Setter TargetName="RootGrid" Property="Margin" Value="0"/>
+                        </DataTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
                         </Trigger>

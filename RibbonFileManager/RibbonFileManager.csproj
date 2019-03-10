@@ -6,6 +6,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> 
     <UseWPF>true</UseWPF>
+	<LangVersion>preview</LangVersion>
     <AssemblyTitle>RibbonFileManager</AssemblyTitle>
     <Product>RibbonFileManager</Product>
     <Copyright>Copyright ©  2018</Copyright>

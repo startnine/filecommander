@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RibbonFileManager
 {
-    public sealed class RecentLocationsList<T> : Collection<T>
+    public sealed class RecentLocationsList<T> : ObservableCollection<T>
     {
         Int32 _index = -1;
 
@@ -50,7 +50,7 @@ namespace RibbonFileManager
         }
     }
 
-    public sealed class NavigationStack<T> : Collection<T>
+    public sealed class NavigationStack<T> : ObservableCollection<T>
     {
         Int32 _index = 0;
 
