@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Start9.UI.Wpf;
 using Start9.UI.Wpf.Windows;
 
 namespace RibbonFileManager
@@ -115,21 +117,40 @@ namespace RibbonFileManager
 
         string _firstNavigationPath = WindowManager.WindowDefaultPath;
 
+        public static BreadcrumbsPathToItemsConverter Converter { get; } = new BreadcrumbsPathToItemsConverter((path) =>
+        {
+            if (path.Contains("Search results in"))
+            {
+                return new[] { new BreadcrumbItem(path, path) };
+            }
+
+            var sb = new StringBuilder(path.Length);
+            var items = new List<BreadcrumbItem>();
+
+            foreach (var p in path.Split('\\'))
+            {
+                sb.Append(p);
+                sb.Append("\\");
+                items.Add(new BreadcrumbItem(p, sb.ToString().Trim('\\')));
+            }
+
+            return items.ToArray();
+        });
+
         public MainWindow()
         {
             Initialize();
+            AddressBox.Converter = Converter;
         }
 
         MainWindow _copyWindow = null;
-        public MainWindow(MainWindow copyWindow)
+        public MainWindow(MainWindow copyWindow) : this()
         {
-            Initialize();
             _copyWindow = copyWindow;
         }
 
-        public MainWindow(string path)
+        public MainWindow(string path) : this()
         {
-            Initialize();
             _firstNavigationPath = path;
         }
 
@@ -567,7 +588,7 @@ namespace RibbonFileManager
             ItemCounter.Content = ActiveContent.CurrentDirectoryListView.Items.Count.ToString() + " items";
 
             _resettingAddress = true;
-            AddressBox.BreadcrumbPath = String.Join('\\', ActiveContent.CurrentLocation.BreadcrumbsSegments);
+            AddressBox.BreadcrumbItems = ActiveContent.CurrentLocation.BreadcrumbsSegments;
             if (ActiveContent.CurrentLocation is DirectoryQuery q)
                 SearchTextBox.WatermarkText = "Search " + Path.GetFileName(q.Name);
             _resettingAddress = false;
@@ -639,7 +660,7 @@ namespace RibbonFileManager
         private async void AddressBox_PathUpdated(object sender, EventArgs e)
         {
             if (!_resettingAddress)
-                await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbPath));
+                await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path));
         }
 
         private void ContentTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
