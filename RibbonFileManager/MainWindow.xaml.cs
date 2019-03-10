@@ -23,7 +23,7 @@ namespace RibbonFileManager
     {
         public WindowContent ActiveContent
         {
-            get => ((ContentTabControl.SelectedItem as TabItem)?.Content) as WindowContent;
+            get => (ContentTabControl.SelectedItem as TabItem)?.Content as WindowContent;
         }
 
         public List<WindowContent> WindowContents => ContentTabControl.Items.OfType<WindowContent>().ToList();
@@ -39,7 +39,6 @@ namespace RibbonFileManager
 
         static void OnInterfaceModeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //Debug.WriteLine("interface mode updated");
             (d as MainWindow).UpdateInterface();
         }
 
@@ -62,35 +61,11 @@ namespace RibbonFileManager
             }
         }
 
-        /*static MainWindow()
-        {
-            //Debug.WriteLine("My Computer Path: " + Environment.GetFolderPath(Environment.SpecialFolder.MyComputer));
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MainWindow), new FrameworkPropertyMetadata(typeof(DecoratableWindow)));
-        }*/
-
-        /*public static RoutedCommand CloseWindowCommand = new RoutedCommand();
-        public static RoutedCommand MenuBarCommand = new RoutedCommand();
-
-        public static RoutedCommand BackCommand = new RoutedCommand();
-        public static RoutedCommand ForwardCommand = new RoutedCommand();
-        public static RoutedCommand UpLevelCommand = new RoutedCommand();
-
-        public static RoutedCommand RenameCommand = new RoutedCommand();*/
-
         void Initialize()
         {
             InitializeComponent();
 
-            /*CloseWindowCommand.InputGestures.Add(new KeyGesture(Key.W, ModifierKeys.Control));
-            MenuBarCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Alt));
-
-            BackCommand.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Alt));
-            ForwardCommand.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Alt));
-            UpLevelCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Alt));
-
-            RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));*/
-
-            Binding interfaceModeBinding = new Binding()
+            var interfaceModeBinding = new Binding()
             {
                 Source = Config.Instance,
                 Path = new PropertyPath("InterfaceMode"),
@@ -100,22 +75,10 @@ namespace RibbonFileManager
             BindingOperations.SetBinding(this, InterfaceModeProperty, interfaceModeBinding);
             UpdateInterface();
 
-            /*Binding checkBoxBinding = new Binding()
-            {
-                Source = typeof(Config),
-                Path = new PropertyPath("ShowItemCheckboxes"),
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            BindingOperations.SetBinding(this, FileManagerBase.ShowItemCheckboxesProperty, checkBoxBinding);*/
-
             WindowManager.OpenWindows.Add(this);
-            //FileManagerControl.Resources.MergedDictionaries.Add(Resources);
-
-            //System.Media.SoundPlayer player = new System.Media.SoundPlayer();
         }
 
-        string _firstNavigationPath = WindowManager.WindowDefaultPath;
+        String _firstNavigationPath = WindowManager.WindowDefaultPath;
 
         public static BreadcrumbsPathToItemsConverter Converter { get; } = new BreadcrumbsPathToItemsConverter((path) =>
         {
@@ -149,12 +112,12 @@ namespace RibbonFileManager
             _copyWindow = copyWindow;
         }
 
-        public MainWindow(string path) : this()
+        public MainWindow(String path) : this()
         {
             _firstNavigationPath = path;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(Object sender, RoutedEventArgs e)
         {
             Config.ClipboardContents.CollectionChanged += ClipboardContents_CollectionChanged;
             if (_copyWindow != null)
@@ -164,8 +127,6 @@ namespace RibbonFileManager
             }
             else
                 AddTab(_firstNavigationPath);
-            //AddTab(_firstNavigationPath);
-            //AddTab(_firstNavigationPath);
             ContentTabControl.SelectedIndex = 0;
             ClipboardContents_CollectionChanged(null, null);
             ValidateCommandStates(0, null);
@@ -176,19 +137,18 @@ namespace RibbonFileManager
             AddTab(WindowManager.WindowDefaultPath);
         }
 
-        public void AddTab(string path)
+        public void AddTab(String path)
         {
             ContentTabControl.Items.Add(CreateTab(path));
         }
 
-        private TabItem CreateTab(string path)
+        private TabItem CreateTab(String path)
         {
             if (Config.Instance.EnableTabs)
             {
-                TabItem item = new TabItem()
+                var item = new TabItem()
                 {
                     Content = new WindowContent(path)
-                    //, Header = "AAAAA"
                 };
 
                 item.MouseDown += (sneder, args) =>
@@ -199,7 +159,7 @@ namespace RibbonFileManager
                     }
                 };
 
-                Binding tabHeaderBinding = new Binding()
+                var tabHeaderBinding = new Binding()
                 {
                     Source = item.Content,
                     Path = new PropertyPath("CurrentDirectoryName"),
@@ -208,7 +168,7 @@ namespace RibbonFileManager
                     FallbackValue = Path.GetFileName(path)
                 };
 
-                BindingOperations.SetBinding(item, TabItem.HeaderProperty, tabHeaderBinding);
+                BindingOperations.SetBinding(item, HeaderedContentControl.HeaderProperty, tabHeaderBinding);
 
                 return item;
             }
@@ -246,7 +206,7 @@ namespace RibbonFileManager
             ValidateNavButtonStates(ActiveContent.NavigationStack.CanGoBack, ActiveContent.NavigationStack.CanGoForward, canGoUp);
         }
 
-        public void ValidateCommandStates(int selectedCount, DiskItem activeItem)
+        public void ValidateCommandStates(Int32 selectedCount, DiskItem activeItem)
         {
             if (selectedCount == 0)
             {
@@ -275,11 +235,8 @@ namespace RibbonFileManager
                 RenameButton.IsEnabled = true;
                 OpenButton.IsEnabled = true;
                 EditButton.IsEnabled = true;
-                ////////SelectedItemCounter.Visibility = Visibility.Visible;
-                ////////SetPanes((DiskItem)(CurrentDirectoryListView.SelectedItem));
 
-
-                if ((selectedCount == 1) && (activeItem.ItemCategory == DiskItem.DiskItemCategory.Directory))
+                if ((selectedCount == 1) && (activeItem.ItemCategory == DiskItemCategory.Directory))
                 {
                     CommandBarControl.CommandBarLayers[2].IsVisible = false;
                     CommandBarControl.CommandBarLayers[3].IsVisible = true;
@@ -291,25 +248,9 @@ namespace RibbonFileManager
                 }
 
 
-                if ((activeItem.ItemCategory != DiskItem.DiskItemCategory.Directory) && (activeItem.ItemCategory != DiskItem.DiskItemCategory.App))
+                if ((activeItem.ItemCategory != DiskItemCategory.Directory) && (activeItem.ItemCategory != DiskItemCategory.App))
                 {
-                    /*var assoc = activeItem.GetAssociatedProgram();
-                    if (assoc != null)
-                        Debug.WriteLine("ASSOCIATED PROGRAM: " + assoc.ItemPath);
-                    else
-                        Debug.WriteLine("COULD NOT FIND ASSOCIATED PROGRAM");*/
-
-                    //MessageBox.Show("waiting");
-                    //Debug.WriteLine("\n");
-
                     var openWith = activeItem.GetOpenWithPrograms();
-                    foreach (DiskItem d in openWith)
-                    {
-                        /*if (d != null)
-                            Debug.WriteLine("OPEN WITH: " + d.ItemPath);
-                        else
-                            Debug.WriteLine("OPEN WITH NULL");*/
-                    }
                 }
             }
         }
@@ -328,9 +269,9 @@ namespace RibbonFileManager
             }
         }
 
-        bool _newWindowSubmenuItemClick = false;
+        Boolean _newWindowSubmenuItemClick = false;
 
-        private void NewWindowButton_Click(object sender, RoutedEventArgs e)
+        private void NewWindowButton_Click(Object sender, RoutedEventArgs e)
         {
             //WindowManager.CloneWindow(this);
             if (sender == NewWindowMenuItem)
@@ -351,26 +292,18 @@ namespace RibbonFileManager
             }
         }
 
-        private void CurrentViewGalleryItem_Click(object sender, RoutedEventArgs e)
+        private void CurrentViewGalleryItem_Click(Object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
+        private void CloseWindowButton_Click(Object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        /*private ProcessStartInfo GetAdminProcessStartOptions(string exeName)
-        {
-            return new ProcessStartInfo(exeName)
-            {
-                Verb = "runas"
-            };
-        }*/
-
-        string cmdName = "cmd.exe";
-        string psName = "powershell.exe";
+        String cmdName = "cmd.exe";
+        String psName = "powershell.exe";
 
         private void OpenCmdButton_Click(Object sender, RoutedEventArgs e)
         {
@@ -400,82 +333,82 @@ namespace RibbonFileManager
             base.OnClosing(e);
         }
 
-        private async void OpenButton_Click(object sender, RoutedEventArgs e)
+        private async void OpenButton_Click(Object sender, RoutedEventArgs e)
         {
             await ActiveContent.OpenSelectionAsync();
         }
 
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        private void CopyButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.CopySelection();
         }
 
-        private void CopyPathButton_Click(object sender, RoutedEventArgs e)
+        private void CopyPathButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.CopyPathToSelection();
         }
 
-        private async void PasteButton_Click(object sender, RoutedEventArgs e)
+        private async void PasteButton_Click(Object sender, RoutedEventArgs e)
         {
             await ActiveContent.PasteCurrentAsync();
         }
 
-        private async void PasteShortcutButton_Click(object sender, RoutedEventArgs e)
+        private async void PasteShortcutButton_Click(Object sender, RoutedEventArgs e)
         {
             await ActiveContent.PasteShortcutAsync();
         }
 
-        private void CutButton_Click(object sender, RoutedEventArgs e)
+        private void CutButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.CutSelection();
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private void EditButton_Click(Object sender, RoutedEventArgs e)
         {
             
         }
 
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(Object sender, RoutedEventArgs e)
         {
             await ActiveContent.DeleteSelectionAsync();
         }
 
-        private void PropertiesButton_Click(object sender, RoutedEventArgs e)
+        private void PropertiesButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.ShowPropertiesForSelection();
         }
 
-        private void RenameButton_Click(object sender, RoutedEventArgs e)
+        private void RenameButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.RenameSelection();
         }
 
-        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        private void HistoryButton_Click(Object sender, RoutedEventArgs e)
         {
 
         }
 
-        private async void NewFolderButton_Click(object sender, RoutedEventArgs e)
+        private async void NewFolderButton_Click(Object sender, RoutedEventArgs e)
         {
             await ActiveContent.CreateNewFolderAsync();
         }
 
-        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        private void SelectAllButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.SelectAll();
         }
 
-        private void SelectNoneButton_Click(object sender, RoutedEventArgs e)
+        private void SelectNoneButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.SelectNone();
         }
 
-        private void InvertSelectionButton_Click(object sender, RoutedEventArgs e)
+        private void InvertSelectionButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.InvertSelection();
         }
 
-        private void FolderAndSearchOptionsMenuItem_Click(object sender, RoutedEventArgs e)
+        private void FolderAndSearchOptionsMenuItem_Click(Object sender, RoutedEventArgs e)
         {
             Config.SettingsWindow.Show();
             Config.SettingsWindow.Focus();
@@ -499,7 +432,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void FolderViewsGallery_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FolderViewsGallery_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             if (FolderViewsGallery.SelectedItem == ListViewGalleryItem)
                 ActiveContent.CurrentView = FileBrowserView.List;
@@ -515,20 +448,14 @@ namespace RibbonFileManager
 
                 if (FolderViewsGallery.SelectedItem == ExtraLargeIconsViewGalleryItem)
                     ActiveContent.IconSize = 256;
-                else if (FolderViewsGallery.SelectedItem == LargeIconsViewGalleryItem)
-                    ActiveContent.IconSize = 96;
-                else if (FolderViewsGallery.SelectedItem == SmallIconsViewGalleryItem)
-                    ActiveContent.IconSize = 16;
-                else
-                    ActiveContent.IconSize = 48;
+                else ActiveContent.IconSize = FolderViewsGallery.SelectedItem == LargeIconsViewGalleryItem
+                    ? 96
+                    : FolderViewsGallery.SelectedItem == SmallIconsViewGalleryItem ? 16 : 48;
             }
         }
 
-        private void FileManagerBase_Loaded(object sender, RoutedEventArgs e)
+        private void FileManagerBase_Loaded(Object sender, RoutedEventArgs e)
         {
-            /*foreach (ResourceDictionary d in Window.GetWindow(this).Resources.MergedDictionaries)
-                Resources.MergedDictionaries.Add(d);*/
-
             Initialize();
         }
 
@@ -561,7 +488,7 @@ namespace RibbonFileManager
         public async Task<Boolean> NavigateUpAsync()
         {
             var p = ((DirectoryQuery) ActiveContent.CurrentLocation).Item.ItemPath;
-            string path = Directory.GetParent(p).ToString();
+            var path = Directory.GetParent(p).ToString();
             if (Directory.Exists(path))
             {
                 var q = new DirectoryQuery(path);
@@ -597,23 +524,23 @@ namespace RibbonFileManager
 
         }
 
-        bool _resettingAddress = false;
+        Boolean _resettingAddress = false;
 
-        public void InitialNavigate(string path)
+        public void InitialNavigate(String path)
         {
             var q = new DirectoryQuery(path);
             ActiveContent.NavigationStack.Add(q);
             Navigate(q);
         }
 
-        private void DetailsViewButton_Click(object sender, RoutedEventArgs e)
+        private void DetailsViewButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.CurrentView = FileBrowserView.Details;
             IconsViewButton.IsChecked = false;
             DetailsViewButton.IsChecked = true;
         }
 
-        private void IconsViewButton_Click(object sender, RoutedEventArgs e)
+        private void IconsViewButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.CurrentView = FileBrowserView.Icons;
             DetailsViewButton.IsChecked = false;
@@ -628,42 +555,42 @@ namespace RibbonFileManager
             NavUpButton.IsEnabled = canGoUp;
         }
 
-        private async void NavBackButton_Click(object sender, RoutedEventArgs e)
+        private async void NavBackButton_Click(Object sender, RoutedEventArgs e)
         {
             await NavigateBackAsync();
             ValidateNavButtonStates();
         }
 
-        private async void NavForwardButton_Click(object sender, RoutedEventArgs e)
+        private async void NavForwardButton_Click(Object sender, RoutedEventArgs e)
         {
             await NavigateForwardAsync();
             ValidateNavButtonStates();
         }
 
-        private void NavHistoryButton_Click(object sender, RoutedEventArgs e)
+        private void NavHistoryButton_Click(Object sender, RoutedEventArgs e)
         {
             foreach (var s in ActiveContent.NavigationStack)
                 Debug.WriteLine(ActiveContent.NavigationStack.IndexOf(s).ToString() + ": " + s);
         }
 
-        private async void NavUpButton_Click(object sender, RoutedEventArgs e)
+        private async void NavUpButton_Click(Object sender, RoutedEventArgs e)
         {
             await NavigateUpAsync();
             ValidateNavButtonStates();
         }
 
-        private void NewTabButton_Click(object sender, RoutedEventArgs e)
+        private void NewTabButton_Click(Object sender, RoutedEventArgs e)
         {
             AddTab(WindowManager.WindowDefaultPath);
         }
 
-        private async void AddressBox_PathUpdated(object sender, EventArgs e)
-        {
+        private async void AddressBox_PathUpdated(Object sender, EventArgs e)
+        {   
             if (!_resettingAddress)
                 await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path));
         }
 
-        private void ContentTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ContentTabControl_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             if (ContentTabControl.SelectedItem != null)
             {
@@ -674,29 +601,29 @@ namespace RibbonFileManager
             }
         }
 
-        private void NavigationPaneMenuItem_Click(object sender, RoutedEventArgs e)
+        private void NavigationPaneMenuItem_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.ShowNavigationPane = NavigationPaneMenuItem.IsChecked == true;
         }
 
-        private void PreviewPaneToggleButton_Click(object sender, RoutedEventArgs e)
+        private void PreviewPaneToggleButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.ShowPreviewPane = PreviewPaneToggleButton.IsChecked == true;
         }
 
-        private void DetailsPaneToggleButton_Click(object sender, RoutedEventArgs e)
+        private void DetailsPaneToggleButton_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.ShowDetailsPane = DetailsPaneToggleButton.IsChecked == true;
         }
 
-        private void ShowItemCheckBoxesCheckBox_Click(object sender, RoutedEventArgs e)
+        private void ShowItemCheckBoxesCheckBox_Click(Object sender, RoutedEventArgs e)
         {
             ActiveContent.ShowItemCheckboxes = ShowItemCheckBoxesCheckBox.IsChecked == true;
         }
 
-        bool _altActionTaken = true;
+        Boolean _altActionTaken = true;
 
-        private async void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        private async void MainWindow_PreviewKeyDown(Object sender, KeyEventArgs e)
         {
             if ((Keyboard.GetKeyStates(Key.LeftCtrl) != KeyStates.None) || (Keyboard.GetKeyStates(Key.RightCtrl) != KeyStates.None))
             {
@@ -732,7 +659,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void MainWindow_PreviewKeyUp(object sender, KeyEventArgs e)
+        private void MainWindow_PreviewKeyUp(Object sender, KeyEventArgs e)
         {
             if ((e.Key == Key.System) && (!_altActionTaken))
                 ToggleMenuBar();

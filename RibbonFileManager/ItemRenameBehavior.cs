@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
-//using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {
@@ -30,22 +29,19 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ManagerBaseProperty =
             DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ItemRenameBehavior), new PropertyMetadata(null));
 
-        public bool IsRenaming
+        public Boolean IsRenaming
         {
-            get => (bool)GetValue(IsRenamingProperty);
+            get => (Boolean) GetValue(IsRenamingProperty);
             set => SetValue(IsRenamingProperty, value);
         }
 
-        public static readonly DependencyProperty IsRenamingProperty = DependencyProperty.Register("IsRenaming", typeof(bool), typeof(ItemRenameBehavior), new PropertyMetadata(false, OnIsRenamingChangedCallback));
+        public static readonly DependencyProperty IsRenamingProperty = DependencyProperty.Register("IsRenaming", typeof(Boolean), typeof(ItemRenameBehavior), new PropertyMetadata(false, OnIsRenamingChangedCallback));
 
-        static void OnIsRenamingChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
+        static void OnIsRenamingChangedCallback(Object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool)(e.NewValue))
+            if ((Boolean) e.NewValue)
             {
                 var sned = sender as ItemRenameBehavior;
-
-                /*if ((sned.TargetItem != null) && (sned.ManagerBase.CurrentDirectoryListView.SelectedItem == sned.TargetItem)) //(sned.ManagerBase.CurrentDirectoryListView.SelectedItems.Contains(sned.TargetItem))
-                    sned._box.Visibility = Visibility.Visible;*/
             }
         }
 
@@ -59,7 +55,7 @@ namespace RibbonFileManager
             _box.KeyDown += TextBox_KeyDown;
         }
 
-        private void TextBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void TextBox_IsVisibleChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {
             if (_box.IsVisible)
             {
@@ -71,13 +67,12 @@ namespace RibbonFileManager
                 ManagerBase.IsRenamingFiles = false;
         }
 
-        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TextBox_KeyDown(Object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                if (TargetItem != null) //((ManagerBase != null) && (TargetItem != null))
+                if (TargetItem != null)
                 {
-                    /*bool? outVal = */
                     TargetItem.RenameItem(_box.Text);
                     _box.Visibility = Visibility.Collapsed;
                 }

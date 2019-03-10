@@ -31,11 +31,11 @@ namespace RibbonFileManager
         }
 
         Point _prevPoint = new Point(0, 0);
-        private void TargetPanel_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void TargetPanel_MouseMove(Object sender, System.Windows.Input.MouseEventArgs e)
         {
             if ((e.LeftButton == System.Windows.Input.MouseButtonState.Pressed) && (_prevPoint != null) && ((e.GetPosition(sender as Panel).X != _prevPoint.X) | (e.GetPosition(sender as Panel).Y != _prevPoint.Y)) && (TargetItem != null))
             {
-                DataObject data = new DataObject();
+                var data = new DataObject();
                 data.SetData(DataFormats.FileDrop, new System.Collections.Specialized.StringCollection()
                 {
                     TargetItem.ItemPath

@@ -10,23 +10,14 @@ namespace RibbonFileManager
 {
     public class DiskItemSubItemsTreeFilterConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public Object Convert(Object value, Type targetType, Object parameter, CultureInfo culture)
         {
             var collection = value as List<DiskItem>;
 
-            //if (collection != null)
-            return collection.All(
-            folder => (
-            (folder.ItemCategory == DiskItem.DiskItemCategory.Directory)
-            || (
-            (folder.ItemCategory == DiskItem.DiskItemCategory.Directory)
-            && Directory.Exists(folder.ItemPath)
-            )));
-            /*else
-                return collection;*/
+            return collection.All(folder => (folder.ItemCategory == DiskItemCategory.Directory) || ((folder.ItemCategory == DiskItemCategory.Directory) && Directory.Exists(folder.ItemPath)));
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public Object ConvertBack(Object value, Type targetType, Object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

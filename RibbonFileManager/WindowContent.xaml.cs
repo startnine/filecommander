@@ -208,7 +208,7 @@ namespace RibbonFileManager
 
         private async void AddressBox_KeyDown(Object sender, KeyEventArgs e)
         {
-            var bar = (sender as TextBox);
+            var bar = sender as TextBox;
             if (e.Key == Key.Enter)
             {
                 var expText = Environment.ExpandEnvironmentVariables(bar.Text);
@@ -234,44 +234,21 @@ namespace RibbonFileManager
         {
             var item = (sender as MenuItem).Tag as ListViewItem;
 
-            if (((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemCategory == DiskItem.DiskItemCategory.Directory)
+            if (((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemCategory == DiskItemCategory.Directory)
                 (sender as MenuItem).Visibility = Visibility.Collapsed;
         }
 
         public void ShowPropertiesForSelection()
         {
-            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
-            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
-            foreach (DiskItem i in itemsArray)
+            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
             {
                 i.ShowProperties();
-                /*string path = i.ItemPath;
-
-                /*if (Directory.Exists(path))
-                    Manager.CreateWindow(path);
-                else*
-                try
-                {
-                    var info = new ProcessStartInfo(path)
-                    {
-                        Verb = "properties",
-                        UseShellExecute = true
-                    };
-                    Process.Start(info);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }*/
-                //Debug.WriteLine("properties result: " + i.ShowProperties());
             }
         }
 
         private async void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
-            var val = e.NewValue as DiskItem;
-
-            if (val != null)
+            if (e.NewValue is DiskItem val)
                 await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)));
         }
 
@@ -302,16 +279,12 @@ namespace RibbonFileManager
         {
             foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
             {
-                if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
+                if (i.ItemCategory == DiskItemCategory.Directory)
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1) //
                     {
                         await NavigateAsync(new DirectoryQuery(i.ItemPath));
                         break;
-                    }
-                    else
-                    {
-                        ////////Manager.CreateWindow(path);
                     }
                 }
                 else
@@ -348,7 +321,7 @@ namespace RibbonFileManager
             var paths = "";
             for (var i = 0; i < CurrentDirectoryListView.SelectedItems.Count; i++)
             {
-                var d = (DiskItem)(CurrentDirectoryListView.SelectedItems[i]);
+                var d = (DiskItem)CurrentDirectoryListView.SelectedItems[i];
                 paths = paths + "\"" + d.ItemPath + "\"";
                 if (i < (CurrentDirectoryListView.SelectedItems.Count - 1))
                 {
@@ -396,10 +369,6 @@ namespace RibbonFileManager
 
         public async Task PasteShortcutAsync()
         {
-            /*foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
-            {
-                Shortcut.CreateShortcut(d.ItemName + " - Shortcut", null, d.ItemPath, HistoryList[HistoryIndex]);
-            }*/
             await RefreshAsync();
         }
 
@@ -407,11 +376,11 @@ namespace RibbonFileManager
         {
             for (var i = 0; i < CurrentDirectoryListView.SelectedItems.Count; i++)
             {
-                var d = (CurrentDirectoryListView.SelectedItems[i] as DiskItem);
+                var d = CurrentDirectoryListView.SelectedItems[i] as DiskItem;
 
-                if (d.ItemCategory == DiskItem.DiskItemCategory.Directory)
+                if (d.ItemCategory == DiskItemCategory.Directory)
                     FileSystem.DeleteDirectory(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                else if ((d.ItemCategory == DiskItem.DiskItemCategory.File) || (d.ItemCategory == DiskItem.DiskItemCategory.Shortcut))
+                else if ((d.ItemCategory == DiskItemCategory.File) || (d.ItemCategory == DiskItemCategory.Shortcut))
                     FileSystem.DeleteFile(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
             }
 
@@ -470,12 +439,12 @@ namespace RibbonFileManager
                 size = 48;
             DetailsFileIconRectangle.Fill = (ImageBrush) new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(item.ItemJumboIcon, null, size.ToString(), null);
             DetailsFileNameTextBlock.Text = 
-                (item.ItemCategory == DiskItem.DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentLocation.Name)
+                (item.ItemCategory == DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentLocation.Name)
                 ? item.SubItems.Count.ToString() + " items"
                 : item.ItemDisplayName;
 
 
-            if (item.ItemCategory != DiskItem.DiskItemCategory.Directory)
+            if (item.ItemCategory != DiskItemCategory.Directory)
             {
                 if (item.ItemPath.ToLowerInvariant() == CurrentLocation.Name.ToLowerInvariant())
                 {
@@ -491,17 +460,6 @@ namespace RibbonFileManager
                     }
                     else
                     {
-                        /*bool isMediaFile = true;
-                        PreviewPlayer.Source = new Uri(item.ItemPath, UriKind.RelativeOrAbsolute);
-                        PreviewPlayer.MediaFailed += (sneder, args) =>
-                        {
-                            isMediaFile = false;
-                        };
-
-                        if (isMediaFile)
-                            SetPreviewPaneLayer(3);
-                        else //if (ext == "txt" || ext == "xml" || ext = "")
-                        {*/
                         var content = File.ReadAllText(item.ItemPath);
                         if (content.Contains("\0\0"))
                             SetPreviewPaneLayer(1);
@@ -510,16 +468,7 @@ namespace RibbonFileManager
                             ((PreviewPaneGrid.Children[4] as ScrollViewer).Content as TextBlock).Text = content;
                             SetPreviewPaneLayer(4);
                         }
-                        //}
                     }
-                    /*else if (ext == "wav" || ext == "wma" || ext == "mp3" || ext == "m4a")
-                    {
-
-                    }
-                    else if (ext == "mp4" || ext == "wmv" || ext == "mp3" || ext == "m4a")
-                    {
-
-                    }*/
                 }
             }
         }
@@ -529,10 +478,7 @@ namespace RibbonFileManager
             for (var i = 0; i < PreviewPaneGrid.Children.Count; i++)
             {
                 var control = PreviewPaneGrid.Children[i];
-                if (i == index)
-                    control.Visibility = Visibility.Visible;
-                else
-                    control.Visibility = Visibility.Collapsed;
+                control.Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }

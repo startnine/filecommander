@@ -16,6 +16,8 @@ namespace RibbonFileManager
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            // In case of data binding error, break glass (uncomment)
+
             //PresentationTraceSources.Refresh();
             //PresentationTraceSources.DataBindingSource.Listeners.Add(new ConsoleTraceListener());
             //PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
@@ -26,12 +28,12 @@ namespace RibbonFileManager
 
     public class DebugTraceListener : TraceListener
     {
-        public override void Write(string message)
+        public override void Write(String message)
         {
 
         }
 
-        public override void WriteLine(string message)
+        public override void WriteLine(String message)
         {
             Debugger.Break();
         }

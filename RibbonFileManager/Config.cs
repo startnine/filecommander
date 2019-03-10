@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -28,8 +29,6 @@ namespace RibbonFileManager
             Ribbon
         }
 
-        /*public InterfaceModeType InterfaceMode { get; set; } = InterfaceModeType.CommandBar;*/
-
         public InterfaceModeType InterfaceMode
         {
             get => (InterfaceModeType)GetValue(InterfaceModeProperty);
@@ -39,32 +38,32 @@ namespace RibbonFileManager
         public static readonly DependencyProperty InterfaceModeProperty =
             DependencyProperty.Register("InterfaceMode", typeof(InterfaceModeType), typeof(Config), new FrameworkPropertyMetadata(InterfaceModeType.Ribbon, FrameworkPropertyMetadataOptions.AffectsRender));
 
-        public bool ShowStatusBar
+        public Boolean ShowStatusBar
         {
-            get => (bool)GetValue(ShowStatusBarProperty);
+            get => (Boolean) GetValue(ShowStatusBarProperty);
             set => SetValue(ShowStatusBarProperty, value);
         }
 
         public static readonly DependencyProperty ShowStatusBarProperty =
-            DependencyProperty.Register("ShowStatusBar", typeof(bool), typeof(Config), new PropertyMetadata(true));
+            DependencyProperty.Register("ShowStatusBar", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
-        public bool EnableTabs
+        public Boolean EnableTabs
         {
-            get => (bool)GetValue(EnableTabsProperty);
+            get => (Boolean) GetValue(EnableTabsProperty);
             set => SetValue(EnableTabsProperty, value);
         }
 
         public static readonly DependencyProperty EnableTabsProperty =
-            DependencyProperty.Register("EnableTabs", typeof(bool), typeof(Config), new PropertyMetadata(true));
+            DependencyProperty.Register("EnableTabs", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
-        public bool ShowTitlebarText
+        public Boolean ShowTitlebarText
         {
-            get => (bool)GetValue(ShowTitlebarTextProperty);
+            get => (Boolean) GetValue(ShowTitlebarTextProperty);
             set => SetValue(ShowTitlebarTextProperty, value);
         }
 
         public static readonly DependencyProperty ShowTitlebarTextProperty =
-            DependencyProperty.Register("ShowTitlebarText", typeof(bool), typeof(Config), new PropertyMetadata(true));
+            DependencyProperty.Register("ShowTitlebarText", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
         public System.Windows.Controls.Dock DetailsPanePlacement
         {
@@ -75,24 +74,23 @@ namespace RibbonFileManager
         public static readonly DependencyProperty DetailsPanePlacementProperty =
             DependencyProperty.Register("DetailsPanePlacement", typeof(System.Windows.Controls.Dock), typeof(Config), new PropertyMetadata(System.Windows.Controls.Dock.Right));
 
-        public static bool ShowItemCheckboxes { get; set; } = false;
+        public static Boolean ShowItemCheckboxes { get; set; } = false;
 
-        static string _favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\" + Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location) + "_Favorites.txt");
+        static String _favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\" + Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location) + "_Favorites.txt");
 
         public static ObservableCollection<DiskItem> Favorites
         {
             get
             {
-                ObservableCollection<DiskItem> items = new ObservableCollection<DiskItem>();
-                //string favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\RibbonFileManager_Favorites.txt");
+                var items = new ObservableCollection<DiskItem>();
                 if (!File.Exists(_favoritesPath))
                 {
-                    string dir = Path.GetDirectoryName(_favoritesPath);
+                    var dir = Path.GetDirectoryName(_favoritesPath);
 
                     if (!Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
 
-                    File.WriteAllLines(_favoritesPath, new List<string>()
+                    File.WriteAllLines(_favoritesPath, new List<String>()
                     {
                         @"%userprofile%\Documents",
                         @"%userprofile%\Pictures",
@@ -101,16 +99,14 @@ namespace RibbonFileManager
                 }
 
                 var lines = File.ReadAllLines(_favoritesPath);
-                foreach (string l in lines)
+                foreach (var l in lines)
                 {
                     if (l.Contains('?'))
                     {
                         var parts = l.Split('?');
-                        //foreach (string s in parts)
-                        for (int i = 0; i < parts.Count(); i++)
+                        for (var i = 0; i < parts.Count(); i++)
                         {
-                            string s = parts[i];
-                            //Debug.WriteLine("parts[" + i + "]: " + s);
+                            var s = parts[i];
                         }
                         items.Add(new DiskItem(parts[0])
                         {
@@ -124,25 +120,21 @@ namespace RibbonFileManager
             }
             set
             {
-                List<string> paths = new List<string>();
-                //string favoritesPath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\RibbonFileManager_Favorites.txt");
-                DiskItem[] itemsArray = value.ToArray();
-                foreach (DiskItem d in itemsArray)
+                var paths = new List<String>();
+                foreach (var d in value)
                 {
                     paths.Add(d.ItemPath);
                 }
                 File.WriteAllLines(_favoritesPath, paths.ToArray());
             }
-            /*get;
-            set;*/
-        }// = new ObservableCollection<DiskItem>();
+        }
 
         public static ObservableCollection<DiskItem> ComputerSubfolders
         {
             get
             {
                 var collection = new ObservableCollection<DiskItem>();
-                string[] _userFolders = { @"%userprofile%\Desktop", @"%userprofile%\Documents", @"%userprofile%\Downloads", @"%userprofile%\Music", @"%userprofile%\Pictures", @"%userprofile%\Videos" };
+                String[] _userFolders = { @"%userprofile%\Desktop", @"%userprofile%\Documents", @"%userprofile%\Downloads", @"%userprofile%\Music", @"%userprofile%\Pictures", @"%userprofile%\Videos" };
                 foreach (var s in _userFolders)
                     collection.Add(new DiskItem(Environment.ExpandEnvironmentVariables(s)));
 
@@ -174,7 +166,7 @@ namespace RibbonFileManager
                 while (File.Exists(outFilename) || Directory.Exists(outFilename))
                 {
                     outFilename = baseFilename + " (" + interval.ToString() + ")";
-                    if (!(String.IsNullOrEmpty(ext)))
+                    if (!String.IsNullOrEmpty(ext))
                     {
                         if (!outFilename.EndsWith(ext))
                         {
@@ -187,7 +179,6 @@ namespace RibbonFileManager
                     }
                     interval += 1;
                 }
-                //Debug.WriteLine("outFilename: " + outFilename);
 
                 if (Cut)
                 {
@@ -208,51 +199,12 @@ namespace RibbonFileManager
                     }
                     else
                     {
-                        CopyDirectory(d.ItemPath, outFilename, true);
+                        FileSystem.CopyDirectory(d.ItemPath, outFilename, UIOption.AllDialogs);
                     }
                 }
                 success.Add(new DiskItem(outFilename));
             }
             return success;
-        }
-
-        //https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories
-        static void CopyDirectory(String sourceDirName, String destDirName, Boolean copySubDirs)
-        {
-            // Get the subdirectories for the specified directory.
-            var dir = new DirectoryInfo(sourceDirName);
-
-            if (!dir.Exists)
-            {
-                throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirName);
-            }
-
-            var dirs = dir.GetDirectories();
-            // If the destination directory doesn't exist, create it.
-            if (!Directory.Exists(destDirName))
-            {
-                Directory.CreateDirectory(destDirName);
-            }
-
-            // Get the files in the directory and copy them to the new location.
-            FileInfo[] files = dir.GetFiles();
-            foreach (var file in files)
-            {
-                var temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
-            }
-
-            // If copying subdirectories, copy them and their contents to new location.
-            if (copySubDirs)
-            {
-                foreach (var subdir in dirs)
-                {
-                    var temppath = Path.Combine(destDirName, subdir.Name);
-                    CopyDirectory(subdir.FullName, temppath, copySubDirs);
-                }
-            }
         }
 
         public static SettingsWindow SettingsWindow = new SettingsWindow();

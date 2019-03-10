@@ -9,17 +9,17 @@ namespace RibbonFileManager
     [TemplatePart(Name = PartWatermarkTextBlock, Type = typeof(TextBlock))]
     public class SearchBox : TextBox
     {
-        const string PartGoStopToggleButton = "PART_GoStopToggleButton";
-        const string PartWatermarkTextBlock = "PART_WatermarkTextBlock";
+        public const String PartGoStopToggleButton = "PART_GoStopToggleButton";
+        public const String PartWatermarkTextBlock = "PART_WatermarkTextBlock";
 
-        public string WatermarkText
+        public String WatermarkText
         {
-            get => (string)GetValue(WatermarkTextProperty);
+            get => (String) GetValue(WatermarkTextProperty);
             set => SetValue(WatermarkTextProperty, value);
         }
 
         public static readonly DependencyProperty WatermarkTextProperty =
-            DependencyProperty.Register(nameof(WatermarkText), typeof(string), typeof(SearchBox), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register(nameof(WatermarkText), typeof(String), typeof(SearchBox), new PropertyMetadata(String.Empty));
 
         public SearchType SearchType
         {
@@ -67,7 +67,7 @@ namespace RibbonFileManager
             _watermarkTextBlock = GetTemplateChild(PartWatermarkTextBlock) as TextBlock;
         }
 
-        private void GoStopToggleButton_Click(object sender, RoutedEventArgs e)
+        private void GoStopToggleButton_Click(Object sender, RoutedEventArgs e)
         {
             if (SearchButton.IsChecked == true)
                 RaiseEvent(new SearchSubmittedEventArgs(Text, SearchSubmittedEvent));

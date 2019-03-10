@@ -25,7 +25,7 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ParentListViewItemProperty =
             DependencyProperty.Register("ParentListViewItem", typeof(ListViewItem), typeof(ClickToOpenBehavior), new PropertyMetadata(null, OnParentListViewItemChangedCallback));
 
-        static void OnParentListViewItemChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
+        static void OnParentListViewItemChangedCallback(System.Object sender, DependencyPropertyChangedEventArgs e)
         {
             var sned = sender as ClickToOpenBehavior;
             //Debug.WriteLine("(e.NewValue != null): " + e.NewValue != null);
@@ -51,10 +51,10 @@ namespace RibbonFileManager
             base.OnAttached();
         }*/
 
-        private void ParentListViewItem_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void ParentListViewItem_PreviewMouseDoubleClick(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             //Debug.WriteLine("DOUBLE CLICK");
-            ManagerBase.OpenSelectionAsync();
+            await ManagerBase.OpenSelectionAsync();
         }
     }
 }

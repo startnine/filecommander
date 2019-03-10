@@ -2441,7 +2441,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="RecentsDataTemplate" DataType="{x:Type local:Location}">
-        <StackPanel Orientation="Horizontal" Margin="-24,0,0,0">
+        <StackPanel Orientation="Horizontal" Margin="-24,0,0,0" HorizontalAlignment="Left">
             <Rectangle Width="16" Height="16" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" VerticalAlignment="Center"/>
             <TextBlock Text="{Binding Name}" Margin="6,0" VerticalAlignment="Center"/>
         </StackPanel>

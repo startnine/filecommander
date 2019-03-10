@@ -34,65 +34,35 @@ namespace RibbonFileManager
         }
 
 
-        private void SettingsWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void SettingsWindow_IsVisibleChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (((bool)e.OldValue == false) && ((bool)e.NewValue == true))
+            if (((Boolean) e.OldValue == false) && ((Boolean) e.NewValue == true))
             {
-                if (Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar)
-                    InterfaceModeComboBox.SelectedIndex = 0;
-                else
-                    InterfaceModeComboBox.SelectedIndex = 1;
+                InterfaceModeComboBox.SelectedIndex = Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar ? 0 : 1;
 
                 StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
                 TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
-
-                /*if (Config.Instance.DetailsPanePlacement == Dock.Left)
-                    DetailsPanePositionComboBox.SelectedIndex = 1;
-                else if (Config.Instance.DetailsPanePlacement == Dock.Right)
-                    DetailsPanePositionComboBox.SelectedIndex = 2;
-                else if (Config.Instance.DetailsPanePlacement == Dock.Top)
-                    DetailsPanePositionComboBox.SelectedIndex = 3;
-                else
-                    DetailsPanePositionComboBox.SelectedIndex = 0;*/
             }
         }
 
-        private void Start9SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void Start9SettingsButton_Click(Object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void ApplyButton_Click(object sender, RoutedEventArgs e)
+        private void ApplyButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (InterfaceModeComboBox.SelectedIndex == 0)
-                Config.Instance.InterfaceMode = Config.InterfaceModeType.CommandBar;
-            else
-                Config.Instance.InterfaceMode = Config.InterfaceModeType.Ribbon;
+            Config.Instance.InterfaceMode = InterfaceModeComboBox.SelectedIndex == 0 ? Config.InterfaceModeType.CommandBar : Config.InterfaceModeType.Ribbon;
 
-            if (StatusBarToggleSwitch.IsChecked.Value)
-                Config.Instance.ShowStatusBar = true;
-            else
-                Config.Instance.ShowStatusBar = false;
+            Config.Instance.ShowStatusBar = StatusBarToggleSwitch.IsChecked.Value;
 
-            if (TitlebarTextToggleSwitch.IsChecked.Value)
-                Config.Instance.ShowTitlebarText = true;
-            else
-                Config.Instance.ShowTitlebarText = false;
-
-            /*if (DetailsPanePositionComboBox.SelectedIndex == 1)
-                Config.Instance.DetailsPanePlacement = Dock.Left;
-            else if (DetailsPanePositionComboBox.SelectedIndex == 2)
-                Config.Instance.DetailsPanePlacement = Dock.Right;
-            else if (DetailsPanePositionComboBox.SelectedIndex == 3)
-                Config.Instance.DetailsPanePlacement = Dock.Top;
-            else
-                Config.Instance.DetailsPanePlacement = Dock.Bottom;*/
+            Config.Instance.ShowTitlebarText = TitlebarTextToggleSwitch.IsChecked.Value;
 
             if (sender == OkButton)
                 Close();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(Object sender, RoutedEventArgs e)
         {
             Close();
         }

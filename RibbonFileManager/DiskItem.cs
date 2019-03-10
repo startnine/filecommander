@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace RibbonFileManager
 {
@@ -16,25 +16,18 @@ namespace RibbonFileManager
 
         FileSystemInfo _info;
 
-        bool _populated = false;
+        Boolean _populated = false;
         ObservableCollection<DiskItem> _subItems = new ObservableCollection<DiskItem>();
 
         public ObservableCollection<DiskItem> SubItems
         {
-            get// => _subItems;
+            get
             {
                 if (!_populated)
                 {
                     PopulateSubItems();
                     _populated = true;
                 }
-                //_subItems = new ObservableCollection<DiskItem>();
-                /*if (_info is DirectoryInfo)
-                {
-                    var info = _info as DirectoryInfo;
-                    foreach (FileSystemInfo f in info.EnumerateFileSystemInfos())
-                        _subItems.Add(new DiskItem(f));
-                }*/
 
                 return _subItems;
             }
@@ -44,7 +37,7 @@ namespace RibbonFileManager
                 NotifyPropertyChanged();
             }
         }
-        public string ItemPath
+        public String ItemPath
         {
             get => _info.FullName;
             private set
@@ -56,35 +49,24 @@ namespace RibbonFileManager
             }
         }
 
-        public string ItemRealName
+        public String ItemRealName
         {
             get => _info.Name;
         }
 
-        string _itemDisplayName = null;
+        String _itemDisplayName = null;
 
-        public string ItemDisplayName
+        public String ItemDisplayName
         {
             get
             {
-                if (_itemDisplayName != null)
-                    return _itemDisplayName;
-                else
-                    return ItemRealName;
+                return _itemDisplayName ?? ItemRealName;
             }
             set
             {
                 _itemDisplayName = value;
                 NotifyPropertyChanged();
             }
-        }
-
-        public enum DiskItemCategory
-        {
-            File,
-            Shortcut,
-            Directory,
-            App
         }
 
         DiskItemCategory _itemCategory;
@@ -106,7 +88,7 @@ namespace RibbonFileManager
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public System.Drawing.Icon ItemSmallIcon
+        public Icon ItemSmallIcon
         {
             get
             {
@@ -114,7 +96,7 @@ namespace RibbonFileManager
             }
         }
 
-        public System.Drawing.Icon ItemLargeIcon
+        public Icon ItemLargeIcon
         {
             get
             {
@@ -122,7 +104,7 @@ namespace RibbonFileManager
             }
         }
 
-        public System.Drawing.Icon ItemExtraLargeIcon
+        public Icon ItemExtraLargeIcon
         {
             get
             {
@@ -130,7 +112,7 @@ namespace RibbonFileManager
             }
         }
 
-        public System.Drawing.Icon ItemJumboIcon
+        public Icon ItemJumboIcon
         {
             get
             {
@@ -138,53 +120,41 @@ namespace RibbonFileManager
             }
         }
 
-        System.Drawing.Icon GetIcon(UInt32 flags)
+        Icon GetIcon(UInt32 flags)
         {
-            NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
+            var shInfo = new NativeMethods.ShFileInfo();
             NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
-            //return System.Drawing.Icon.FromHandle(shInfo.hIcon);
-            System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
+            var result = (Icon) Icon.FromHandle(shInfo.hIcon).Clone();
             NativeMethods.DestroyIcon(shInfo.hIcon);
             return result;
         }
 
-        System.Drawing.Icon GetIcon(UInt32 flags, int imageList)
+        Icon GetIcon(UInt32 flags, Int32 imageList)
         {
-            NativeMethods.ShFileInfo shInfo = new NativeMethods.ShFileInfo();
+            var shInfo = new NativeMethods.ShFileInfo();
             NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
-            /*System.Drawing.Icon result = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(shInfo.hIcon).Clone());
-            NativeMethods.DestroyIcon(shInfo.hIcon);*/
 
-            NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out NativeMethods.IImageList list);
-            IntPtr resultHandle = IntPtr.Zero;
+            NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out var list);
+            var resultHandle = IntPtr.Zero;
             list.GetIcon(shInfo.iIcon, 1, ref resultHandle);
-            System.Drawing.Icon finalResult = (System.Drawing.Icon)(System.Drawing.Icon.FromHandle(resultHandle).Clone());
+            var finalResult = (Icon) Icon.FromHandle(resultHandle).Clone();
             NativeMethods.DestroyIcon(resultHandle);
             return finalResult;
         }
 
-        public double ItemSize
-        {
-            get
-            {
-                if (_info is FileInfo)
-                    return (_info as FileInfo).Length;
-                else
-                    return (double)0.0;
-            }
-        }
+        public Double ItemSize => _info is FileInfo ? (_info as FileInfo).Length : 0.0;
 
-        public string FriendlyItemSize
+        public String FriendlyItemSize
         {
             get
             {
                 if (_info is FileInfo)
                 {
-                    double size = ItemSize;
-                    int unitCounter = 0;
+                    var size = ItemSize;
+                    var unitCounter = 0;
                     while (size > 1024)
                     {
-                        size = size / 1024;
+                        size /= 1024;
                         unitCounter++;
                     }
 
@@ -196,10 +166,7 @@ namespace RibbonFileManager
                         return size.ToString() + " MB";
                     else if (unitCounter == 3)
                         return size.ToString() + " GB";
-                    else if (unitCounter == 4)
-                        return size.ToString() + " TB";
-                    else
-                        return size.ToString() + " PB";
+                    else return unitCounter == 4 ? size.ToString() + " TB" : size.ToString() + " PB";
                 }
                 else return String.Empty;
             }
@@ -210,10 +177,6 @@ namespace RibbonFileManager
             ItemPath = Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(ItemPath))
                 ItemCategory = DiskItemCategory.Directory;
-
-            //SetFSInfo(ItemPath);
-
-            //WatchFileSystem();
         }
 
         public DiskItem(FileSystemInfo info)
@@ -221,8 +184,6 @@ namespace RibbonFileManager
             _info = info;
             if (info is DirectoryInfo)
                 ItemCategory = DiskItemCategory.Directory;
-
-            //WatchFileSystem();
         }
 
         FileSystemWatcher _watcher;
@@ -232,9 +193,9 @@ namespace RibbonFileManager
             if (_info is DirectoryInfo)
             {
                 var info = _info as DirectoryInfo;
-                int lastDirectoryIndex = 0;
+                var lastDirectoryIndex = 0;
                 var infos = info.GetFileSystemInfos();
-                foreach (FileSystemInfo f in infos)
+                foreach (var f in infos)
                 {
                     if (f is DirectoryInfo)
                     {
@@ -253,9 +214,9 @@ namespace RibbonFileManager
                 _watcher = new FileSystemWatcher(_info.FullName);
         }
 
-        string SetFSInfo(string path)
+        String SetFSInfo(String path)
         {
-            string returnValue = Environment.ExpandEnvironmentVariables(path);
+            var returnValue = Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(path))
                 _info = new DirectoryInfo(path);
             else if (File.Exists(path))
@@ -290,9 +251,9 @@ namespace RibbonFileManager
         public List<DiskItem> GetOpenWithPrograms()
         {
             var assoc = new List<DiskItem>();
-            string ext = Path.GetExtension(ItemPath);
+            var ext = Path.GetExtension(ItemPath);
 
-            string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + ext + @"\OpenWithList";
+            var keyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\" + ext + @"\OpenWithList";
 
             using (var openWithListKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(keyPath))
             {
@@ -301,13 +262,13 @@ namespace RibbonFileManager
                     var mruListVal = openWithListKey.GetValue("MRUList");
                     if (mruListVal != null)
                     {
-                        char[] mruList = mruListVal.ToString().ToCharArray();
-                        foreach (char c in mruList)
+                        var mruList = mruListVal.ToString().ToCharArray();
+                        foreach (var c in mruList)
                         {
                             var charVal = openWithListKey.GetValue(c.ToString());
                             if (charVal != null)
                             {
-                                string exePath = ConvertProgIdToExecutablePath(charVal.ToString());
+                                var exePath = ConvertProgIdToExecutablePath(charVal.ToString());
                                 if (exePath != null)
                                     assoc.Add(new DiskItem(exePath));
                                 else
@@ -323,9 +284,9 @@ namespace RibbonFileManager
             return assoc;
         }
 
-        string ConvertProgIdToExecutablePath(string progId)
+        String ConvertProgIdToExecutablePath(String progId)
         {
-            string outPath = null;
+            String outPath = null;
             using (var appPathKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + progId))
             {
                 if (appPathKey != null)
@@ -342,15 +303,6 @@ namespace RibbonFileManager
                         if (defaultVal != null)
                         {
                             outPath = GetAssociatedProgramItemFromRegistry(defaultVal);
-                            /*string defaultValue = defaultVal.ToString();
-                            if (defaultValue != null)
-                            {
-                                Debug.WriteLine("pathValue: " + defaultValue);
-                                defaultValue = Environment.ExpandEnvironmentVariables(defaultValue);
-
-                                if (File.Exists(defaultValue))
-                                    assoc = new DiskItem(defaultValue);
-                            }*/
                         }
                     }
                 }
@@ -359,13 +311,12 @@ namespace RibbonFileManager
             return outPath;
         }
 
-        string GetAssociatedProgramItemFromRegistry(object targetObject)
+        String GetAssociatedProgramItemFromRegistry(Object targetObject)
         {
-            string item = null;
-            string targetValue = targetObject.ToString();
+            String item = null;
+            var targetValue = targetObject.ToString();
             if (targetValue != null)
             {
-                //Debug.WriteLine("targetValue: " + targetValue);
                 targetValue = Environment.ExpandEnvironmentVariables(targetValue);
 
                 if (File.Exists(targetValue))
@@ -374,11 +325,11 @@ namespace RibbonFileManager
             return item;
         }
 
-        public bool? RenameItem(string newName)
+        public Boolean? RenameItem(String newName)
         {
-            bool? returnValue = null;
-            string oldPath = ItemPath;
-            string newPath = Path.Combine(Directory.GetParent(ItemPath).ToString(), newName);
+            Boolean? returnValue = null;
+            var oldPath = ItemPath;
+            var newPath = Path.Combine(Directory.GetParent(ItemPath).ToString(), newName);
             if ((!File.Exists(newPath)) && (!Directory.Exists(newPath)))
             {
                 if ((ItemCategory == DiskItemCategory.File) || (ItemCategory == DiskItemCategory.Shortcut))
@@ -436,169 +387,168 @@ namespace RibbonFileManager
         private class NativeMethods
         {
             [DllImport("shell32.dll", EntryPoint = "#727")]
-            public extern static int SHGetImageList(int iImageList, ref Guid riid, out IImageList ppv);
+            public extern static Int32 SHGetImageList(Int32 iImageList, ref Guid riid, out IImageList ppv);
 
             public static Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
 
-            [ComImportAttribute()]
-            [GuidAttribute("46EB5926-582E-4017-9FDF-E8998DAA0950")]
-            [InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
-            //helpstring("Image List"),
+            [ComImport]
+            [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
+            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
             public interface IImageList
             {
                 [PreserveSig]
-                int Add(
+                Int32 Add(
                     IntPtr hbmImage,
                     IntPtr hbmMask,
-                    ref int pi);
+                    ref Int32 pi);
 
                 [PreserveSig]
-                int ReplaceIcon(
-                    int i,
+                Int32 ReplaceIcon(
+                    Int32 i,
                     IntPtr hicon,
-                    ref int pi);
+                    ref Int32 pi);
 
                 [PreserveSig]
-                int SetOverlayImage(
-                    int iImage,
-                    int iOverlay);
+                Int32 SetOverlayImage(
+                    Int32 iImage,
+                    Int32 iOverlay);
 
                 [PreserveSig]
-                int Replace(
-                    int i,
+                Int32 Replace(
+                    Int32 i,
                     IntPtr hbmImage,
                     IntPtr hbmMask);
 
                 [PreserveSig]
-                int AddMasked(
+                Int32 AddMasked(
                     IntPtr hbmImage,
-                    int crMask,
-                    ref int pi);
+                    Int32 crMask,
+                    ref Int32 pi);
 
                 [PreserveSig]
-                int Draw(
+                Int32 Draw(
                     ref IMAGELISTDRAWPARAMS pimldp);
 
                 [PreserveSig]
-                int Remove(
-                int i);
+                Int32 Remove(
+                Int32 i);
 
                 [PreserveSig]
-                int GetIcon(
-                    int i,
-                    int flags,
+                Int32 GetIcon(
+                    Int32 i,
+                    Int32 flags,
                     ref IntPtr picon);
 
                 [PreserveSig]
-                int GetImageInfo(
-                    int i,
+                Int32 GetImageInfo(
+                    Int32 i,
                     ref IMAGEINFO pImageInfo);
 
                 [PreserveSig]
-                int Copy(
-                    int iDst,
+                Int32 Copy(
+                    Int32 iDst,
                     IImageList punkSrc,
-                    int iSrc,
-                    int uFlags);
+                    Int32 iSrc,
+                    Int32 uFlags);
 
                 [PreserveSig]
-                int Merge(
-                    int i1,
+                Int32 Merge(
+                    Int32 i1,
                     IImageList punk2,
-                    int i2,
-                    int dx,
-                    int dy,
+                    Int32 i2,
+                    Int32 dx,
+                    Int32 dy,
                     ref Guid riid,
                     ref IntPtr ppv);
 
                 [PreserveSig]
-                int Clone(
+                Int32 Clone(
                     ref Guid riid,
                     ref IntPtr ppv);
 
                 [PreserveSig]
-                int GetImageRect(
-                    int i,
-                    ref System.Drawing.Rectangle prc);
+                Int32 GetImageRect(
+                    Int32 i,
+                    ref Rectangle prc);
 
                 [PreserveSig]
-                int GetIconSize(
-                    ref int cx,
-                    ref int cy);
+                Int32 GetIconSize(
+                    ref Int32 cx,
+                    ref Int32 cy);
 
                 [PreserveSig]
-                int SetIconSize(
-                    int cx,
-                    int cy);
+                Int32 SetIconSize(
+                    Int32 cx,
+                    Int32 cy);
 
                 [PreserveSig]
-                int GetImageCount(
-                ref int pi);
+                Int32 GetImageCount(
+                ref Int32 pi);
 
                 [PreserveSig]
-                int SetImageCount(
-                    int uNewCount);
+                Int32 SetImageCount(
+                    Int32 uNewCount);
 
                 [PreserveSig]
-                int SetBkColor(
-                    int clrBk,
-                    ref int pclr);
+                Int32 SetBkColor(
+                    Int32 clrBk,
+                    ref Int32 pclr);
 
                 [PreserveSig]
-                int GetBkColor(
-                    ref int pclr);
+                Int32 GetBkColor(
+                    ref Int32 pclr);
 
                 [PreserveSig]
-                int BeginDrag(
-                    int iTrack,
-                    int dxHotspot,
-                    int dyHotspot);
+                Int32 BeginDrag(
+                    Int32 iTrack,
+                    Int32 dxHotspot,
+                    Int32 dyHotspot);
 
                 [PreserveSig]
-                int EndDrag();
+                Int32 EndDrag();
 
                 [PreserveSig]
-                int DragEnter(
+                Int32 DragEnter(
                     IntPtr hwndLock,
-                    int x,
-                    int y);
+                    Int32 x,
+                    Int32 y);
 
                 [PreserveSig]
-                int DragLeave(
+                Int32 DragLeave(
                     IntPtr hwndLock);
 
                 [PreserveSig]
-                int DragMove(
-                    int x,
-                    int y);
+                Int32 DragMove(
+                    Int32 x,
+                    Int32 y);
 
                 [PreserveSig]
-                int SetDragCursorImage(
+                Int32 SetDragCursorImage(
                     ref IImageList punk,
-                    int iDrag,
-                    int dxHotspot,
-                    int dyHotspot);
+                    Int32 iDrag,
+                    Int32 dxHotspot,
+                    Int32 dyHotspot);
 
                 [PreserveSig]
-                int DragShowNolock(
-                    int fShow);
+                Int32 DragShowNolock(
+                    Int32 fShow);
 
                 [PreserveSig]
-                int GetDragImage(
-                    ref System.Drawing.Point ppt,
-                    ref System.Drawing.Point pptHotspot,
+                Int32 GetDragImage(
+                    ref Point ppt,
+                    ref Point pptHotspot,
                     ref Guid riid,
                     ref IntPtr ppv);
 
                 [PreserveSig]
-                int GetItemFlags(
-                    int i,
-                    ref int dwFlags);
+                Int32 GetItemFlags(
+                    Int32 i,
+                    ref Int32 dwFlags);
 
                 [PreserveSig]
-                int GetOverlayImage(
-                    int iOverlay,
-                    ref int piIndex);
+                Int32 GetOverlayImage(
+                    Int32 iOverlay,
+                    ref Int32 piIndex);
             };
 
             [StructLayout(LayoutKind.Sequential)]
@@ -606,35 +556,36 @@ namespace RibbonFileManager
             {
                 public IntPtr hbmImage;
                 public IntPtr hbmMask;
-                public int Unused1;
-                public int Unused2;
-                public System.Drawing.Rectangle rcImage;
+                public Int32 Unused1;
+                public Int32 Unused2;
+                public Rectangle rcImage;
             }
 
             public struct IMAGELISTDRAWPARAMS
             {
-                public int cbSize;
+                public Int32 cbSize;
                 public IntPtr himl;
-                public int i;
+                public Int32 i;
                 public IntPtr hdcDst;
-                public int x;
-                public int y;
-                public int cx;
-                public int cy;
-                public int xBitmap;        // x offest from the upperleft of bitmap
-                public int yBitmap;        // y offset from the upperleft of bitmap
-                public int rgbBk;
-                public int rgbFg;
-                public int fStyle;
-                public int dwRop;
-                public int fState;
-                public int Frame;
-                public int crEffect;
+                public Int32 x;
+                public Int32 y;
+                public Int32 cx;
+                public Int32 cy;
+                public Int32 xBitmap;        // x offest from the upperleft of bitmap
+                public Int32 yBitmap;        // y offset from the upperleft of bitmap
+                public Int32 rgbBk;
+                public Int32 rgbFg;
+                public Int32 fStyle;
+                public Int32 dwRop;
+                public Int32 fState;
+                public Int32 Frame;
+                public Int32 crEffect;
             }
 
 
+
             [DllImport("user32.dll", SetLastError = true)]
-            public static extern bool DestroyIcon(IntPtr hIcon);
+            public static extern Boolean DestroyIcon(IntPtr hIcon);
 
             [DllImport("shell32.dll", CharSet = CharSet.Auto)]
             public static extern IntPtr SHGetFileInfo(String pszPath, UInt32 dwFileAttributes, ref ShFileInfo psfi, UInt32 cbFileInfo, UInt32 uFlags);
@@ -652,27 +603,35 @@ namespace RibbonFileManager
             }
 
             [DllImport("shell32.dll")]
-            public static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+            public static extern Boolean ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
 
             [StructLayout(LayoutKind.Sequential)]//, CharSet = CharSet.Auto)]
             public struct SHELLEXECUTEINFO
             {
-                public int cbSize;
-                public uint fMask;
+                public Int32 cbSize;
+                public UInt32 fMask;
                 public IntPtr hwnd;
                 public String lpVerb;
                 public String lpFile;
                 public String lpParameters;
                 public String lpDirectory;
-                public int nShow;
+                public Int32 nShow;
                 public IntPtr hInstApp; //int
                 public IntPtr lpIDList; //int
                 public String lpClass;
                 public IntPtr hkeyClass; //int
-                public uint dwHotKey;
+                public UInt32 dwHotKey;
                 public IntPtr hIcon; //int
                 public IntPtr hProcess; //int
             }
         }
+    }
+
+    public enum DiskItemCategory
+    {
+        File,
+        Shortcut,
+        Directory,
+        App
     }
 }
