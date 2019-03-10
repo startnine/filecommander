@@ -161,8 +161,8 @@ namespace RibbonFileManager
 
                 var tabHeaderBinding = new Binding()
                 {
-                    Source = item.Content,
-                    Path = new PropertyPath("CurrentDirectoryName"),
+                    Source = (item.Content as WindowContent).NavigationStack,
+                    Path = new PropertyPath("Current"),
                     Mode = BindingMode.OneWay,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                     FallbackValue = Path.GetFileName(path)
@@ -503,6 +503,7 @@ namespace RibbonFileManager
         public void Navigate(Location location)
         {
             Title = location.Name;
+            (ContentTabControl.SelectedItem as TabItem).GetBindingExpression(HeaderedContentControl.HeaderProperty).UpdateTarget(); //activec
 
             UpdateStatusBar();
             ValidateNavButtonStates();

@@ -176,6 +176,7 @@ namespace RibbonFileManager
 
             RecentLocations.Navigate(location);
             await RefreshAsync(location, token);
+            CurrentDisplayName = location.Name;
         }
 
         async Task Navigate(SearchQuery l, CancellationTokenSource source, Boolean clearTextBox = true)
@@ -191,9 +192,16 @@ namespace RibbonFileManager
             {
                 var results = new ObservableCollection<DiskItem>();
                 CurrentDirectoryListView.ItemsSource = results;
+                int nextDirectoryIndex = 0;
                 await foreach (var path in GetDirectoryContents(l.Path, l.Query, source.Token, l.Recursive))
                 {
-                    results.Add(path);
+                    if (path.ItemCategory == DiskItemCategory.Directory)
+                    {
+                        results.Insert(nextDirectoryIndex, path);
+                        nextDirectoryIndex++;
+                    }
+                    else
+                        results.Add(path);
                     source.Token.ThrowIfCancellationRequested();
                 }
             }

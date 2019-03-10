@@ -91,7 +91,7 @@ namespace RibbonFileManager
 
         public Boolean CanGoForward => _index + 1 <= Count - 1;
 
-        public Boolean CanGoBack => _index - 1 >= 0;
+        public Boolean CanGoBack => _index > 0; //_index - 1 >= 0;
 
         public T Current
         {
