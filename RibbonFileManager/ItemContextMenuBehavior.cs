@@ -154,9 +154,9 @@ namespace RibbonFileManager
                 (e.NewValue as MenuItem).Click += (sender as ItemContextMenuBehavior).DeleteMenuItem_Click;
         }
 
-        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ManagerBase.DeleteSelection();
+            await ManagerBase.DeleteSelectionAsync();
         }
 
         public MenuItem RenameMenuItem

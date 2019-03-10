@@ -54,7 +54,7 @@ namespace RibbonFileManager
         private void ParentListViewItem_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             //Debug.WriteLine("DOUBLE CLICK");
-            ManagerBase.OpenSelection();
+            ManagerBase.OpenSelectionAsync();
         }
     }
 }

@@ -12,6 +12,8 @@ namespace RibbonFileManager
 {
     public class DiskItem : INotifyPropertyChanged
     {
+        public override Int32 GetHashCode() => _info.GetHashCode();
+
         FileSystemInfo _info;
 
         bool _populated = false;
@@ -247,7 +249,6 @@ namespace RibbonFileManager
 
         void WatchFileSystem()
         {
-
             if (_info is DirectoryInfo)
                 _watcher = new FileSystemWatcher(_info.FullName);
         }

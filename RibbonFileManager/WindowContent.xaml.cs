@@ -25,30 +25,30 @@ namespace RibbonFileManager
     /// </summary>
     public partial class WindowContent : UserControl
     {
-        public bool IsRenamingFiles
+        public Boolean IsRenamingFiles
         {
-            get => (bool)GetValue(IsRenamingFilesProperty);
+            get => (Boolean)GetValue(IsRenamingFilesProperty);
             set => SetValue(IsRenamingFilesProperty, value);
         }
 
-        public static readonly DependencyProperty IsRenamingFilesProperty = DependencyProperty.Register("IsRenamingFiles", typeof(bool), typeof(WindowContent), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsRenamingFilesProperty = DependencyProperty.Register("IsRenamingFiles", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
 
         public MainWindow OwnerWindow
         {
             get => Window.GetWindow(this) as MainWindow;
         }
 
-        public static event EventHandler<EventArgs> CurrentDirectorySelectionChanged;
+        public static event EventHandler CurrentDirectorySelectionChanged;
 
         CancellationTokenSource _source;
 
-        public string CurrentFolderTitle
+        public String CurrentFolderTitle
         {
             get
             {
                 try
                 {
-                    return Path.GetFileName(CurrentPath);
+                    return CurrentLocation.Name;
                 }
                 catch
                 {
@@ -57,42 +57,25 @@ namespace RibbonFileManager
             }
         }
 
-        public List<string> HistoryList { get; set; } = new List<string>();
-        /*{
-            get => (List<String>)GetValue(HistoryListProperty);
-            set => SetValue(HistoryListProperty, value);
-        }*/
 
-        //public static readonly DependencyProperty HistoryListProperty = DependencyProperty.Register("HistoryList", typeof(List<String>), typeof(FileManagerBase), new PropertyMetadata(new List<String>()));
+        public NavigationStack<Location> NavigationStack { get; set; } = new NavigationStack<Location>();
 
-        public Int32 HistoryIndex
+        public RecentLocationsList<Location> RecentLocations { get; set; } = new RecentLocationsList<Location>();
+
+        public IEnumerable<Location> HistoryElements => RecentLocations.Reverse();
+
+        public Location CurrentLocation
         {
-            get => (Int32)GetValue(HistoryIndexProperty);
-            set => SetValue(HistoryIndexProperty, value);
+            get => NavigationStack.Current;
         }
 
-        public static readonly DependencyProperty HistoryIndexProperty = DependencyProperty.Register("HistoryIndex", typeof(Int32), typeof(WindowContent), new PropertyMetadata(0, OnHistoryIndexPropertyChangedCallback));
-
-        static void OnHistoryIndexPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public String CurrentDisplayName
         {
-            WindowContent sender = d as WindowContent;
-            var oldValue = (Int32)e.OldValue;
-            var newValue = (Int32)e.NewValue;
-            sender.Navigate(sender.HistoryList[newValue]);
+            get => (String)GetValue(CurrentDisplayNameProperty);
+            set => SetValue(CurrentDisplayNameProperty, value);
         }
 
-        public string CurrentPath
-        {
-            get => HistoryList[HistoryIndex];
-        }
-
-        public string CurrentDirectoryName
-        {
-            get => (string)GetValue(CurrentDirectoryNameProperty);
-            set => SetValue(CurrentDirectoryNameProperty, value);
-        }
-
-        public static readonly DependencyProperty CurrentDirectoryNameProperty = DependencyProperty.Register("CurrentDirectoryName", typeof(string), typeof(WindowContent), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty CurrentDisplayNameProperty = DependencyProperty.Register(nameof(CurrentDisplayName), typeof(String), typeof(WindowContent), new PropertyMetadata(String.Empty));
 
         public Double IconSize
         {
@@ -102,38 +85,29 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register("IconSize", typeof(Double), typeof(WindowContent), new PropertyMetadata((Double)48.0));
 
-        public bool ShowDetailsPane
+        public Boolean ShowDetailsPane
         {
-            get => (bool)GetValue(ShowDetailsPaneProperty);
+            get => (Boolean)GetValue(ShowDetailsPaneProperty);
             set => SetValue(ShowDetailsPaneProperty, value);
         }
 
-        public static readonly DependencyProperty ShowDetailsPaneProperty = DependencyProperty.Register("ShowDetailsPane", typeof(bool), typeof(WindowContent), new PropertyMetadata(false));
+        public static readonly DependencyProperty ShowDetailsPaneProperty = DependencyProperty.Register("ShowDetailsPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
 
-        public bool ShowPreviewPane
+        public Boolean ShowPreviewPane
         {
-            get => (bool)GetValue(ShowPreviewPaneProperty);
+            get => (Boolean)GetValue(ShowPreviewPaneProperty);
             set => SetValue(ShowPreviewPaneProperty, value);
         }
 
-        public static readonly DependencyProperty ShowPreviewPaneProperty = DependencyProperty.Register("ShowPreviewPane", typeof(bool), typeof(WindowContent), new PropertyMetadata(false));
+        public static readonly DependencyProperty ShowPreviewPaneProperty = DependencyProperty.Register("ShowPreviewPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
 
-        public bool ShowNavigationPane
+        public Boolean ShowNavigationPane
         {
-            get => (bool)GetValue(ShowNavigationPaneProperty);
+            get => (Boolean)GetValue(ShowNavigationPaneProperty);
             set => SetValue(ShowNavigationPaneProperty, value);
         }
 
-        public static readonly DependencyProperty ShowNavigationPaneProperty = DependencyProperty.Register("ShowNavigationPane", typeof(bool), typeof(WindowContent), new PropertyMetadata(true));
-
-        public enum FileBrowserView
-        {
-            Icons,
-            List,
-            Details,
-            Tiles,
-            Content
-        }
+        public static readonly DependencyProperty ShowNavigationPaneProperty = DependencyProperty.Register("ShowNavigationPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(true));
 
         public FileBrowserView CurrentView
         {
@@ -143,34 +117,35 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty CurrentViewProperty = DependencyProperty.Register("CurrentView", typeof(FileBrowserView), typeof(WindowContent), new PropertyMetadata(FileBrowserView.Icons));
 
-        public bool ShowItemCheckboxes
+        public Boolean ShowItemCheckboxes
         {
-            get => (bool)GetValue(ShowItemCheckboxesProperty);
+            get => (Boolean)GetValue(ShowItemCheckboxesProperty);
             set => SetValue(ShowItemCheckboxesProperty, value);
         }
 
-        public static readonly DependencyProperty ShowItemCheckboxesProperty = DependencyProperty.Register("ShowItemCheckboxes", typeof(bool), typeof(WindowContent), new PropertyMetadata(false));
+        public static readonly DependencyProperty ShowItemCheckboxesProperty = DependencyProperty.Register("ShowItemCheckboxes", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
 
-        string _initPath;
-        public WindowContent(string path)
+        String _initPath;
+
+        public WindowContent(String path)
         {
             InitializeComponent();
             _initPath = path;
-            if (HistoryList.Count == 0)
-                HistoryList.Add(_initPath);
+            if (NavigationStack.Count == 0)
+                NavigationStack.Add(new DirectoryQuery(path));
 
             Loaded += WindowContent_Loaded;
         }
 
-        private void WindowContent_Loaded(object sender, RoutedEventArgs e)
+        private async void WindowContent_Loaded(Object sender, RoutedEventArgs e)
         {
             Loaded -= WindowContent_Loaded;
-            Navigate(_initPath);
+            await NavigateAsync(new DirectoryQuery(_initPath));
         }
 
-        async IAsyncEnumerable<DiskItem> GetSearchResults(String query, CancellationToken token)
+        static async IAsyncEnumerable<DiskItem> GetDirectoryContents(String path, String query, CancellationToken token, Boolean recursive)
         {
-            var entries = Directory.EnumerateFileSystemEntries(CurrentPath, query, new EnumerationOptions { RecurseSubdirectories = true, ReturnSpecialDirectories = true });
+            var entries = Directory.EnumerateFileSystemEntries(path, query, new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
             var enumer = entries.GetEnumerator();
             while (await Task.Run(enumer.MoveNext))
             {
@@ -180,72 +155,66 @@ namespace RibbonFileManager
             }
         }
 
-        public async Task SearchAsync(String query, CancellationToken token = default)
+        public async Task RefreshAsync(Location location, CancellationToken token = default)
         {
             _source?.Cancel();
-            if (String.IsNullOrEmpty(query))
+            _source = new CancellationTokenSource();
+            var source = CancellationTokenSource.CreateLinkedTokenSource(_source.Token, token);
+
+
+            switch (location)
             {
-                CurrentDirectoryListView.ItemsSource = new DiskItem(CurrentPath).SubItems;
+                case DirectoryQuery l: await Navigate(new SearchQuery(l.Item.ItemPath, "*", false), source); break;
+                case SearchQuery s: await Navigate(s, source, false); break;
             }
-            else
-            {
-                var old = CurrentDirectoryListView.ItemsSource;
+        }
+        
+        public async Task NavigateAsync(Location location, CancellationToken token = default)
+        {
+            NavigationStack.Add(location);
+            NavigationStack.Forward();
 
-                _source = new CancellationTokenSource();
-                var source = CancellationTokenSource.CreateLinkedTokenSource(_source.Token, token);
-
-                try
-                {
-                    var results = new ObservableCollection<DiskItem>();
-                    CurrentDirectoryListView.ItemsSource = results;
-                    await foreach (var path in GetSearchResults(query, source.Token))
-                    {
-                        results.Add(path);
-                        source.Token.ThrowIfCancellationRequested();
-                    }
-                }
-                catch (OperationCanceledException) // if the user canceled search, then preserve what's been searched
-                {
-                }
-                catch // else, don't do anything
-                {
-                    CurrentDirectoryListView.ItemsSource = old;
-                }
-            }
-
+            RecentLocations.Navigate(location);
+            await RefreshAsync(location, token);
         }
 
-        public void Navigate(string path)
+        async Task Navigate(SearchQuery l, CancellationTokenSource source, Boolean clearTextBox = true)
         {
-            if (Directory.Exists(path))
-            {
-                _source?.Cancel();
-                CurrentDirectoryListView.ItemsSource = new DiskItem(path).SubItems;
-                CurrentDirectoryName = Path.GetFileName(path);
+            var old = CurrentDirectoryListView.ItemsSource;
 
-                if (!HistoryList.Contains(path))
-                {
-                    HistoryList.Add(path);
+            OwnerWindow.Navigate(l);
 
-                    HistoryIndex = HistoryList.IndexOf(path);
-                }
-
-                OwnerWindow.Navigate(path);
+            if (clearTextBox)
                 OwnerWindow.SearchTextBox.Clear();
 
-                //OwnerWindow.ValidateNavButtonStates();
+            try
+            {
+                var results = new ObservableCollection<DiskItem>();
+                CurrentDirectoryListView.ItemsSource = results;
+                await foreach (var path in GetDirectoryContents(l.Path, l.Query, source.Token, l.Recursive))
+                {
+                    results.Add(path);
+                    source.Token.ThrowIfCancellationRequested();
+                }
+            }
+            catch (OperationCanceledException) when (!String.IsNullOrEmpty(l.Query)) // if the user canceled a search, then preserve what's been searched
+            {
+            }
+            catch // else, fall back to the previous results
+            {
+                CurrentDirectoryListView.ItemsSource = old;
             }
         }
 
-        private void AddressBox_KeyDown(object sender, KeyEventArgs e)
+        private async void AddressBox_KeyDown(Object sender, KeyEventArgs e)
         {
             var bar = (sender as TextBox);
             if (e.Key == Key.Enter)
             {
-                string expText = Environment.ExpandEnvironmentVariables(bar.Text);
+                var expText = Environment.ExpandEnvironmentVariables(bar.Text);
                 if (Directory.Exists(expText))
                 {
-                    Navigate(expText);
+                    await NavigateAsync(new DirectoryQuery(expText));
                     CurrentDirectoryListView.Focus();
                     //NavBar_PathTextBox_LostFocus(null, null);
                 }
@@ -261,7 +230,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void RunAsAdminMenuItem_Loaded(object sender, RoutedEventArgs e)
+        private void RunAsAdminMenuItem_Loaded(Object sender, RoutedEventArgs e)
         {
             var item = (sender as MenuItem).Tag as ListViewItem;
 
@@ -298,15 +267,15 @@ namespace RibbonFileManager
             }
         }
 
-        private void NavigationPaneTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private async void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             var val = e.NewValue as DiskItem;
 
             if (val != null)
-                Navigate(Environment.ExpandEnvironmentVariables(val.ItemPath));
+                await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)));
         }
 
-        private void CurrentDirectoryListView_KeyDown(object sender, KeyEventArgs e)
+        private async void CurrentDirectoryListView_KeyDown(Object sender, KeyEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
@@ -315,13 +284,13 @@ namespace RibbonFileManager
                 else if (e.Key == Key.X)
                     CutSelection();
                 else if (e.Key == Key.V)
-                    PasteCurrent();
+                    await PasteCurrentAsync();
             }
             else if (e.Key == Key.Delete)
-                DeleteSelection();
+                await DeleteSelectionAsync();
         }
 
-        private void CurrentDirectoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CurrentDirectoryListView_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             DiskItem item = null;
             if (CurrentDirectoryListView.SelectedItem != null)
@@ -329,26 +298,15 @@ namespace RibbonFileManager
             OwnerWindow.ValidateCommandStates(CurrentDirectoryListView.SelectedItems.Count, item);
         }
 
-        public void OpenSelection()
+        public async Task OpenSelectionAsync(DiskItem.OpenVerbs verb = DiskItem.OpenVerbs.Normal)
         {
-            OpenSelection(DiskItem.OpenVerbs.Normal);
-        }
-
-        public void OpenSelection(DiskItem.OpenVerbs verb)
-        {
-            //var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
-            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
-            foreach (DiskItem i in itemsArray)
+            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
             {
-                //string path = i.ItemPath;
-
-                //Debug.WriteLine(path);
                 if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1) //
                     {
-                        Navigate(i.ItemPath);
+                        await NavigateAsync(new DirectoryQuery(i.ItemPath));
                         break;
                     }
                     else
@@ -358,7 +316,7 @@ namespace RibbonFileManager
                 }
                 else
                 {
-                    ProcessStartInfo info = new ProcessStartInfo()
+                    var info = new ProcessStartInfo()
                     {
                         FileName = i.ItemPath,
                         UseShellExecute = true
@@ -400,13 +358,14 @@ namespace RibbonFileManager
             Clipboard.SetText(paths);
         }
 
-        public void PasteCurrent()
+        public async Task PasteCurrentAsync()
         {
-            var items = Config.CopyTo(HistoryList[HistoryIndex]);
-            var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            DiskItem[] itemsArray = new DiskItem[items.Count];
-            items.CopyTo(itemsArray, 0);
-            foreach (var d in itemsArray)
+            if (!(NavigationStack.Current is DirectoryQuery curr)) return;
+
+            var items = Config.PasteIn(curr.Item.ItemPath);
+            var source = (ObservableCollection<DiskItem>) CurrentDirectoryListView.ItemsSource;
+
+            foreach (var d in items)
             {
                 if (source.Contains(d))
                 {
@@ -418,35 +377,33 @@ namespace RibbonFileManager
                 }
             }
 
-            Refresh();
+            await RefreshAsync();
         }
 
         public void SetClipboard()
         {
             Config.ClipboardContents.Clear();
-            DiskItem[] itemsArray = new DiskItem[CurrentDirectoryListView.SelectedItems.Count];
-            CurrentDirectoryListView.SelectedItems.CopyTo(itemsArray, 0);
-            foreach (DiskItem d in itemsArray)
+            foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
             {
                 Config.ClipboardContents.Add(d);
             }
         }
 
-        public void Refresh()
+        public async Task RefreshAsync()
         {
-            Navigate(CurrentPath);
+            await RefreshAsync(CurrentLocation);
         }
 
-        public void PasteShortcut()
+        public async Task PasteShortcutAsync()
         {
             /*foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
             {
                 Shortcut.CreateShortcut(d.ItemName + " - Shortcut", null, d.ItemPath, HistoryList[HistoryIndex]);
             }*/
-            Refresh();
+            await RefreshAsync();
         }
 
-        public void DeleteSelection()
+        public async Task DeleteSelectionAsync()
         {
             for (var i = 0; i < CurrentDirectoryListView.SelectedItems.Count; i++)
             {
@@ -458,7 +415,7 @@ namespace RibbonFileManager
                     FileSystem.DeleteFile(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
             }
 
-            Refresh();
+            await RefreshAsync();
         }
 
         public void RenameSelection()
@@ -466,23 +423,23 @@ namespace RibbonFileManager
             IsRenamingFiles = true;
         }
 
-        public void CreateNewFolder()
+        public async Task CreateNewFolderAsync()
         {
-            string path = CurrentPath + @"\New Folder";
+            var path = CurrentLocation + @"\New Folder";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             else
             {
-                int cycle = 1;
+                var cycle = 1;
                 while (Directory.Exists(path))
                 {
-                    path = CurrentPath + @"\New Folder (" + cycle.ToString() + ")";
+                    path = CurrentLocation + @"\New Folder (" + cycle.ToString() + ")";
                     MessageBox.Show(path);
                     cycle++;
                 }
                 Directory.CreateDirectory(path);
             }
-            Refresh();
+            await RefreshAsync();
         }
 
         public void SelectAll()
@@ -497,37 +454,36 @@ namespace RibbonFileManager
 
         public void InvertSelection()
         {
-
+            foreach (ListViewItem item in CurrentDirectoryListView.Items)
+                item.IsSelected = !item.IsSelected;
         }
 
-        private void FileManagerBase_CurrentDirectorySelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FileManagerBase_CurrentDirectorySelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             CurrentDirectorySelectionChanged?.Invoke(this, null);
         }
 
         public void SetPanes(DiskItem item)
         {
-            /*DetailsFileIconBorder.Background*/
-            //Debug.WriteLine("ActualHeight: " + DetailsFileIconRectangle.ActualHeight.ToString());
-            double size = DetailsFileIconRectangle.ActualHeight;
+            var size = DetailsFileIconRectangle.ActualHeight;
             if (size <= 0)
                 size = 48;
-            DetailsFileIconRectangle.Fill = (ImageBrush)((new Start9.UI.Wpf.Converters.IconToImageBrushConverter()).Convert(item.ItemJumboIcon, null, size.ToString(), null));
-            if ((item.ItemCategory == DiskItem.DiskItemCategory.Directory) && (item.ItemRealName == Path.GetFileName(CurrentPath)))
-                DetailsFileNameTextBlock.Text = item.SubItems.Count.ToString() + " items";
-            else
-                DetailsFileNameTextBlock.Text = item.ItemDisplayName;
+            DetailsFileIconRectangle.Fill = (ImageBrush) new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(item.ItemJumboIcon, null, size.ToString(), null);
+            DetailsFileNameTextBlock.Text = 
+                (item.ItemCategory == DiskItem.DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentLocation.Name)
+                ? item.SubItems.Count.ToString() + " items"
+                : item.ItemDisplayName;
 
 
             if (item.ItemCategory != DiskItem.DiskItemCategory.Directory)
             {
-                if (item.ItemPath.ToLowerInvariant() == CurrentPath.ToLowerInvariant())
+                if (item.ItemPath.ToLowerInvariant() == CurrentLocation.Name.ToLowerInvariant())
                 {
                     SetPreviewPaneLayer(0);
                 }
                 else
                 {
-                    string ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
+                    var ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
                     if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg")
                     {
                         (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
@@ -546,7 +502,7 @@ namespace RibbonFileManager
                             SetPreviewPaneLayer(3);
                         else //if (ext == "txt" || ext == "xml" || ext = "")
                         {*/
-                        string content = File.ReadAllText(item.ItemPath);
+                        var content = File.ReadAllText(item.ItemPath);
                         if (content.Contains("\0\0"))
                             SetPreviewPaneLayer(1);
                         else
@@ -568,9 +524,9 @@ namespace RibbonFileManager
             }
         }
 
-        void SetPreviewPaneLayer(int index)
+        void SetPreviewPaneLayer(Int32 index)
         {
-            for (int i = 0; i < PreviewPaneGrid.Children.Count; i++)
+            for (var i = 0; i < PreviewPaneGrid.Children.Count; i++)
             {
                 var control = PreviewPaneGrid.Children[i];
                 if (i == index)
@@ -579,5 +535,14 @@ namespace RibbonFileManager
                     control.Visibility = Visibility.Collapsed;
             }
         }
+    }
+
+    public enum FileBrowserView
+    {
+        Icons,
+        List,
+        Details,
+        Tiles,
+        Content
     }
 }

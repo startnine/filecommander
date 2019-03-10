@@ -35,7 +35,7 @@
                 <StackPanel Orientation="Vertical" Visibility="Collapsed">
                     <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
                     <UniformGrid/>
-                </StackPanel>
+                </StackPanel>   
                 <ScrollViewer Visibility="Collapsed">
                     <TextBlock/>
                 </ScrollViewer>

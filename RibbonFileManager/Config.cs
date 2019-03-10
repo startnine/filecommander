@@ -160,11 +160,10 @@ namespace RibbonFileManager
         public static ObservableCollection<DiskItem> ClipboardContents { get; set; } = new ObservableCollection<DiskItem>();
         public static Boolean Cut { get; set; } = false;
 
-        public static ObservableCollection<DiskItem> CopyTo(String targetPath)
+        public static ObservableCollection<DiskItem> PasteIn(String targetPath)
         {
             var success = new ObservableCollection<DiskItem>();
-            DiskItem[] clipboard = ClipboardContents.ToArray();
-            foreach (var d in clipboard)
+            foreach (var d in ClipboardContents)
             {
                 var baseFilename = targetPath + @"\" + Path.GetFileName(d.ItemPath);
                 var outFilename = baseFilename;
@@ -172,17 +171,17 @@ namespace RibbonFileManager
                 var interval = 1;
 
                 var ext = Path.GetExtension(baseFilename);
-                while ((File.Exists(outFilename)) | (Directory.Exists(outFilename)))
+                while (File.Exists(outFilename) || Directory.Exists(outFilename))
                 {
                     outFilename = baseFilename + " (" + interval.ToString() + ")";
                     if (!(String.IsNullOrEmpty(ext)))
                     {
-                        if (!(outFilename.EndsWith(ext)))
+                        if (!outFilename.EndsWith(ext))
                         {
                             if (outFilename.Contains(ext))
                             {
                                 outFilename = outFilename.Replace(ext, "");
-                                outFilename = outFilename + ext;
+                                outFilename += ext;
                             }
                         }
                     }
