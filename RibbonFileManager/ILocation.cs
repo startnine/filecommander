@@ -18,6 +18,8 @@ namespace RibbonFileManager
 
         public abstract String Name { get; }
 
+        public abstract String LocationPath { get; }
+
         public abstract BreadcrumbItem[] BreadcrumbsSegments { get; }
 
         public abstract Icon Icon { get; }
@@ -39,6 +41,8 @@ namespace RibbonFileManager
         public DiskItem Item { get; }
 
         public override String Name => Item.ItemDisplayName;
+
+        public override String LocationPath => Item.ItemPath;
 
         public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Item.ItemPath);
 
@@ -62,6 +66,8 @@ namespace RibbonFileManager
         public Boolean Recursive { get; }
 
         public override String Name => $"{Query} - Search results in {Path}";
+
+        public override String LocationPath => String.Empty; //TODO: Make this work as intended
 
         public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Name);
             

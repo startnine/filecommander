@@ -387,12 +387,18 @@ namespace RibbonFileManager
                 var d = CurrentDirectoryListView.SelectedItems[i] as DiskItem;
 
                 if (d.ItemCategory == DiskItemCategory.Directory)
+                {
                     FileSystem.DeleteDirectory(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                    (CurrentDirectoryListView.ItemsSource as ObservableCollection<DiskItem>).Remove(d);
+                }
                 else if ((d.ItemCategory == DiskItemCategory.File) || (d.ItemCategory == DiskItemCategory.Shortcut))
+                {
                     FileSystem.DeleteFile(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
+                    (CurrentDirectoryListView.ItemsSource as ObservableCollection<DiskItem>).Remove(d);
+                }
             }
 
-            await RefreshAsync();
+            //await RefreshAsync();
         }
 
         public void RenameSelection()
@@ -402,7 +408,7 @@ namespace RibbonFileManager
 
         public async Task CreateNewFolderAsync()
         {
-            var path = CurrentLocation + @"\New Folder";
+            var path = Path.Combine(CurrentLocation.LocationPath, "New Folder");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             else
@@ -410,7 +416,7 @@ namespace RibbonFileManager
                 var cycle = 1;
                 while (Directory.Exists(path))
                 {
-                    path = CurrentLocation + @"\New Folder (" + cycle.ToString() + ")";
+                    path = Path.Combine(CurrentLocation.LocationPath, @"New Folder (" + cycle.ToString() + ")");
                     MessageBox.Show(path);
                     cycle++;
                 }

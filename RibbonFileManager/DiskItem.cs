@@ -14,6 +14,10 @@ namespace RibbonFileManager
     {
         public override Int32 GetHashCode() => _info.GetHashCode();
 
+        public override string ToString()
+        {
+            return ItemDisplayName;
+        }
         FileSystemInfo _info;
 
         Boolean _populated = false;
