@@ -343,18 +343,86 @@ namespace RibbonFileManager
         {
             if (!(NavigationStack.Current is DirectoryQuery curr)) return;
 
-            var items = Config.PasteIn(curr.Item.ItemPath);
-            var source = (ObservableCollection<DiskItem>) CurrentDirectoryListView.ItemsSource;
-
-            foreach (var d in items)
+            System.Collections.Specialized.StringCollection clipboard = null;
+            if (Clipboard.ContainsFileDropList())
             {
-                if (source.Contains(d))
+                clipboard = Clipboard.GetFileDropList();
+                foreach (string s in clipboard)
                 {
-                    source.Remove(d);
+                    string outPath = Path.Combine(CurrentLocation.LocationPath, Path.GetFileName(s));
+                    if (File.Exists(s))
+                    {
+                        if (s.ToLowerInvariant() == outPath.ToLowerInvariant())
+                        {
+                            string fixBasePath = outPath + " - Copy";
+                            string fixedPath = fixBasePath;
+                            int cycle = 1;
+                            while (File.Exists(fixedPath))
+                            {
+                                fixedPath = fixBasePath + " (" + cycle.ToString() + ")";
+                                cycle++;
+                            }
+                            FileSystem.CopyFile(s, fixedPath, UIOption.AllDialogs);
+                        }
+                        else if (File.Exists(outPath))
+                        {
+                            string fixedPath = outPath;
+                            int cycle = 1;
+                            while (File.Exists(fixedPath))
+                            {
+                                fixedPath = outPath + " (" + cycle.ToString() + ")";
+                                cycle++;
+                            }
+                            FileSystem.CopyFile(s, fixedPath, UIOption.AllDialogs);
+                        }
+                        else
+                            FileSystem.CopyFile(s, outPath, UIOption.AllDialogs); //File.Copy(s, outPath);
+                    }
+                    else if (Directory.Exists(s))
+                    {
+                        if (s.ToLowerInvariant() == outPath.ToLowerInvariant())
+                        {
+                            string fixBasePath = outPath + " - Copy";
+                            string fixedPath = fixBasePath;
+                            int cycle = 1;
+                            while (Directory.Exists(fixedPath))
+                            {
+                                fixedPath = fixBasePath + " (" + cycle.ToString() + ")";
+                                cycle++;
+                            }
+                            FileSystem.CopyDirectory(s, fixedPath, UIOption.AllDialogs);
+                        }
+                        else if (Directory.Exists(outPath))
+                        {
+                            string fixedPath = outPath;
+                            int cycle = 1;
+                            while (Directory.Exists(fixedPath))
+                            {
+                                fixedPath = outPath + " (" + cycle.ToString() + ")";
+                                cycle++;
+                            }
+                            FileSystem.CopyDirectory(s, fixedPath, UIOption.AllDialogs);
+                        }
+                        else
+                            FileSystem.CopyDirectory(s, outPath, UIOption.AllDialogs);
+                    }
                 }
-                else
+            }
+            else
+            {
+                var items = Config.PasteIn(curr.Item.ItemPath);
+                var source = (ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource;
+
+                foreach (var d in items)
                 {
-                    source.Add(d);
+                    if (source.Contains(d))
+                    {
+                        source.Remove(d);
+                    }
+                    else
+                    {
+                        source.Add(d);
+                    }
                 }
             }
 
@@ -363,11 +431,18 @@ namespace RibbonFileManager
 
         public void SetClipboard()
         {
-            Config.ClipboardContents.Clear();
+            System.Collections.Specialized.StringCollection paths = new System.Collections.Specialized.StringCollection();
+            foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
+                paths.Add(d.ItemPath);
+            Clipboard.SetFileDropList(paths);
+
+            OwnerWindow.UpdateClipboardButtons();
+
+            /*Config.ClipboardContents.Clear();
             foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
             {
                 Config.ClipboardContents.Add(d);
-            }
+            }*/
         }
 
         public async Task RefreshAsync()

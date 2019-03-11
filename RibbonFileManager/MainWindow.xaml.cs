@@ -104,6 +104,27 @@ namespace RibbonFileManager
         {
             Initialize();
             AddressBox.Converter = Converter;
+
+            Activated += MainWindow_Activated;
+        }
+
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+            UpdateClipboardButtons();
+        }
+
+        public void UpdateClipboardButtons()
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                PasteButton.IsEnabled = true;
+                PasteShortcutButton.IsEnabled = true;
+            }
+            else
+            {
+                PasteButton.IsEnabled = false;
+                PasteShortcutButton.IsEnabled = false;
+            }
         }
 
         MainWindow _copyWindow = null;
