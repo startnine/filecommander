@@ -12,7 +12,7 @@ namespace RibbonFileManager
 {
     public static class WindowManager
     {
-        public static String WindowDefaultPath = Environment.ExpandEnvironmentVariables(@"%userprofile%");
+        public static String WindowDefaultPath = "shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"; //Environment.ExpandEnvironmentVariables(@"%userprofile%");
 
         public static List<MainWindow> OpenWindows = new List<MainWindow>();
 

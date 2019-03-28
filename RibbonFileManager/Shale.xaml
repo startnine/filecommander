@@ -3905,6 +3905,8 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
         <Setter Property="GridView.AllowsColumnReorder" Value="True"/>
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
         <Setter Property="ItemsPanel">
@@ -4097,6 +4099,10 @@
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DockPanel Width="240" Height="42">
+                                <e:Interaction.Behaviors>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                    <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                </e:Interaction.Behaviors>
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
                             </DockPanel>
@@ -4106,7 +4112,7 @@
                 <Setter Property="ItemsPanel">
                     <Setter.Value>
                         <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local"/>
+                            <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
                         </ItemsPanelTemplate>
                     </Setter.Value>
                 </Setter>
@@ -4658,7 +4664,6 @@
                 <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LineTabItemStyle}">
                     <Setter Property="Padding" Value="10,0"/>
                     <Setter Property="Width" Value="250"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
                     <Setter Property="LayoutTransform">
                         <Setter.Value>
                             <ScaleTransform ScaleX="0" ScaleY="1"/>
@@ -4680,7 +4685,7 @@
                                             </Rectangle>
                                         </Border>
                                     </Grid>
-                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" Effect="{DynamicResource DropShadow}" TextElement.Foreground="{DynamicResource TitlebarIdleForegroundBrush}"/>
+                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Left" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" Effect="{DynamicResource DropShadow}" TextElement.Foreground="{DynamicResource TitlebarIdleForegroundBrush}"/>
                                     <Button HorizontalAlignment="Right" Margin="0" Style="{DynamicResource CaptionButtonStyle}">
                                         <e:Interaction.Behaviors>
                                             <local:ClosableTabItemBehavior OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>

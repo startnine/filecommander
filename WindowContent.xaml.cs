@@ -171,7 +171,7 @@ namespace RibbonFileManager
             }
         }
 
-        static async IAsyncEnumerable<DiskItem> GetShellLocationContents(Location location, CancellationToken token, Boolean recursive)
+        static async IAsyncEnumerable<DiskItem> GetShellLocationContents(Location location, String query, CancellationToken token, Boolean recursive)
         {
             if ((location as ShellLocation).LocationGuid == ShellLocation.ThisPcGuid)
             {
@@ -184,23 +184,16 @@ namespace RibbonFileManager
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
                     };
-                foreach (string s in entries)
-                    yield return await Task.Run(() => new DiskItem(s));
-
                 foreach (DriveInfo d in System.IO.DriveInfo.GetDrives())
-                {
-                    Debug.WriteLine("d.RootDirectory.FullName: " + d.RootDirectory.FullName);
-                    yield return await Task.Run(() => new DiskItem(d.RootDirectory.FullName));
-                }
+                    entries.Add(d.RootDirectory.FullName);
 
-                /*var enumer = entries.GetEnumerator();
+                var enumer = entries.GetEnumerator();
                 while (await Task.Run(enumer.MoveNext))
                 {
                     token.ThrowIfCancellationRequested();
-                    Debug.WriteLine("enumer.Current: " + enumer.Current);
                     yield return await Task.Run(() => new DiskItem(enumer.Current));
                     token.ThrowIfCancellationRequested();
-                }*/
+                }
             }
             else //We don't know what this GUID is
             {
@@ -219,7 +212,6 @@ namespace RibbonFileManager
             {
                 case DirectoryQuery l: await Navigate(new SearchQuery(l.Item.ItemPath, "*", false), source); break;
                 case SearchQuery s: await Navigate(s, source, false); break;
-                case ShellLocation l: await NavigateShellLocation(l, source, false); break;
             }
         }
         
@@ -247,56 +239,39 @@ namespace RibbonFileManager
                 var results = new ObservableCollection<DiskItem>();
                 CurrentDirectoryListView.ItemsSource = results;
                 int nextDirectoryIndex = 0;
-                Debug.WriteLine("l type: " + l.GetType().ToString());
-                await foreach (var path in GetDirectoryContents(l.Path, l.Query, source.Token, l.Recursive))
+                /*if (l is ShellLocation)
                 {
-                    if (path.ItemCategory == DiskItemCategory.Directory)
+                    await foreach (var path in GetShellLocationContents(l, l.Query, source.Token, l.Recursive))
                     {
-                        results.Insert(nextDirectoryIndex, path);
-                        nextDirectoryIndex++;
+                        if (path.ItemCategory == DiskItemCategory.Directory)
+                        {
+                            results.Insert(nextDirectoryIndex, path);
+                            nextDirectoryIndex++;
+                        }
+                        else
+                            results.Add(path);
+                        source.Token.ThrowIfCancellationRequested();
                     }
-                    else
-                        results.Add(path);
-                    source.Token.ThrowIfCancellationRequested();
                 }
+                else
+                {*/
+                    await foreach (var path in GetDirectoryContents(l.LocationPath, l.Query, source.Token, l.Recursive))
+                    {
+                        if (path.ItemCategory == DiskItemCategory.Directory)
+                        {
+                            results.Insert(nextDirectoryIndex, path);
+                            nextDirectoryIndex++;
+                        }
+                        else
+                            results.Add(path);
+                        source.Token.ThrowIfCancellationRequested();
+                    }
+                
             }
             catch (OperationCanceledException) when (!String.IsNullOrEmpty(l.Query)) // if the user canceled a search, then preserve what's been searched
             {
             }
             catch // else, fall back to the previous results
-            {
-                CurrentDirectoryListView.ItemsSource = old;
-            }
-        }
-
-        async Task NavigateShellLocation(ShellLocation l, CancellationTokenSource source, Boolean clearTextBox = true)
-        {
-            var old = CurrentDirectoryListView.ItemsSource;
-
-            OwnerWindow.Navigate(l);
-
-            if (clearTextBox)
-                OwnerWindow.SearchTextBox.Clear();
-
-            try
-            {
-                var results = new ObservableCollection<DiskItem>();
-                CurrentDirectoryListView.ItemsSource = results;
-                int nextDirectoryIndex = 0;
-                Debug.WriteLine("l type: " + l.GetType().ToString());
-                await foreach (var path in GetShellLocationContents(l, source.Token, true))
-                {
-                    if (path.ItemCategory == DiskItemCategory.Directory)
-                    {
-                        results.Insert(nextDirectoryIndex, path);
-                        nextDirectoryIndex++;
-                    }
-                    else
-                        results.Add(path);
-                    source.Token.ThrowIfCancellationRequested();
-                }
-            }
-            catch // fall back to the previous results
             {
                 CurrentDirectoryListView.ItemsSource = old;
             }
@@ -346,12 +321,6 @@ namespace RibbonFileManager
         {
             if (e.NewValue is DiskItem val)
                 await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)));
-            else
-            {
-                Debug.WriteLine("Tree SelectedValuePath: " + NavigationPaneTreeView.SelectedValuePath);
-                /*if (NavigationPaneTreeView.SelectedValuePath == MyComputerTreeViewItem.Header)
-                    await NavigateAsync(new ShellLocation(ShellLocation.ThisPcGuid));*/
-            }
         }
 
         private async void CurrentDirectoryListView_KeyDown(Object sender, KeyEventArgs e)

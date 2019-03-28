@@ -702,13 +702,21 @@ namespace RibbonFileManager
             {
                 SearchQuery s => s.Path,
                 DirectoryQuery d => d.Item.ItemPath,
+                ShellLocation s => s.LocationPath,
             };
+
+            Guid id = Guid.Empty;
+            if (ActiveContent.CurrentLocation is ShellLocation loc)
+                id = loc.LocationGuid;
 
             try
             {
                 if (sb.Text == "")
                 {
-                    await ActiveContent.NavigateAsync(new DirectoryQuery(path), cts.Token);
+                    if (Directory.Exists(path))
+                        await ActiveContent.NavigateAsync(new DirectoryQuery(path), cts.Token);
+                    else
+                        await ActiveContent.NavigateAsync(new ShellLocation(id), cts.Token);
                 }
                 else
                 {

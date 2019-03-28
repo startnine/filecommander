@@ -75,4 +75,30 @@ namespace RibbonFileManager
 
     }
 
+
+    [DebuggerDisplay("Path = {Item.ItemPath}")]
+    public class ShellLocation : Location
+    {
+        public ShellLocation(Guid guid)
+        {
+            LocationGuid = guid;
+        }
+
+        public Guid LocationGuid { get; }
+
+        public static Guid ThisPcGuid = new Guid("20D04FE0-3AEA-1069-A2D8-08002B30309D");
+
+        public static Dictionary<Guid, string> Names = new Dictionary<Guid, string>
+        {
+            {ThisPcGuid, "This PC"}
+        };
+
+        public override String Name => Names[LocationGuid];
+
+        public override String LocationPath => Name;
+
+        public override BreadcrumbItem[] BreadcrumbsSegments => new BreadcrumbItem[] { new BreadcrumbItem(Name, Name) };
+
+        public override Icon Icon => null;
+    }
 }
