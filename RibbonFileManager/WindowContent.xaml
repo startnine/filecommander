@@ -42,6 +42,9 @@
             </Grid>
         </ContentControl>
         <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown">
+            <ListView.GroupStyle>
+                <GroupStyle HeaderTemplate="{StaticResource CurrentDirectoryListViewHeaderTemplate}" ContainerStyle="{StaticResource CurrentDirectoryListViewGroupContainerStyle}"/>
+            </ListView.GroupStyle>
             <ListView.Resources>
                 <!--ContextMenu x:Key="ItemContextMenu" Opened="TouchableContextMenu_Opened">
                     <MenuItem x:Name="OpenMenuItem" Header="Open" Click="OpenMenuItem_Click"/>

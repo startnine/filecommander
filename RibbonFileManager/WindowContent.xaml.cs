@@ -159,7 +159,7 @@ namespace RibbonFileManager
             await NavigateAsync(_initLocation);
         }
 
-        static async IAsyncEnumerable<DiskItem> GetDirectoryContents(String path, String query, CancellationToken token, Boolean recursive)
+        static async IAsyncEnumerable<DiskItem> GetaDirectoryContents(String path, String query, CancellationToken token, Boolean recursive)
         {
             var entries = Directory.EnumerateFileSystemEntries(path, query, new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
             var enumer = entries.GetEnumerator();
@@ -168,40 +168,6 @@ namespace RibbonFileManager
                 token.ThrowIfCancellationRequested();
                 yield return await Task.Run(() => new DiskItem(enumer.Current));
                 token.ThrowIfCancellationRequested();
-            }
-        }
-
-        static async IAsyncEnumerable<DiskItem> GetShellLocationContents(ShellLocation location, CancellationToken token, Boolean recursive)
-        {
-            if (location.LocationGuid == ShellLocation.ThisPcGuid)
-            {
-                var entries = new List<string>()
-                    {
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Music"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
-                    };
-                foreach (string s in entries)
-                {
-                    token.ThrowIfCancellationRequested();
-                    yield return await Task.Run(() => new DiskItem(s));
-                    token.ThrowIfCancellationRequested();
-                }
-
-                foreach (DriveInfo d in System.IO.DriveInfo.GetDrives())
-                {
-                    token.ThrowIfCancellationRequested();
-                    Debug.WriteLine("d.RootDirectory.FullName: " + d.RootDirectory.FullName);
-                    yield return await Task.Run(() => new DiskItem(d.RootDirectory.FullName));
-                    token.ThrowIfCancellationRequested();
-                }
-            }
-            else //We don't know what this GUID is
-            {
-                throw new Exception("Unrecognized Shell Location GUID");
             }
         }
 
@@ -214,9 +180,9 @@ namespace RibbonFileManager
 
             switch (location)
             {
-                case DirectoryQuery l: await Navigate(new SearchQuery(l.Item.ItemPath, "*", false), source); break;
+                case DirectoryQuery l: await Navigate(l/*new SearchQuery(l.LocationPath, "*", false)*/, source); break;
                 case SearchQuery s: await Navigate(s, source, false); break;
-                case ShellLocation l: await NavigateShellLocation(l, source, false); break;
+                case ShellLocation l: await Navigate(l, source); break;
             }
         }
         
@@ -230,8 +196,12 @@ namespace RibbonFileManager
             CurrentDisplayName = location.Name;
         }
 
-        async Task Navigate(SearchQuery l, CancellationTokenSource source, Boolean clearTextBox = true)
+        async Task Navigate(Location l, CancellationTokenSource source, Boolean clearTextBox = true)
         {
+            string query = string.Empty;
+            if (l is SearchQuery search)
+                query = search.Query;
+
             var old = CurrentDirectoryListView.ItemsSource;
 
             OwnerWindow.Navigate(l);
@@ -245,7 +215,7 @@ namespace RibbonFileManager
                 CurrentDirectoryListView.ItemsSource = results;
                 int nextDirectoryIndex = 0;
                 Debug.WriteLine("l type: " + l.GetType().ToString());
-                await foreach (var path in GetDirectoryContents(l.Path, l.Query, source.Token, l.Recursive))
+                await foreach (var path in l.GetLocationContents(source.Token, false))
                 {
                     if (path.ItemCategory == DiskItemCategory.Directory)
                     {
@@ -256,47 +226,28 @@ namespace RibbonFileManager
                         results.Add(path);
                     source.Token.ThrowIfCancellationRequested();
                 }
-            }
-            catch (OperationCanceledException) when (!String.IsNullOrEmpty(l.Query)) // if the user canceled a search, then preserve what's been searched
-            {
-            }
-            catch // else, fall back to the previous results
-            {
-                CurrentDirectoryListView.ItemsSource = old;
-            }
-        }
 
-        async Task NavigateShellLocation(ShellLocation l, CancellationTokenSource source, Boolean clearTextBox = true)
-        {
-            var old = CurrentDirectoryListView.ItemsSource;
 
-            OwnerWindow.Navigate(l);
 
-            if (clearTextBox)
-                OwnerWindow.SearchTextBox.Clear();
+                CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
 
-            try
-            {
-                var results = new ObservableCollection<DiskItem>();
-                CurrentDirectoryListView.ItemsSource = results;
-                int nextDirectoryIndex = 0;
-                Debug.WriteLine("l type: " + l.GetType().ToString());
-                await foreach (var path in GetShellLocationContents(l, source.Token, true))
+                if (l is ShellLocation shell)
                 {
-                    if (path.ItemCategory == DiskItemCategory.Directory)
+                    foreach (PropertyGroupDescription desc in shell.PropertyGroupDescriptions)
                     {
-                        results.Insert(nextDirectoryIndex, path);
-                        nextDirectoryIndex++;
-                    }
-                    else
-                    {
-                        results.Add(path);
-                        source.Token.ThrowIfCancellationRequested();
+                        Debug.WriteLine("Adding " + desc.PropertyName);
+                        collectionView.GroupDescriptions.Add(desc);
                     }
                 }
+                else
+                    collectionView.GroupDescriptions.Clear();
             }
-            catch // fall back to the previous results
+            catch (OperationCanceledException) when (!String.IsNullOrEmpty(query)) // if the user canceled a search, then preserve what's been searched
             {
+            }
+            catch (Exception ex) // else, fall back to the previous results
+            {
+                Debug.WriteLine(ex);
                 CurrentDirectoryListView.ItemsSource = old;
             }
         }
@@ -662,6 +613,12 @@ namespace RibbonFileManager
                 var control = PreviewPaneGrid.Children[i];
                 control.Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+
+        private GroupStyle SelectGroupStyle(CollectionViewGroup group, int level)
+        {
+
+            return (GroupStyle)FindResource("myGroupStyle");
         }
     }
 

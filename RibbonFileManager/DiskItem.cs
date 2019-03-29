@@ -85,6 +85,8 @@ namespace RibbonFileManager
             }
         }
 
+        public bool IsDrive => ((ItemCategory == DiskItemCategory.Directory) && (ItemPath.Length == 3) && (Char.IsLetter(ItemPath.ToCharArray()[0])) && (ItemPath.ToCharArray()[1] == ':'));
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

@@ -5,7 +5,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RibbonFileManager
 {
@@ -27,7 +30,7 @@ namespace RibbonFileManager
         public override Boolean Equals(Object obj) => Equals(obj as Location);
         public Boolean Equals(Location other) => Name == other?.Name;
         public override Int32 GetHashCode() => Name.GetHashCode();
-
+        public abstract IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive);
     }
 
     [DebuggerDisplay("Path = {Item.ItemPath}")]
@@ -47,6 +50,18 @@ namespace RibbonFileManager
         public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Item.ItemPath);
 
         public override Icon Icon => Item.ItemJumboIcon;
+
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(LocationPath, "*", new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
+            var enumer = entries.GetEnumerator();
+            while (await Task.Run(enumer.MoveNext))
+            {
+                token.ThrowIfCancellationRequested();
+                yield return await Task.Run(() => new DiskItem(enumer.Current));
+                token.ThrowIfCancellationRequested();
+            }
+        }
     }
 
     [DebuggerDisplay("Path = {Path} Query = {Query}")]
@@ -73,6 +88,17 @@ namespace RibbonFileManager
             
         public override Icon Icon { get; }
 
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(Path, Query, new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
+            var enumer = entries.GetEnumerator();
+            while (await Task.Run(enumer.MoveNext))
+            {
+                token.ThrowIfCancellationRequested();
+                yield return await Task.Run(() => new DiskItem(enumer.Current));
+                token.ThrowIfCancellationRequested();
+            }
+        }
     }
 
 
@@ -93,6 +119,20 @@ namespace RibbonFileManager
             {ThisPcGuid, "This PC"}
         };
 
+        public List<PropertyGroupDescription> PropertyGroupDescriptions
+        {
+            get
+            {
+                List<PropertyGroupDescription> descriptions = new List<PropertyGroupDescription>();
+                if (LocationGuid == ThisPcGuid)
+                {
+                    descriptions.Add(new PropertyGroupDescription("IsDrive"));
+                }
+                return descriptions;
+            }
+        }
+
+
         public override String Name => Names[LocationGuid];
 
         public override String LocationPath => Name;
@@ -100,5 +140,39 @@ namespace RibbonFileManager
         public override BreadcrumbItem[] BreadcrumbsSegments => new BreadcrumbItem[] { new BreadcrumbItem(Name, Name) };
 
         public override Icon Icon => null;
+
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        {
+            if (LocationGuid == ShellLocation.ThisPcGuid)
+            {
+                var entries = new List<string>()
+                    {
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop"),
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"),
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads"),
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Music"),
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures"),
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
+                    };
+                foreach (string s in entries)
+                {
+                    token.ThrowIfCancellationRequested();
+                    yield return await Task.Run(() => new DiskItem(s));
+                    token.ThrowIfCancellationRequested();
+                }
+
+                foreach (DriveInfo d in System.IO.DriveInfo.GetDrives())
+                {
+                    token.ThrowIfCancellationRequested();
+                    Debug.WriteLine("d.RootDirectory.FullName: " + d.RootDirectory.FullName);
+                    yield return await Task.Run(() => new DiskItem(d.RootDirectory.FullName));
+                    token.ThrowIfCancellationRequested();
+                }
+            }
+            else //We don't know what this GUID is
+            {
+                throw new Exception("Unrecognized Shell Location GUID");
+            }
+        }
     }
 }
