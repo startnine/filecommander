@@ -171,9 +171,9 @@ namespace RibbonFileManager
             }
         }
 
-        static async IAsyncEnumerable<DiskItem> GetShellLocationContents(Location location, CancellationToken token, Boolean recursive)
+        static async IAsyncEnumerable<DiskItem> GetShellLocationContents(ShellLocation location, CancellationToken token, Boolean recursive)
         {
-            if ((location as ShellLocation).LocationGuid == ShellLocation.ThisPcGuid)
+            if (location.LocationGuid == ShellLocation.ThisPcGuid)
             {
                 var entries = new List<string>()
                     {
@@ -185,22 +185,19 @@ namespace RibbonFileManager
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
                     };
                 foreach (string s in entries)
+                {
+                    token.ThrowIfCancellationRequested();
                     yield return await Task.Run(() => new DiskItem(s));
+                    token.ThrowIfCancellationRequested();
+                }
 
                 foreach (DriveInfo d in System.IO.DriveInfo.GetDrives())
                 {
+                    token.ThrowIfCancellationRequested();
                     Debug.WriteLine("d.RootDirectory.FullName: " + d.RootDirectory.FullName);
                     yield return await Task.Run(() => new DiskItem(d.RootDirectory.FullName));
+                    token.ThrowIfCancellationRequested();
                 }
-
-                /*var enumer = entries.GetEnumerator();
-                while (await Task.Run(enumer.MoveNext))
-                {
-                    token.ThrowIfCancellationRequested();
-                    Debug.WriteLine("enumer.Current: " + enumer.Current);
-                    yield return await Task.Run(() => new DiskItem(enumer.Current));
-                    token.ThrowIfCancellationRequested();
-                }*/
             }
             else //We don't know what this GUID is
             {
@@ -292,8 +289,10 @@ namespace RibbonFileManager
                         nextDirectoryIndex++;
                     }
                     else
+                    {
                         results.Add(path);
-                    source.Token.ThrowIfCancellationRequested();
+                        source.Token.ThrowIfCancellationRequested();
+                    }
                 }
             }
             catch // fall back to the previous results
