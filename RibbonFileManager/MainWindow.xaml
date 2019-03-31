@@ -113,7 +113,26 @@
                                 <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
                             </Fluent:ApplicationMenu>
                         </Fluent:Ribbon.Menu>
-                        <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
+                        <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" KeyTip="C">
+                            <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
+                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" SizeDefinition="Large,Middle" KeyTip="PR"/>
+                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" SizeDefinition="Large,Middle" KeyTip="O"/>
+                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" SizeDefinition="Large,Middle" KeyTip="R"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Network" Header="Network">
+                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" SizeDefinition="Large,Middle" KeyTip="M"/>
+                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" SizeDefinition="Large,Middle" KeyTip="N"/>
+                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" SizeDefinition="Large,Middle" KeyTip="L"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="SystemBox" Header="System">
+                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" SizeDefinition="Large" KeyTip="C"/>
+                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" SizeDefinition="Large" KeyTip="S"/>
+                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" SizeDefinition="Middle,Small" KeyTip="U"/>
+                                <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" SizeDefinition="Middle,Small" KeyTip="S"/>
+                                <Fluent:Button x:Name="ManageSystemButton" Header="Manage" SizeDefinition="Middle,Small" KeyTip="G"/>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem x:Name="HomeRibbonTabItem" Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
                             <Fluent:RibbonGroupBox x:Name="ClipboardBox" Header="Clipboard">
                                 <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" Icon="{DynamicResource CopyButtonIcon}" SizeDefinition="Large,Small" KeyTip="CO" Click="CopyButton_Click"/>
                                 <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" Icon="{DynamicResource PasteButtonIcon}" SizeDefinition="Large,Small" KeyTip="V" Click="PasteButton_Click"/>
@@ -147,7 +166,7 @@
                                 <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" Icon="{DynamicResource InvertSelectionButtonIcon}" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
-                        <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank" KeyTip="S">
+                        <Fluent:RibbonTabItem x:Name="ShareRibbonTabItem" Header="Share" ReduceOrder="ShareWith,Send,ShareBlank" KeyTip="S">
                             <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
                                 <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
                                 <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>

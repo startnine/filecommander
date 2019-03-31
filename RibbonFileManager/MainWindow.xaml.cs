@@ -526,6 +526,19 @@ namespace RibbonFileManager
             Title = location.Name;
             (ContentTabControl.SelectedItem as TabItem).GetBindingExpression(HeaderedContentControl.HeaderProperty).UpdateTarget(); //activec
 
+            if ((location is ShellLocation loc) && (loc.LocationGuid == ShellLocation.ThisPcGuid))
+            {
+                ComputerRibbonTabItem.Visibility = Visibility.Visible;
+                HomeRibbonTabItem.Visibility = Visibility.Collapsed;
+                ShareRibbonTabItem.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ComputerRibbonTabItem.Visibility = Visibility.Collapsed;
+                HomeRibbonTabItem.Visibility = Visibility.Visible;
+                ShareRibbonTabItem.Visibility = Visibility.Visible;
+            }
+
             UpdateStatusBar();
             ValidateNavButtonStates();
         }

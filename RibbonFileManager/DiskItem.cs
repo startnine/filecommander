@@ -19,6 +19,16 @@ namespace RibbonFileManager
             return ItemDisplayName;
         }
         FileSystemInfo _info;
+        DriveInfo _driveInfo
+        {
+            get
+            {
+                if (IsDrive)
+                    return new DriveInfo(ItemPath.ToCharArray()[0].ToString());
+                else
+                    return null;
+            }
+        }
 
         Boolean _populated = false;
         ObservableCollection<DiskItem> _subItems = new ObservableCollection<DiskItem>();
@@ -64,7 +74,10 @@ namespace RibbonFileManager
         {
             get
             {
-                return _itemDisplayName ?? ItemRealName;
+                if (IsDrive)
+                    return _driveInfo.DriveType + " (" + _driveInfo.Name + ") " + _driveInfo.VolumeLabel;
+                else
+                    return _itemDisplayName ?? ItemRealName;
             }
             set
             {
@@ -86,6 +99,28 @@ namespace RibbonFileManager
         }
 
         public bool IsDrive => ((ItemCategory == DiskItemCategory.Directory) && (ItemPath.Length == 3) && (Char.IsLetter(ItemPath.ToCharArray()[0])) && (ItemPath.ToCharArray()[1] == ':'));
+
+        public Double DriveFreeSpace
+        {
+            get
+            {
+                if (IsDrive)
+                    return _driveInfo.AvailableFreeSpace;
+                else
+                    return 0.0;
+            }
+        }
+
+        public String FriendlyDriveFreeSpace
+        {
+            get
+            {
+                if (IsDrive)
+                    return GetDiskSizeInAppropriateUnits(DriveFreeSpace);
+                else
+                    return String.Empty;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -148,34 +183,49 @@ namespace RibbonFileManager
             return finalResult;
         }
 
-        public Double ItemSize => _info is FileInfo ? (_info as FileInfo).Length : 0.0;
+        public Double ItemSize
+        {
+            get
+            {
+                if (_info is FileInfo info)
+                    return info.Length;
+                else if (IsDrive)
+                    return _driveInfo.TotalSize;
+                else
+                    return 0.0;
+            }
+        }
+
 
         public String FriendlyItemSize
         {
             get
             {
-                if (_info is FileInfo)
-                {
-                    var size = ItemSize;
-                    var unitCounter = 0;
-                    while (size > 1024)
-                    {
-                        size /= 1024;
-                        unitCounter++;
-                    }
-
-                    if (unitCounter == 0)
-                        return size.ToString() + " B";
-                    else if (unitCounter == 1)
-                        return size.ToString() + " KB";
-                    else if (unitCounter == 2)
-                        return size.ToString() + " MB";
-                    else if (unitCounter == 3)
-                        return size.ToString() + " GB";
-                    else return unitCounter == 4 ? size.ToString() + " TB" : size.ToString() + " PB";
-                }
-                else return String.Empty;
+                if ((_info is FileInfo) || IsDrive)
+                    return GetDiskSizeInAppropriateUnits(ItemSize);
+                else
+                    return String.Empty;
             }
+        }
+
+        string GetDiskSizeInAppropriateUnits(double size)
+        {
+            var unitCounter = 0;
+            while (size > 1024)
+            {
+                size /= 1024;
+                unitCounter++;
+            }
+
+            if (unitCounter == 0)
+                return size.ToString() + " B";
+            else if (unitCounter == 1)
+                return size.ToString() + " KB";
+            else if (unitCounter == 2)
+                return size.ToString() + " MB";
+            else if (unitCounter == 3)
+                return size.ToString() + " GB";
+            else return unitCounter == 4 ? size.ToString() + " TB" : size.ToString() + " PB";
         }
 
         public DiskItem(String path)
@@ -189,7 +239,9 @@ namespace RibbonFileManager
         {
             _info = info;
             if (info is DirectoryInfo)
+            {
                 ItemCategory = DiskItemCategory.Directory;
+            }
         }
 
         FileSystemWatcher _watcher;

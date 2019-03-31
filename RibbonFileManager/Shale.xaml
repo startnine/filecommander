@@ -22,6 +22,7 @@
     <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter"/>
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
     <local:DiskItemSubItemsTreeFilterConverter x:Key="DiskItemSubItemsTreeFilterConverter"/>
+    <local:DriveFreeSpaceToUsedSpaceConverter x:Key="DriveFreeSpaceToUsedSpaceConverter"/>
 
     <!--#endregion Converters-->
 
@@ -1608,7 +1609,7 @@
                                             </Border.Background>
                                         </Border>
                                     </Border>
-                                    <Path Data="M 0 0 L 4 4 L 0 8 Z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:MenuItem}}}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"/>
+                                    <Path Data="M 0 0 L 4 4 L 0 8 Z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}}}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"/>
                                 </Grid>
                                 <ContentPresenter x:Name="textBlock" ContentSource="Header" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" Width="Auto" Height="Auto" Margin="5,3,3,3" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" />
                                 <Image x:Name="checkedImage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="16" Height="16" Stretch="Uniform" Source="{DynamicResource Fluent.Ribbon.Images.Checked}" Visibility="Collapsed" SnapsToDevicePixels="True" />
@@ -3032,7 +3033,197 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-        
+
+    <Style x:Key="{x:Type Fluent:CheckBox}" TargetType="{x:Type Fluent:CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="MinHeight" Value="13" />
+        <Setter Property="ToolTipService.ShowDuration" Value="30000" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="MinWidth" Value="132" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Fluent:CheckBox}">
+                    <!--Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Border x:Name="border" Width="13" Height="13" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Path x:Name="CheckIcon" Width="7.5" Height="6.9" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M48.4375,110.4375 L51.4995,112.812 L56.3745,107.24883" Fluent:FrameworkHelper.UseLayoutRounding="False" Opacity="0" Stretch="Fill" Stroke="{DynamicResource Fluent.Ribbon.Brushes.HighlightBrush}" StrokeEndLineCap="Triangle" StrokeStartLineCap="Triangle" StrokeThickness="1.5" />
+                                    <Rectangle x:Name="IndeterminateIcon" Width="7" Height="7" Opacity="0" Fill="{DynamicResource GrayBrush2}" />
+                                    <Rectangle x:Name="DisabledVisualElement" Fill="{DynamicResource WhiteBrush}" Opacity="0" RadiusX="1" RadiusY="1" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <ContentControl Grid.Column="1" IsTabStop="False" Margin="2,0,0,0" Foreground="{TemplateBinding Foreground}">
+                            <ContentPresenter x:Name="contentPresenter" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding ContentTemplate}" RecognizesAccessKey="True" />
+                        </ContentControl>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" />
+                            <Setter TargetName="CheckIcon" Property="Stroke" Value="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.MouseOver.Stroke}" />
+                            <Setter TargetName="IndeterminateIcon" Property="Fill" Value="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.MouseOver.Stroke}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.BorderBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource Fluent.Ribbon.Brushes.Button.Pressed.Background}" />
+                            <Setter TargetName="CheckIcon" Property="Stroke" Value="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.Pressed.Stroke}" />
+                            <Setter TargetName="IndeterminateIcon" Property="Fill" Value="{DynamicResource Fluent.Ribbon.Brushes.CheckBox.Pressed.Stroke}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="contentPresenter" Property="Opacity" Value=".55" />
+                            <Setter TargetName="DisabledVisualElement" Property="Opacity" Value=".55" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckIcon" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="IndeterminateIcon" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="FlowDirection" Value="RightToLeft">
+                            <Setter TargetName="CheckIcon" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="-1" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers-->
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#01000000">
+                        <DockPanel Margin="{TemplateBinding Padding}">
+                            <Grid Width="13" Height="13" DockPanel.Dock="Left">
+                                <Border x:Name="IdleBackground" CornerRadius="3" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
+                                    </Border.Background>
+                                    <Border CornerRadius="3" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonBackgroundGradientStops}"/>
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
+                                <Border x:Name="HoverBackground" CornerRadius="3" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1"  GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
+                                    </Border.Background>
+                                    <Border CornerRadius="3" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
+                                <Border x:Name="PressedBackground" CornerRadius="3" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonPressedBorderBrush}" BorderThickness="1" Opacity="0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonPressedBackgroundGradientStops}"/>
+                                    </Border.Background>
+                                    <Border CornerRadius="3" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonPressedSecondaryBackgroundGradientStops}"/>
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
+                                <Border x:Name="DisabledBackground" CornerRadius="3" Margin="0" Padding="0" Background="{DynamicResource ButtonDisabledBackgroundBrush}" BorderBrush="{DynamicResource ButtonDisabledBorderBrush}" BorderThickness="1" Opacity="0">
+                                    <Border CornerRadius="3" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0" Background="{DynamicResource ButtonDisabledSecondaryBackgroundBrush}"/>
+                                </Border>
+                                <Grid x:Name="OpacityLimiterCanvas" Opacity="1">
+                                    <Path x:Name="CheckMark" Data="M 2 5 L 4 9 L 8 0" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{DynamicResource CheckBoxTickBrush}" StrokeThickness="1.125"
+                              Opacity="0" />
+                                    <Path x:Name="IndeterminateBox" Data="M 0.5 0.5 L 0.5 6 L 6 6 L 6 0.5 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource CheckBoxTickBrush}" Stroke="{DynamicResource CheckBoxTickBrush}" StrokeThickness="1.25" Opacity="0" />
+                                </Grid>
+                            </Grid>
+                            <Grid Margin="5,0,0,0">
+                                <ContentPresenter Content="{TemplateBinding Header}"/>
+                            </Grid>
+                        </DockPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsPressed" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsThreeState" Value="True" />
+                                <Condition Property="IsChecked" Value="{x:Null}" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateBox" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="IndeterminateBox" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckMark" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckMark" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                        <DoubleAnimation Storyboard.TargetName="OpacityLimiterCanvas" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.125" />
+                                        <DoubleAnimation Storyboard.TargetName="OpacityLimiterCanvas" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--#endregion Ribbon Control Styles-->
 
     <!--#region Main Ribbon Icons-->
@@ -3912,7 +4103,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local"/>
+                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -3967,22 +4158,17 @@
                 </Setter>
             </DataTrigger>
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Icons">
-                <Setter Property="Template">
+                <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
                             <Grid>
                                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                     <ItemsPresenter/>
                                 </ScrollViewer>
-                                <!--Rectangle x:Name="ShadowRectangle" VerticalAlignment="Bottom" Margin="0" Height="18" IsHitTestVisible="False">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
-                                    </Rectangle.Fill>
-                                </Rectangle-->
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
-                </Setter>
+                </Setter-->
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
@@ -4104,8 +4290,31 @@
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
-                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                                <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                    <ProgressBar x:Name="DriveSpaceProgressBar" HorizontalAlignment="Stretch" Minimum="0" Maximum="{Binding ItemSize, Mode=OneWay}" Visibility="Collapsed">
+                                        <ProgressBar.Value>
+                                            <MultiBinding Converter="{StaticResource DriveFreeSpaceToUsedSpaceConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding Path="DriveFreeSpace" Mode="OneWay"/>
+                                                    <Binding Path="ItemSize" Mode="OneWay"/>
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </ProgressBar.Value>
+                                    </ProgressBar>
+                                    <StackPanel x:Name="DriveSpaceStackPanel" Orientation="Horizontal" HorizontalAlignment="Left" Visibility="Collapsed">
+                                        <TextBlock Text="{Binding FriendlyDriveFreeSpace, Mode=OneWay}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                                        <TextBlock Text=" free of " HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                                        <TextBlock Text="{Binding FriendlyItemSize, Mode=OneWay}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsDrive}" Value="True">
+                                    <Setter TargetName="DriveSpaceProgressBar" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="DriveSpaceStackPanel" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
@@ -4317,7 +4526,8 @@
                                     <Grid Margin="4">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
-                                            <RowDefinition x:Name="ContentRow" Height="{Binding DesiredHeight, ElementName=Content}" />
+                                            <!--RowDefinition x:Name="ContentRow" Height="{Binding DesiredHeight, ElementName=Content}" /-->
+                                            <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <DockPanel Grid.Row="0">
                                             <ToggleButton OverridesDefaultStyle="True" IsChecked="{Binding IsExpanded, Mode=TwoWay,  RelativeSource={RelativeSource TemplatedParent}}" DockPanel.Dock="Left">
