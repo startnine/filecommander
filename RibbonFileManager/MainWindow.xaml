@@ -82,7 +82,7 @@
                             </Grid>
                         </DockPanel>
                     </ContentControl>
-                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding ElementName=RibbonTitle}" AutomaticStateManagement="True" SelectedTabIndex="0">
+                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}}" AutomaticStateManagement="True" SelectedTabIndex="0">
                         <!--Source={x:Reference Name=RibbonTitleBar}-->
                         <!--x:Reference RibbonTitleBar-->
                         <Fluent:Ribbon.Menu>
@@ -113,6 +113,9 @@
                                 <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
                             </Fluent:ApplicationMenu>
                         </Fluent:Ribbon.Menu>
+                        <Fluent:Ribbon.ContextualGroups>
+                            <Fluent:RibbonContextualTabGroup x:Name="ArchiveToolsGroup" Header="Compressed Folder Tools" Background="#FFFBC4DF" BorderBrush="#FFFBC4DF"/>
+                        </Fluent:Ribbon.ContextualGroups>
                         <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" KeyTip="C">
                             <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
                                 <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" SizeDefinition="Large,Middle" KeyTip="PR"/>
@@ -255,6 +258,14 @@
                                 <Fluent:DropDownButton Header="Options" SizeDefinition="Large,Small">
                                     <Fluent:MenuItem x:Name="FolderAndSearchOptionsMenuItem" Header="Change folder and search options" Click="FolderAndSearchOptionsMenuItem_Click"/>
                                 </Fluent:DropDownButton>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem Header="Extract" ReduceOrder="ExtractTo,ExtractAll" KeyTip="JZ" Group="{Binding Source={x:Reference ArchiveToolsGroup}}">
+                            <Fluent:RibbonGroupBox x:Name="ExtractTo" Header="Extract To">
+                                <Fluent:InRibbonGallery x:Name="ExtractToGallery" Header="Extract To" SizeDefinition="Large,Medium"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="ExtractAll">
+                                <Fluent:Button x:Name="ExtractAllButton" Header="Extract all" SizeDefinition="Large,Large"/>
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
                     </Fluent:Ribbon>

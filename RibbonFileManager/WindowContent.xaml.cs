@@ -83,7 +83,7 @@ namespace RibbonFileManager
             set => SetValue(IconSizeProperty, value);
         }
 
-        public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register("IconSize", typeof(Double), typeof(WindowContent), new PropertyMetadata((Double)48.0));
+        public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(nameof(IconSize), typeof(double), typeof(WindowContent), new PropertyMetadata((double)48.0));
 
         public Boolean ShowDetailsPane
         {

@@ -243,6 +243,8 @@ namespace RibbonFileManager
 
                 CommandBarControl.CommandBarLayers[2].IsVisible = false;
                 CommandBarControl.CommandBarLayers[3].IsVisible = false;
+
+                ArchiveToolsGroup.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -266,6 +268,11 @@ namespace RibbonFileManager
                     CommandBarControl.CommandBarLayers[2].IsVisible = true;
                     CommandBarControl.CommandBarLayers[3].IsVisible = false;
                 }
+
+                if ((selectedCount == 1) && (Path.GetExtension(activeItem.ItemRealName).ToLowerInvariant() == ".zip"))
+                    ArchiveToolsGroup.Visibility = Visibility.Visible;
+                else
+                    ArchiveToolsGroup.Visibility = Visibility.Collapsed;
 
 
                 if ((activeItem.ItemCategory != DiskItemCategory.Directory) && (activeItem.ItemCategory != DiskItemCategory.App))
