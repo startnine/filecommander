@@ -86,6 +86,21 @@ namespace RibbonFileManager
             }
         }
 
+        public String ItemDisplayType
+        {
+            get
+            {
+                if (ItemCategory == DiskItemCategory.Shortcut)
+                    return "Shortcut";
+                else if (ItemCategory == DiskItemCategory.Directory)
+                    return "File folder";
+                else if (ItemCategory == DiskItemCategory.App)
+                    return "Windows app";
+                else
+                    return Path.GetExtension(ItemRealName).ToUpperInvariant() + " File";
+            }
+        }
+
         DiskItemCategory _itemCategory;
 
         public DiskItemCategory ItemCategory

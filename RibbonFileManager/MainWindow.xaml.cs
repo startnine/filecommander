@@ -541,9 +541,9 @@ namespace RibbonFileManager
             }
             else
             {
-                ComputerRibbonTabItem.Visibility = Visibility.Collapsed;
                 HomeRibbonTabItem.Visibility = Visibility.Visible;
                 ShareRibbonTabItem.Visibility = Visibility.Visible;
+                ComputerRibbonTabItem.Visibility = Visibility.Collapsed;
             }
 
             UpdateStatusBar();
@@ -705,7 +705,7 @@ namespace RibbonFileManager
                 ToggleMenuBar();
         }
 
-        private async void SearchTextBox_SearchSubmitted(Object sender, SearchSubmittedEventArgs e)
+        private async void SearchTextBox_ActionSubmitted(Object sender, ActionSubmittedEventArgs e)
         {
             var cts = new CancellationTokenSource();
             var sb = (SearchBox)sender;

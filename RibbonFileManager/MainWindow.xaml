@@ -75,7 +75,8 @@
                                     <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Click="NavUpButton_Click"/>
                                 </StackPanel>
                             </StackPanel>
-                            <local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" SearchSubmitted="SearchTextBox_SearchSubmitted" SearchType="Instant" />
+                            <!--local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" SearchSubmitted="SearchTextBox_SearchSubmitted" SearchType="Instant" /-->
+                            <ui:ActionBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" ActionSubmitted="SearchTextBox_ActionSubmitted" ActionType="Instant" />
                             <Grid>
                                 <!--TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/-->
                                 <ui:BreadcrumbsBar x:Name="AddressBox" PathUpdated="AddressBox_PathUpdated"/>
@@ -118,9 +119,9 @@
                         </Fluent:Ribbon.ContextualGroups>
                         <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" KeyTip="C">
                             <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
-                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" SizeDefinition="Large,Middle" KeyTip="PR"/>
+                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="PR"/>
                                 <Fluent:Button x:Name="ComputerOpenButton" Header="Open" SizeDefinition="Large,Middle" KeyTip="O"/>
-                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" SizeDefinition="Large,Middle" KeyTip="R"/>
+                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Network" Header="Network">
                                 <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" SizeDefinition="Large,Middle" KeyTip="M"/>

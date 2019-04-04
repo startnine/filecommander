@@ -3,6 +3,7 @@ using Start9.UI.Wpf.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -619,6 +620,45 @@ namespace RibbonFileManager
         {
 
             return (GroupStyle)FindResource("myGroupStyle");
+        }
+
+
+        GridViewColumnHeader _currentDirectoryListViewLastHeaderClicked = null;
+        ListSortDirection _currentDirectoryListViewLastSortDirection = ListSortDirection.Ascending;
+
+        private void CurrentDirectoryListView_GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader header = e.OriginalSource as GridViewColumnHeader;
+            ListSortDirection sortDirection = ListSortDirection.Ascending;
+
+            if (header != null)
+            {
+                if ((_currentDirectoryListViewLastHeaderClicked != null) && (header.Role == _currentDirectoryListViewLastHeaderClicked.Role) && (_currentDirectoryListViewLastSortDirection == ListSortDirection.Ascending))
+                    sortDirection = ListSortDirection.Descending;
+
+                var columnBinding = header.Column.DisplayMemberBinding as Binding;
+                var sortBy = columnBinding?.Path.Path ?? header.Column.Header as string;
+
+                SortCurrentDirectoryListView(sortBy, sortDirection);
+
+                if (sortDirection == ListSortDirection.Descending)
+                    header.SetResourceReference(GridViewColumnHeader.ContentTemplateProperty, "CurrentDirectoryListViewColumnHeaderDescendingTemplate");
+                else
+                    header.SetResourceReference(GridViewColumnHeader.ContentTemplateProperty, "CurrentDirectoryListViewColumnHeaderAscendingTemplate");
+
+                _currentDirectoryListViewLastHeaderClicked = header;
+                _currentDirectoryListViewLastSortDirection = sortDirection;
+            }
+        }
+
+        private void SortCurrentDirectoryListView(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView currentDirectoryItemsSource = CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
+
+            currentDirectoryItemsSource.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            currentDirectoryItemsSource.SortDescriptions.Add(sd);
+            currentDirectoryItemsSource.Refresh();
         }
     }
 
