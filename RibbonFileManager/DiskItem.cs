@@ -75,7 +75,7 @@ namespace RibbonFileManager
             get
             {
                 if (IsDrive)
-                    return _driveInfo.DriveType + " (" + _driveInfo.Name + ") " + _driveInfo.VolumeLabel;
+                    return _driveInfo.DriveType + " (" + _driveInfo.Name.Substring(0, _driveInfo.Name.Length - 1) + ") " + _driveInfo.VolumeLabel;
                 else
                     return _itemDisplayName ?? ItemRealName;
             }

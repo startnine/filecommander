@@ -50,7 +50,8 @@ namespace RibbonFileManager
 
         private void OpenMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-
+            if (TargetItem != null)
+                ManagerBase.OpenPath(TargetItem.ItemPath);
         }
 
         public MenuItem RunAsAdminMenuItem

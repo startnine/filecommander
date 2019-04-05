@@ -13,7 +13,7 @@
         <ResourceDictionary Source="pack://application:,,,/Fluent;Component/Themes/Generic.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Shale.xaml"/>
         <!--Un-comment the line below for Dark Shale-->
-        <!--ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Colors/ShaleBaseDark.xaml"/-->
+        <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Colors/ShaleBaseDark.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
     <!--#region Converters-->
@@ -112,6 +112,48 @@
         </Setter>
     </Style>
 
+    <Style x:Key="TabScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid x:Name="Grid" IsHitTestVisible="True">
+                        <ScrollContentPresenter  Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" />
+                        <RepeatButton Style="{DynamicResource CaptionRepeatButtonStyle}" Command="{x:Static ScrollBar.LineLeftCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Left" Width="13" Height="Auto" VerticalAlignment="Stretch">
+                            <!--Style="{DynamicResource ScrollButtonStyle}"-->
+                            <RepeatButton.Visibility>
+                                <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="0">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="HorizontalOffset" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ExtentWidth" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ViewportWidth" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 6 0 L 0 6 L 6 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type RepeatButton}}}" StrokeThickness="2"/>
+                            <!--Path Fill="{DynamicResource BlackBrush}" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M0,0L1,1 1,-1z" /-->
+                        </RepeatButton>
+                        <RepeatButton Style="{DynamicResource CaptionRepeatButtonStyle}" Command="{x:Static ScrollBar.LineRightCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Right" Width="13" Height="Auto" VerticalAlignment="Stretch">
+                            <!--Style="{DynamicResource ScrollButtonStyle}"-->
+                            <RepeatButton.Visibility>
+                                <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="100">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="HorizontalOffset" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ExtentWidth" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ViewportWidth" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type RepeatButton}}}" StrokeThickness="2"/>
+                            <!--Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type RepeatButton}}}" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M1,0L0,1 0,-1z" /-->
+                        </RepeatButton>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CanContentScroll" Value="True" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="PanningMode" Value="HorizontalOnly" />
+    </Style>
+
     <Style x:Key="{x:Type Fluent:RibbonTabControl}" TargetType="{x:Type Fluent:RibbonTabControl}">
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}"/>
@@ -127,45 +169,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:RibbonTabControl}">
                     <ControlTemplate.Resources>
-                        <Style TargetType="{x:Type ScrollViewer}">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                                        <Grid x:Name="Grid" IsHitTestVisible="True">
-                                            <ScrollContentPresenter  Margin="{TemplateBinding Padding}" x:Name="PART_ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" IsHitTestVisible="True" />
-                                            <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Left" Width="13" Height="Auto" VerticalAlignment="Stretch">
-                                                <!--Style="{DynamicResource ScrollButtonStyle}"-->
-                                                <RepeatButton.Visibility>
-                                                    <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="0">
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="HorizontalOffset" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ExtentWidth" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ViewportWidth" />
-                                                    </MultiBinding>
-                                                </RepeatButton.Visibility>
-                                                <Path Fill="{DynamicResource BlackBrush}" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M0,0L1,1 1,-1z" />
-                                            </RepeatButton>
-                                            <RepeatButton Command="{x:Static ScrollBar.LineRightCommand}" CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" Focusable="false" HorizontalAlignment="Right" Width="13" Height="Auto" VerticalAlignment="Stretch">
-                                                <!--Style="{DynamicResource ScrollButtonStyle}"-->
-                                                <RepeatButton.Visibility>
-                                                    <MultiBinding FallbackValue="Visibility.Collapsed" Converter="{StaticResource MenuScrollingVisibilityConverter}" ConverterParameter="100">
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ComputedHorizontalScrollBarVisibility" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="HorizontalOffset" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ExtentWidth" />
-                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ViewportWidth" />
-                                                    </MultiBinding>
-                                                </RepeatButton.Visibility>
-                                                <Path Fill="{DynamicResource BlackBrush}" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="3" Height="5" Data="M1,0L0,1 0,-1z" />
-                                            </RepeatButton>
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="CanContentScroll" Value="True" />
-                            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-                            <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
-                            <Setter Property="PanningMode" Value="HorizontalOnly" />
-                        </Style>
+                        <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource TabScrollViewerStyle}"/>
                     </ControlTemplate.Resources>
                     <Grid x:Name="ContentGrid" KeyboardNavigation.TabNavigation="Local" Height="Auto" VerticalAlignment="Top">
                         <Grid.RowDefinitions>
@@ -2744,7 +2748,7 @@
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                                            <StackPanel HorizontalAlignment="Stretch" Margin="1,0,0,0">
+                                                            <StackPanel HorizontalAlignment="Stretch">
                                                                 <RepeatButton x:Name="upButton" Height="21" Command="ScrollBar.PageUpCommand" Margin="0" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                                                     <RepeatButton.Style>
                                                                         <Style TargetType="{x:Type RepeatButton}">
@@ -4547,7 +4551,53 @@
                 <Setter Property="View">
                     <Setter.Value>
                         <GridView>
-                            <GridViewColumn Header="Name" Width="160" DisplayMemberBinding="{Binding ItemDisplayName}"/>
+                            <GridViewColumn Header="Name" Width="160">
+                                <!-- DisplayMemberBinding="{Binding ItemDisplayName}"-->
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type local:DiskItem}">
+                                        <DockPanel>
+                                            <e:Interaction.Behaviors>
+                                                <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
+                                                <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                            </e:Interaction.Behaviors>
+                                            <DockPanel.ContextMenu>
+                                                <ContextMenu x:Name="ItemContextMenu">
+                                                    <!-- Opened="TouchableContextMenu_Opened"-->
+                                                    <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                                    <!--Click="OpenMenuItem_Click"-->
+                                                    <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
+                                                    <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                                    <!-- Click="RunAsAdminMenuItem_Click"-->
+                                                    <Separator/>
+                                                    <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                                    <!-- Click="CopyMenuItem_Click"-->
+                                                    <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                                    <!-- Click="CutMenuItem_Click"-->
+                                                    <Separator/>
+                                                    <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                                    <!-- Click="DeleteMenuItem_Click"-->
+                                                    <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                                    <Separator/>
+                                                    <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                                    <!-- Click="PropertiesMenuItem_Click"-->
+                                                    <e:Interaction.Behaviors>
+                                                        <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                                    </e:Interaction.Behaviors>
+                                                </ContextMenu>
+                                            </DockPanel.ContextMenu>
+                                            <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
+                                            <Grid>
+                                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                                                <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
+                                                    <e:Interaction.Behaviors>
+                                                        <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                                    </e:Interaction.Behaviors>
+                                                </TextBox>
+                                            </Grid>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Type" Width="120" DisplayMemberBinding="{Binding ItemDisplayType}"/>
                             <GridViewColumn Header="Size" Width="80" DisplayMemberBinding="{Binding FriendlyItemSize}"/>
                         </GridView>
@@ -4563,9 +4613,41 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
+                                <DockPanel.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <!-- Opened="TouchableContextMenu_Opened"-->
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <!--Click="OpenMenuItem_Click"-->
+                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <!-- Click="RunAsAdminMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <!-- Click="CopyMenuItem_Click"-->
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <!-- Click="CutMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <!-- Click="DeleteMenuItem_Click"-->
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                        <!-- Click="PropertiesMenuItem_Click"-->
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                    </ContextMenu>
+                                </DockPanel.ContextMenu>
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                    <Grid>
+                                        <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
+                                            <e:Interaction.Behaviors>
+                                                <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                            </e:Interaction.Behaviors>
+                                        </TextBox>
+                                    </Grid>
                                     <ProgressBar x:Name="DriveSpaceProgressBar" HorizontalAlignment="Stretch" Minimum="0" Maximum="{Binding ItemSize, Mode=OneWay}" Visibility="Collapsed">
                                         <ProgressBar.Value>
                                             <MultiBinding Converter="{StaticResource DriveFreeSpaceToUsedSpaceConverter}">
@@ -4618,13 +4700,40 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
+                                <DockPanel.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <!-- Opened="TouchableContextMenu_Opened"-->
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <!--Click="OpenMenuItem_Click"-->
+                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <!-- Click="RunAsAdminMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <!-- Click="CopyMenuItem_Click"-->
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <!-- Click="CutMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <!-- Click="DeleteMenuItem_Click"-->
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                        <!-- Click="PropertiesMenuItem_Click"-->
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                    </ContextMenu>
+                                </DockPanel.ContextMenu>
                                 <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
-                                <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
-                                <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
-                                    <e:Interaction.Behaviors>
-                                        <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
-                                    </e:Interaction.Behaviors>
-                                </TextBox>
+                                <Grid>
+                                    <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                                    <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                        </e:Interaction.Behaviors>
+                                    </TextBox>
+                                </Grid>
                             </DockPanel>
                         </DataTemplate>
                         <!--DataTemplate DataType="{x:Type local:DiskItem}">
@@ -4678,6 +4787,31 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" ManagerBase="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
+                                <Grid.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <!-- Opened="TouchableContextMenu_Opened"-->
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <!--Click="OpenMenuItem_Click"-->
+                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <!-- Click="RunAsAdminMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <!-- Click="CopyMenuItem_Click"-->
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <!-- Click="CutMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <!-- Click="DeleteMenuItem_Click"-->
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                        <!-- Click="PropertiesMenuItem_Click"-->
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior ManagerBase="{Binding ManagerBase, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32"/>
                                     <ColumnDefinition/>
@@ -5274,6 +5408,7 @@
             </DataTemplate>
         </Style.Resources>
         <Setter Property="Height" Value="31"/>
+        <Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Mode=OneWay}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LineTabItemStyle}">
@@ -5395,34 +5530,36 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
-                    <Grid x:Name="RootGrid" Margin="0,1,0,0">
-                        <ui:TravellingSelector x:Name="TravellingSelector" AnimationDuration="0:0:0.250" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}" TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" CollectionSize="{Binding Items.Count, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" SelectedObjectIndex="{Binding SelectedIndex, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
-                            <ui:TravellingSelector.AnimationEase>
-                                <CubicEase EasingMode="EaseOut"/>
-                            </ui:TravellingSelector.AnimationEase>
-                            <ui:TravellingSelector.Template>
-                                <ControlTemplate TargetType="{x:Type ui:TravellingSelector}">
-                                    <Grid Background="#01000000">
-                                        <Border x:Name="PART_Selector" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{TemplateBinding SelectionWidth}" Height="{TemplateBinding SelectionHeight}">
-                                            <Border Margin="-2,0" ClipToBounds="True">
-                                                <Border x:Name="SelectedBorder" Margin="4,0" BorderBrush="{DynamicResource SelectedHighlightBrush}" BorderThickness="0,2,0,0" RenderTransformOrigin="0.5,1">
-                                                    <Border.RenderTransform>
-                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
-                                                    </Border.RenderTransform>
-                                                    <Rectangle Fill="{Binding BorderBrush, ElementName=SelectedBorder}" Opacity="1" Height="2" VerticalAlignment="Top" Margin="0,-2">
-                                                        <Rectangle.Effect>
-                                                            <BlurEffect Radius="5"/>
-                                                        </Rectangle.Effect>
-                                                    </Rectangle>
+                    <ScrollViewer Style="{DynamicResource TabScrollViewerStyle}" Margin="0,1,0,0" Padding="0" HorizontalAlignment="Left" MaxWidth="{TemplateBinding ActualWidth}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <Grid x:Name="RootGrid">
+                            <ui:TravellingSelector x:Name="TravellingSelector" AnimationDuration="0:0:0.250" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}" TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" CollectionSize="{Binding Items.Count, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" SelectedObjectIndex="{Binding SelectedIndex, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                                <ui:TravellingSelector.AnimationEase>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </ui:TravellingSelector.AnimationEase>
+                                <ui:TravellingSelector.Template>
+                                    <ControlTemplate TargetType="{x:Type ui:TravellingSelector}">
+                                        <Grid Background="#01000000">
+                                            <Border x:Name="PART_Selector" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{TemplateBinding SelectionWidth}" Height="{TemplateBinding SelectionHeight}">
+                                                <Border Margin="-2,0" ClipToBounds="True">
+                                                    <Border x:Name="SelectedBorder" Margin="4,0" BorderBrush="{DynamicResource SelectedHighlightBrush}" BorderThickness="0,2,0,0" RenderTransformOrigin="0.5,1">
+                                                        <Border.RenderTransform>
+                                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                        </Border.RenderTransform>
+                                                        <Rectangle Fill="{Binding BorderBrush, ElementName=SelectedBorder}" Opacity="1" Height="2" VerticalAlignment="Top" Margin="0,-2">
+                                                            <Rectangle.Effect>
+                                                                <BlurEffect Radius="5"/>
+                                                            </Rectangle.Effect>
+                                                        </Rectangle>
+                                                    </Border>
                                                 </Border>
                                             </Border>
-                                        </Border>
-                                    </Grid>
-                                </ControlTemplate>
-                            </ui:TravellingSelector.Template>
-                        </ui:TravellingSelector>
-                        <TabPanel Name="HeaderPanel" HorizontalAlignment="Left" IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
-                    </Grid>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ui:TravellingSelector.Template>
+                            </ui:TravellingSelector>
+                            <TabPanel Name="HeaderPanel" HorizontalAlignment="Left" VerticalAlignment="Stretch" MaxHeight="{TemplateBinding ActualHeight}" IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
+                        </Grid>
+                    </ScrollViewer>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}, Mode=OneWay}" Value="Maximized">
                             <Setter TargetName="RootGrid" Property="Margin" Value="0"/>
@@ -5436,10 +5573,249 @@
         </Setter>
     </Style>
 
+    <Grid x:Key="TabsSetAsideToggleButtonIcon" x:Shared="False" Height="10">
+        <!--Path Data="M 0 0 L 0 5 L 5 5 L 5 0 Z" Fill="Transparent" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="3,3,0,0"/>
+                    <Path Data="M 5 0 L -1 0 L -1 6" Fill="Transparent" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,3,3"/-->
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+            <Rectangle Width="3" Height="2" Margin="0,0,1,0" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}}"/>
+            <Rectangle Width="3" Height="2" Margin="0,0,1,0" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}}"/>
+        </StackPanel>
+        <Path Data="M 0 0 L 0 6 L 9 6 L 9 0 Z" Fill="Transparent" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+    </Grid>
+
+    <Style x:Key="TabsSetAsideToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CaptionToggleButtonStyle}">
+        <Setter Property="Content" Value="{DynamicResource TabsSetAsideToggleButtonIcon}"/>
+    </Style>
+
+    <Grid x:Key="SetTabsAsideButtonIcon" x:Shared="False" Width="10">
+        <Path Data="M 4 0 L 0 0 L 0 7 L 4 7" Fill="Transparent" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Path Data="M 0 4 L 4 0 L 4 3 L 7 3 L 7 5 L 4 5 L 4 8 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <!--M 0 3 L 3 0 L 3 1 L 7 1 L 7 2 L 3 2 L 3 3 Z-->
+    </Grid>
+
+    <Style x:Key="SetTabsAsideButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Content" Value="{DynamicResource SetTabsAsideButtonIcon}"/>
+    </Style>
+
+    <Path x:Key="NewTabButtonIcon" x:Shared="False" Data="M 0 4 L 8 4 M 4 0 L 4 8" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+
     <Style x:Key="NewTabButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Content">
+        <Setter Property="Margin" Value="0,0,150,0"/>
+        <Setter Property="Content" Value="{DynamicResource NewTabButtonIcon}"/>
+    </Style>
+
+    <Style x:Key="TabsOverviewContentControlStyle" TargetType="{x:Type ContentControl}">
+        <!--Setter Property="Opacity" Value="0"/-->
+        <!--Setter Property="Visibility" Value="Collapsed"/-->
+        <Setter Property="Template">
             <Setter.Value>
-                <Path Data="M 0 4 L 8 4 M 4 0 L 4 8" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid x:Name="RootGrid" Opacity="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="45"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="{DynamicResource ModalPanelBackdropBrush}" Margin="0,0,-3,-3" BorderThickness="0,0,3,3" CornerRadius="0,0,4,0" Grid.Column="0" Grid.Row="0"/>
+                        <Border Background="{DynamicResource ModalPanelBackdropBrush}" CornerRadius="0,3,0,0" Grid.Column="1" Grid.Row="0"/>
+                        <Border Background="{DynamicResource ModalPanelBackdropBrush}" CornerRadius="0,0,3,3" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"/>
+                        <Grid x:Name="ContentGrid" RenderTransformOrigin="0,0" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2">
+                            <Grid.RenderTransform>
+                                <ScaleTransform ScaleX="0" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Mode=Self}}"/>
+                            </Grid.RenderTransform>
+                            <Border x:Name="ContentPaneBorder" CornerRadius="3" Effect="{DynamicResource TertiaryDropShadow}" BorderBrush="Transparent" Margin="48" UseLayoutRounding="True">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
+                                </Border.Background>
+                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsManipulationEnabled" Value="False">
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                        </Trigger>
+                        <Trigger Property="IsManipulationEnabled" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames-->
+                                        <DoubleAnimation Storyboard.TargetName="ContentGrid" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.25">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuinticEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!--ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames-->
+                                        <DoubleAnimation Storyboard.TargetName="ContentGrid" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0" Duration="0:0:0.25">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuinticEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="LocationTabDataTemplate" DataType="{x:Type local:LocationTab}">
+        <Grid Width="174" Height="154">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="24"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Title}" TextAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
+            <Rectangle Fill="{Binding Thumbnail, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"/>
+            <Rectangle Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" Grid.Column="0" Grid.Row="1"/>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="CurrentlyOpenTabsListViewStyle" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <DockPanel>
+                        <TextBlock Text="Currently Open Tabs" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" FontSize="14" Opacity="0.5" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" DockPanel.Dock="Top"/>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate" Value="{DynamicResource LocationTabDataTemplate}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TabsSetAsideListViewStyle" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Setter Property="Width" Value="350"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <DockPanel>
+                        <Rectangle Fill="{DynamicResource HorizontalPanelBorderBrush}" Width="1" Margin="0,4" DockPanel.Dock="Right"/>
+                        <TextBlock Text="Tabs You've Set Aside" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" FontSize="14" Opacity="0.5" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" DockPanel.Dock="Top"/>
+                        <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <tic:AttachedProperties.CornerCurves>
+                                <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                            </tic:AttachedProperties.CornerCurves>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="{x:Type local:TabGroup}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="24"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Column="0" Grid.Row="0">
+                            <Button Content="Restore tabs" DockPanel.Dock="Right"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Tabs.Count, Mode=OneWay}" FontSize="13"/>
+                                <TextBlock Text=" tabs" FontSize="13"/>
+                                <TextBlock Margin="15,0" Text="{Binding Time, Mode=OneWay}"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <Button Style="{DynamicResource CaptionButtonStyle}" Grid.Column="1" Grid.Row="0">
+                            <Path Data="M 0 -1 L 2 -1 L 4.5 2 L 7 -1 L 9 -1 L 9 1 L 6 3.5 L 9 6 L 9 8 L 7 8 L 4.5 5 L 2 8 L 0 8 L 0 6 L 3 3.5 L 0 1 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True"/>
+                        </Button>
+                        <ListView ItemsSource="{Binding Tabs}" ItemTemplate="{DynamicResource LocationTabDataTemplate}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                            <ListView.Style>
+                                <Style TargetType="{x:Type ListView}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListView}">
+                                                <Grid>
+                                                    <ContentControl x:Name="ContentCon" HorizontalAlignment="Left">
+                                                        <ContentControl.Content>
+                                                            <ItemsPresenter/>
+                                                        </ContentControl.Content>
+                                                    </ContentControl>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition SourceName="ContentCon" Property="IsMouseOver" Value="True"/>
+                                                            <Condition SourceName="ContentCon" Property="IsMouseOver" Value="False"/>
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="ContentCon" Property="Content">
+                                                            <Setter.Value>
+                                                                <!--ControlTemplate TargetType="{x:Type ListView}"-->
+                                                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                                                    <ItemsPresenter/>
+                                                                </ScrollViewer>
+                                                                <!--/ControlTemplate-->
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <!--Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ListView}">
+                                                                    <DockPanel LastChildFill="False">
+                                                                        <ScrollBar x:Name="ScrollBar" Orientation="Horizontal" Minimum="0" Maximum="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DockPanel}}}" DockPanel.Dock="Bottom"/>
+                                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                            <ItemsPresenter Width="Auto"/>
+                                                                            <Rectangle Width="{Binding Value, ElementName=ScrollBar, Mode=OneWay}"/>
+                                                                        </StackPanel>
+                                                                    </DockPanel>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter-->
+                                                    </MultiTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="ItemsPanel">
+                                        <Setter.Value>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.Style>
+                        </ListView>
+                    </Grid>
+                </DataTemplate>
             </Setter.Value>
         </Setter>
     </Style>

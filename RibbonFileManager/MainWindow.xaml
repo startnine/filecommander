@@ -9,7 +9,7 @@
         xmlns:Fluent="urn:fluent-ribbon"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp">
+        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
     <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
     <!--InterfaceMode="{Binding InterfaceMode, Source={x:Static local:Config.Instance}}"-->
     <!--win:DecoratableWindow.FullWindowContent-->
@@ -23,14 +23,18 @@
 
         <CommandBinding Command="{x:Static local:MainWindow.RenameCommand}" Executed="RenameCommandBinding_Executed"/>
     </win:DecoratableWindow.CommandBindings-->
-        <Grid Style="{DynamicResource RootGridStyle}">
+    <Grid Style="{DynamicResource RootGridStyle}">
         <DockPanel>
             <Grid DockPanel.Dock="Top">
                 <Fluent:RibbonTitleBar x:Name="RibbonTitle" Opacity="0"/>
-                <StackPanel Orientation="Horizontal">
-                    <TabControl x:Name="ContentTabControl" Style="{DynamicResource TitleBarTabControlStyle}" SelectionChanged="ContentTabControl_SelectionChanged"/>
-                    <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab"/>
-                </StackPanel>
+                <DockPanel>
+                    <ToggleButton x:Name="TabsSetAsideToggleButton" Style="{DynamicResource TabsSetAsideToggleButtonStyle}" Click="TabsSetAsideToggleButton_Click" ToolTip="Tabs Overview" DockPanel.Dock="Left"/>
+                    <Button x:Name="SetTabsAsideButton" Style="{DynamicResource SetTabsAsideButtonStyle}" Click="SetTabsAsideButton_Click" ToolTip="Set Tabs Aside" DockPanel.Dock="Left"/>
+                    <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Right"/>
+                    <Grid>
+                        <TabControl x:Name="ContentTabControl" Style="{DynamicResource TitleBarTabControlStyle}" SelectionChanged="ContentTabControl_SelectionChanged"/>
+                    </Grid>
+                </DockPanel>
             </Grid>
             <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
                 <DockPanel>
@@ -306,6 +310,17 @@
             </Fluent:BackstageTabItem>
             <Fluent:BackstageTabItem Header="History" />
         </Fluent:BackstageTabControl-->
-        </Grid>
+
+        <ContentControl x:Name="TabsOverviewContentControl" Style="{DynamicResource TabsOverviewContentControlStyle}" IsManipulationEnabled="False">
+            <ContentControl.DataContext>
+                <local:TabManager x:Name="TabMgr"/>
+            </ContentControl.DataContext>
+            <DockPanel>
+                <ListView x:Name="TabsSetAsideListView" Style="{DynamicResource TabsSetAsideListViewStyle}" ItemsSource="{Binding TabsSetAside, Source={x:Reference TabMgr}, Mode=OneWay}"  DockPanel.Dock="Left"/>
+                <ListView x:Name="CurrentlyOpenTabsListView" Style="{DynamicResource CurrentlyOpenTabsListViewStyle}" ItemsSource="{Binding OpenTabs, Source={x:Reference TabMgr}, Mode=OneWay}" SelectionChanged="CurrentlyOpenTabsListView_SelectionChanged"/>
+            </DockPanel>
+        </ContentControl>
+
+    </Grid>
     <!--/win:DecoratableWindow.FullWindowContent-->
 </win:DecoratableWindow>

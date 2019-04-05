@@ -150,6 +150,8 @@ namespace RibbonFileManager
                 string guidString = path.Replace(_shellLocationPrefix, string.Empty);
                 return new ShellLocation(Guid.Parse(guidString));
             }
+            else if (Guid.TryParse(path, out Guid guid))
+                return new ShellLocation(guid);
             else
                 return null;
         }
@@ -195,6 +197,9 @@ namespace RibbonFileManager
             RecentLocations.Navigate(location);
             await RefreshAsync(location, token);
             CurrentDisplayName = location.Name;
+
+            if (location is DirectoryQuery query)
+                SetPanes(query.Item);
         }
 
         async Task Navigate(Location l, CancellationTokenSource source, Boolean clearTextBox = true)
@@ -328,13 +333,24 @@ namespace RibbonFileManager
             OwnerWindow.ValidateCommandStates(CurrentDirectoryListView.SelectedItems.Count, item);
         }
 
+        public async Task OpenPath(string path)
+        {
+            string expanded = Environment.ExpandEnvironmentVariables(path);
+            if (Directory.Exists(expanded))
+                await NavigateAsync(new DirectoryQuery(expanded));
+            else if (File.Exists(expanded))
+                new DiskItem(expanded).Open();
+            else
+                Start9.UI.Wpf.Windows.MessageBox<Start9.UI.Wpf.Windows.MessageBoxEnums.OkButton>.Show("File Commander can't find '" + expanded + "'. Check the #SPEELING and try again.", "File Commander");
+        }
+
         public async Task OpenSelectionAsync(DiskItem.OpenVerbs verb = DiskItem.OpenVerbs.Normal)
         {
             foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
             {
                 if (i.ItemCategory == DiskItemCategory.Directory)
                 {
-                    if (CurrentDirectoryListView.SelectedItems.Count == 1) //
+                    if (CurrentDirectoryListView.SelectedItems.Count == 1)
                     {
                         await NavigateAsync(new DirectoryQuery(i.ItemPath));
                         break;
@@ -342,12 +358,13 @@ namespace RibbonFileManager
                 }
                 else
                 {
-                    var info = new ProcessStartInfo()
+                    /*var info = new ProcessStartInfo()
                     {
                         FileName = i.ItemPath,
                         UseShellExecute = true
                     };
-                    Process.Start(info);
+                    Process.Start(info);*/
+                    i.Open();
                 }
             }
         }
@@ -557,8 +574,11 @@ namespace RibbonFileManager
 
         public void InvertSelection()
         {
-            foreach (ListViewItem item in CurrentDirectoryListView.Items)
-                item.IsSelected = !item.IsSelected;
+            foreach (DiskItem item in CurrentDirectoryListView.Items)
+            {
+                //var container = CurrentDirectoryListView.ContainerFromElement(item); //wat
+                //item.IsSelected = !item.IsSelected;
+            }
         }
 
         private void FileManagerBase_CurrentDirectorySelectionChanged(Object sender, SelectionChangedEventArgs e)

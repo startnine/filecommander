@@ -26,7 +26,17 @@ namespace RibbonFileManager
             get => (ContentTabControl.SelectedItem as TabItem)?.Content as WindowContent;
         }
 
-        public List<WindowContent> WindowContents => ContentTabControl.Items.OfType<WindowContent>().ToList();
+        public List<WindowContent> WindowContents// => ContentTabControl.Items.OfType<WindowContent>().ToList();
+        {
+            get
+            {
+                List<WindowContent> content = new List<WindowContent>();
+                foreach (TabItem item in ContentTabControl.Items)
+                    content.Add(item.Content as WindowContent);
+
+                return content;
+            }
+        }
 
         public Config.InterfaceModeType InterfaceMode
         {
@@ -144,7 +154,17 @@ namespace RibbonFileManager
             if (_copyWindow != null)
             {
                 foreach (var w in _copyWindow.WindowContents)
-                    AddTab((w.CurrentLocation as DirectoryQuery).Item.ItemPath);
+                {
+                    if (w.CurrentLocation is DirectoryQuery query)
+                        AddTab(query.LocationPath);
+                    else if (w.CurrentLocation is ShellLocation location)
+                        AddTab(location.LocationGuid.ToString());
+                    else if (w.CurrentLocation is SearchQuery search)
+                    {
+                        //TODO figure out what to do here lol
+                    }
+                }
+                    //AddTab((w.CurrentLocation as DirectoryQuery).Item.ItemPath);
             }
             else
                 AddTab(_firstNavigationPath);
@@ -153,14 +173,17 @@ namespace RibbonFileManager
             ValidateCommandStates(0, null);
         }
 
-        public void AddTab()
+        public TabItem AddTab()
         {
-            AddTab(WindowManager.WindowDefaultPath);
+            return AddTab(WindowManager.WindowDefaultPath);
         }
 
-        public void AddTab(String path)
+        public TabItem AddTab(String path)
         {
-            ContentTabControl.Items.Add(CreateTab(path));
+            var item = CreateTab(path);
+            ContentTabControl.Items.Add(item);
+            ContentTabControl.SelectedItem = item;
+            return item;
         }
 
         private TabItem CreateTab(String path)
@@ -245,6 +268,8 @@ namespace RibbonFileManager
                 CommandBarControl.CommandBarLayers[3].IsVisible = false;
 
                 ArchiveToolsGroup.Visibility = Visibility.Collapsed;
+
+                SelectedItemCounter.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -279,6 +304,9 @@ namespace RibbonFileManager
                 {
                     var openWith = activeItem.GetOpenWithPrograms();
                 }
+
+                SelectedItemCounter.Visibility = Visibility.Visible;
+                SelectedItemCounter.Content = selectedCount + " items selected " + activeItem.FriendlyItemSize;
             }
         }
 
@@ -624,6 +652,35 @@ namespace RibbonFileManager
             AddTab(WindowManager.WindowDefaultPath);
         }
 
+        private void TabsSetAsideToggleButton_Click(Object sender, RoutedEventArgs e)
+        {
+            ShowHideTabsOverview(!(TabsOverviewContentControl.IsManipulationEnabled));
+        }
+
+        public void ShowHideTabsOverview(bool show)
+        {
+            if (show)
+            {
+                (TabsOverviewContentControl.DataContext as TabManager).Populate();
+
+                TabsSetAsideToggleButton.IsChecked = true;
+                TabsOverviewContentControl.IsManipulationEnabled = true;
+            }
+            else
+            {
+                TabsSetAsideToggleButton.IsChecked = false;
+                TabsOverviewContentControl.IsManipulationEnabled = false;
+
+                if (ContentTabControl.Items.Count == 0)
+                    Close();
+            }
+        }
+
+        private void SetTabsAsideButton_Click(Object sender, RoutedEventArgs e)
+        {
+            TabManager.SetTabsAside(this);
+        }
+
         private async void AddressBox_PathUpdated(Object sender, EventArgs e)
         {   
             if (!_resettingAddress)
@@ -638,6 +695,8 @@ namespace RibbonFileManager
                 NavigationPaneMenuItem.IsChecked = ActiveContent.ShowNavigationPane;
                 DetailsPaneToggleButton.IsChecked = ActiveContent.ShowDetailsPane;
                 PreviewPaneToggleButton.IsChecked = ActiveContent.ShowPreviewPane;
+                if (ActiveContent.CurrentLocation is DirectoryQuery query)
+                    ValidateCommandStates(query.Item.SubItems.Count, query.Item);
             }
         }
 
@@ -671,6 +730,20 @@ namespace RibbonFileManager
                     AddTab();
                 else if (e.Key == Key.W)
                     CloseCurrentLocation();
+                else if (e.Key == Key.PageUp)
+                {
+                    if (ContentTabControl.SelectedIndex > 0)
+                        ContentTabControl.SelectedIndex--;
+                    else
+                        ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                }
+                else if (e.Key == Key.PageDown)
+                {
+                    if (ContentTabControl.SelectedIndex < (ContentTabControl.Items.Count - 1))
+                        ContentTabControl.SelectedIndex++;
+                    else
+                        ContentTabControl.SelectedIndex = 0;
+                }
                 else if (e.Key == Key.R)
                     ActiveContent.RenameSelection();
             }
@@ -750,6 +823,22 @@ namespace RibbonFileManager
 
             sb.SearchCanceled -= Cancellation;
             sb.CancelSearch();
+        }
+
+        private void CurrentlyOpenTabsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if /*(TabsOverviewContentControl.IsVisible && */(CurrentlyOpenTabsListView.SelectedItem != null)//)
+            {
+                (CurrentlyOpenTabsListView.SelectedItem as LocationTab).SwitchTo();
+                CurrentlyOpenTabsListView.SelectedItem = null;
+                ShowHideTabsOverview(false);
+            }
+        }
+
+        private void DecoratableWindow_Deactivated(object sender, EventArgs e)
+        {
+            if (TabsOverviewContentControl.IsVisible)
+                ShowHideTabsOverview(false);
         }
     }
 }
