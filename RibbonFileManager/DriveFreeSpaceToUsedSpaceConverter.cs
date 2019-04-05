@@ -8,15 +8,15 @@ namespace RibbonFileManager
 {
     public class DriveFreeSpaceToUsedSpaceConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public Object Convert(Object[] values, Type targetType, Object parameter, CultureInfo culture)
         {
-            if ((values[0] is double freeSpace) && (values[1] is double totalSpace))
+            if ((values[0] is Double freeSpace) && (values[1] is Double totalSpace))
                 return totalSpace - freeSpace;
             else
                 return 0.0;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public Object[] ConvertBack(Object value, Type[] targetTypes, Object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

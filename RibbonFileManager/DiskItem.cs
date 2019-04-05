@@ -14,7 +14,7 @@ namespace RibbonFileManager
     {
         public override Int32 GetHashCode() => _info.GetHashCode();
 
-        public override string ToString()
+        public override String ToString()
         {
             return ItemDisplayName;
         }
@@ -113,7 +113,7 @@ namespace RibbonFileManager
             }
         }
 
-        public bool IsDrive => ((ItemCategory == DiskItemCategory.Directory) && (ItemPath.Length == 3) && (Char.IsLetter(ItemPath.ToCharArray()[0])) && (ItemPath.ToCharArray()[1] == ':'));
+        public Boolean IsDrive => ((ItemCategory == DiskItemCategory.Directory) && (ItemPath.Length == 3) && (Char.IsLetter(ItemPath.ToCharArray()[0])) && (ItemPath.ToCharArray()[1] == ':'));
 
         public Double DriveFreeSpace
         {
@@ -223,7 +223,7 @@ namespace RibbonFileManager
             }
         }
 
-        string GetDiskSizeInAppropriateUnits(double size)
+        String GetDiskSizeInAppropriateUnits(Double size)
         {
             var unitCounter = 0;
             while (size > 1024)

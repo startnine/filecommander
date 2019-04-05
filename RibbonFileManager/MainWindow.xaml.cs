@@ -26,17 +26,7 @@ namespace RibbonFileManager
             get => (ContentTabControl.SelectedItem as TabItem)?.Content as WindowContent;
         }
 
-        public List<WindowContent> WindowContents// => ContentTabControl.Items.OfType<WindowContent>().ToList();
-        {
-            get
-            {
-                List<WindowContent> content = new List<WindowContent>();
-                foreach (TabItem item in ContentTabControl.Items)
-                    content.Add(item.Content as WindowContent);
-
-                return content;
-            }
-        }
+        public IEnumerable<WindowContent> WindowContents => ContentTabControl.Items.OfType<WindowContent>();
 
         public Config.InterfaceModeType InterfaceMode
         {
@@ -118,7 +108,7 @@ namespace RibbonFileManager
             Activated += MainWindow_Activated;
         }
 
-        private void MainWindow_Activated(object sender, EventArgs e)
+        private void MainWindow_Activated(Object sender, EventArgs e)
         {
             UpdateClipboardButtons();
         }
@@ -657,7 +647,7 @@ namespace RibbonFileManager
             ShowHideTabsOverview(!(TabsOverviewContentControl.IsManipulationEnabled));
         }
 
-        public void ShowHideTabsOverview(bool show)
+        public void ShowHideTabsOverview(Boolean show)
         {
             if (show)
             {
@@ -825,7 +815,7 @@ namespace RibbonFileManager
             sb.CancelSearch();
         }
 
-        private void CurrentlyOpenTabsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CurrentlyOpenTabsListView_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             if /*(TabsOverviewContentControl.IsVisible && */(CurrentlyOpenTabsListView.SelectedItem != null)//)
             {
@@ -835,7 +825,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void DecoratableWindow_Deactivated(object sender, EventArgs e)
+        private void DecoratableWindow_Deactivated(Object sender, EventArgs e)
         {
             if (TabsOverviewContentControl.IsVisible)
                 ShowHideTabsOverview(false);
