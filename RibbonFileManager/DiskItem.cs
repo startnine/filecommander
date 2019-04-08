@@ -12,6 +12,28 @@ namespace RibbonFileManager
 {
     public class DiskItem : INotifyPropertyChanged
     {
+        bool _isSelected = false;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        bool _isRenaming = false;
+        public bool IsRenaming
+        {
+            get => _isRenaming;
+            set
+            {
+                _isRenaming = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public override Int32 GetHashCode() => _info.GetHashCode();
 
         public override string ToString()

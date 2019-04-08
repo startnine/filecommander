@@ -11,6 +11,8 @@ namespace RibbonFileManager
 {
     public class ItemRenameBehavior : Behavior<TextBox>
     {
+        TextBox _box = null;
+
         public DiskItem TargetItem
         {
             get => (DiskItem)GetValue(TargetItemProperty);
@@ -20,14 +22,14 @@ namespace RibbonFileManager
         public static readonly DependencyProperty TargetItemProperty =
             DependencyProperty.Register("TargetItem", typeof(DiskItem), typeof(ItemRenameBehavior), new PropertyMetadata(null));
 
-        public WindowContent ManagerBase
+        public WindowContent WindowContent
         {
-            get => (WindowContent)GetValue(ManagerBaseProperty);
-            set => SetValue(ManagerBaseProperty, value);
+            get => (WindowContent)GetValue(WindowContentProperty);
+            set => SetValue(WindowContentProperty, value);
         }
 
-        public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ItemRenameBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty WindowContentProperty =
+            DependencyProperty.Register(nameof(WindowContent), typeof(WindowContent), typeof(ItemRenameBehavior), new PropertyMetadata(null));
 
         public Boolean IsRenaming
         {
@@ -39,13 +41,12 @@ namespace RibbonFileManager
 
         static void OnIsRenamingChangedCallback(Object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((Boolean) e.NewValue)
+            if ((Boolean)e.NewValue)
             {
-                var sned = sender as ItemRenameBehavior;
+                //var sned = sender as ItemRenameBehavior;
+                (sender as ItemRenameBehavior)._box.Visibility = Visibility.Visible;
             }
         }
-
-        TextBox _box;
 
         protected override void OnAttached()
         {
@@ -64,7 +65,7 @@ namespace RibbonFileManager
                 _box.SelectAll();
             }
             else
-                ManagerBase.IsRenamingFiles = false;
+                TargetItem.IsRenaming = false;
         }
 
         private void TextBox_KeyDown(Object sender, System.Windows.Input.KeyEventArgs e)

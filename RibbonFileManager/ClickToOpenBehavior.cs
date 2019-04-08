@@ -26,19 +26,19 @@ namespace RibbonFileManager
                 (e.OldValue as ListViewItem).PreviewMouseDoubleClick -= sned.ParentListViewItem_PreviewMouseDoubleClick;
         }
 
-        public WindowContent ManagerBase
+        public WindowContent WindowContent
         {
-            get => (WindowContent)GetValue(ManagerBaseProperty);
-            set => SetValue(ManagerBaseProperty, value);
+            get => (WindowContent)GetValue(WindowContentProperty);
+            set => SetValue(WindowContentProperty, value);
         }
 
-        public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ClickToOpenBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty WindowContentProperty =
+            DependencyProperty.Register(nameof(WindowContent), typeof(WindowContent), typeof(ClickToOpenBehavior), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
 
         private async void ParentListViewItem_PreviewMouseDoubleClick(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            await ManagerBase.OpenSelectionAsync();
+            await WindowContent.OpenSelectionAsync();
         }
     }
 }

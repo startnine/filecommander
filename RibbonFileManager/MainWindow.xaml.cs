@@ -770,6 +770,9 @@ namespace RibbonFileManager
                     _altActionTaken = false;
                 }
             }
+
+            if (e.Key == Key.F2)
+                ActiveContent.RenameSelection();
         }
 
         private void MainWindow_PreviewKeyUp(Object sender, KeyEventArgs e)

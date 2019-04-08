@@ -175,7 +175,7 @@ namespace RibbonFileManager
             if (_item != null)
             {
                 var content = _item.Content as WindowContent;
-                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(content.ActualWidth), (int)SystemScaling.WpfUnitsToRealPixels(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(Window.GetWindow(_item).ActualWidth), (int)SystemScaling.WpfUnitsToRealPixels(Window.GetWindow(_item).ActualHeight), 96, 96, PixelFormats.Pbgra32);
                 bitmap.Render(content);
                 return new ImageBrush(bitmap)
                 {
@@ -199,7 +199,7 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageBrush), typeof(LocationTab), new PropertyMetadata(new ImageBrush()));
 
-        Icon Icon
+        public Icon Icon
         {
             get => (Icon)GetValue(IconProperty);
             set => SetValue(IconProperty, value);

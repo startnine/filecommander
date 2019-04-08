@@ -24,14 +24,14 @@ namespace RibbonFileManager
             }
         }
 
-        public WindowContent ManagerBase
+        public WindowContent WindowContent
         {
-            get => (WindowContent)GetValue(ManagerBaseProperty);
-            set => SetValue(ManagerBaseProperty, value);
+            get => (WindowContent)GetValue(WindowContentProperty);
+            set => SetValue(WindowContentProperty, value);
         }
 
-        public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(WindowContent), typeof(ItemContextMenuBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty WindowContentProperty =
+            DependencyProperty.Register(nameof(WindowContent), typeof(WindowContent), typeof(ItemContextMenuBehavior), new PropertyMetadata(null));
 
         public MenuItem OpenMenuItem
         {
@@ -51,7 +51,7 @@ namespace RibbonFileManager
         private void OpenMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
             if (TargetItem != null)
-                ManagerBase.OpenPath(TargetItem.ItemPath);
+                WindowContent.OpenPath(TargetItem.ItemPath);
         }
 
         public MenuItem RunAsAdminMenuItem
@@ -91,7 +91,7 @@ namespace RibbonFileManager
 
         private void CopyMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-            ManagerBase.CopySelection();
+            WindowContent.CopySelection();
         }
 
         public MenuItem CutMenuItem
@@ -111,7 +111,7 @@ namespace RibbonFileManager
 
         private void CutMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-            ManagerBase.CutSelection();
+            WindowContent.CutSelection();
         }
 
         public MenuItem DeleteMenuItem
@@ -131,7 +131,7 @@ namespace RibbonFileManager
 
         private async void DeleteMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-            await ManagerBase.DeleteSelectionAsync();
+            await WindowContent.DeleteSelectionAsync();
         }
 
         public MenuItem RenameMenuItem

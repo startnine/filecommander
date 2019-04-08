@@ -87,7 +87,7 @@
                             </Grid>
                         </DockPanel>
                     </ContentControl>
-                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}}" AutomaticStateManagement="True" SelectedTabIndex="0">
+                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}, FallbackValue={x:Null}}" AutomaticStateManagement="True" SelectedTabIndex="0">
                         <!--Source={x:Reference Name=RibbonTitleBar}-->
                         <!--x:Reference RibbonTitleBar-->
                         <Fluent:Ribbon.Menu>

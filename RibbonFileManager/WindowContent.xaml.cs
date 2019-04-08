@@ -26,13 +26,13 @@ namespace RibbonFileManager
     /// </summary>
     public partial class WindowContent : UserControl
     {
-        public Boolean IsRenamingFiles
+        /*public Boolean IsRenamingFiles
         {
             get => (Boolean)GetValue(IsRenamingFilesProperty);
             set => SetValue(IsRenamingFilesProperty, value);
         }
 
-        public static readonly DependencyProperty IsRenamingFilesProperty = DependencyProperty.Register("IsRenamingFiles", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsRenamingFilesProperty = DependencyProperty.Register("IsRenamingFiles", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));*/
 
         public MainWindow OwnerWindow
         {
@@ -540,7 +540,10 @@ namespace RibbonFileManager
 
         public void RenameSelection()
         {
-            IsRenamingFiles = true;
+            foreach (DiskItem s in CurrentDirectoryListView.SelectedItems)
+                s.IsRenaming = true;
+            //(CurrentDirectoryListView.ItemsSource as ObservableCollection<DiskItem>)
+            //IsRenamingFiles = true;
         }
 
         public async Task CreateNewFolderAsync()
