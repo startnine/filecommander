@@ -114,7 +114,7 @@ namespace RibbonFileManager
 
         public static Guid ThisPcGuid = new Guid("20D04FE0-3AEA-1069-A2D8-08002B30309D");
 
-        public static Dictionary<Guid, string> Names = new Dictionary<Guid, string>
+        public static Dictionary<Guid, String> Names = new Dictionary<Guid, String>
         {
             {ThisPcGuid, "This PC"}
         };
@@ -123,7 +123,7 @@ namespace RibbonFileManager
         {
             get
             {
-                List<PropertyGroupDescription> descriptions = new List<PropertyGroupDescription>();
+                var descriptions = new List<PropertyGroupDescription>();
                 if (LocationGuid == ThisPcGuid)
                 {
                     descriptions.Add(new PropertyGroupDescription("IsDrive"));
@@ -143,9 +143,9 @@ namespace RibbonFileManager
 
         public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
         {
-            if (LocationGuid == ShellLocation.ThisPcGuid)
+            if (LocationGuid == ThisPcGuid)
             {
-                var entries = new List<string>()
+                var entries = new List<String>()
                     {
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"),
@@ -154,18 +154,20 @@ namespace RibbonFileManager
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
                     };
-                foreach (string s in entries)
+
+                foreach (var s in entries)
                 {
-                    token.ThrowIfCancellationRequested();
                     yield return await Task.Run(() => new DiskItem(s));
                     token.ThrowIfCancellationRequested();
                 }
 
-                foreach (DriveInfo d in System.IO.DriveInfo.GetDrives())
+                foreach (var drive in DriveInfo.GetDrives())
                 {
-                    token.ThrowIfCancellationRequested();
-                    Debug.WriteLine("d.RootDirectory.FullName: " + d.RootDirectory.FullName);
-                    yield return await Task.Run(() => new DiskItem(d.RootDirectory.FullName));
+                    if (Directory.Exists(drive.RootDirectory.FullName))
+                    {
+                        yield return await Task.Run(() => new DiskItem(drive.RootDirectory.FullName));
+                    }
+
                     token.ThrowIfCancellationRequested();
                 }
             }

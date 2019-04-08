@@ -15,8 +15,8 @@ namespace RibbonFileManager
 {
     public class TabManager : DependencyObject
     {
-        static string _groupsSetAsidePath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\FileCommander_TabGroups");
-        public static string SlashReplacement = @"((SLASH))";
+        static String _groupsSetAsidePath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\FileCommander_TabGroups");
+        public static String SlashReplacement = @"((SLASH))";
 
         public ObservableCollection<LocationTab> OpenTabs
         {
@@ -67,7 +67,7 @@ namespace RibbonFileManager
                     OpenTabs.Add(new LocationTab(t));
             }
 
-            foreach (string s in Directory.EnumerateFiles(_groupsSetAsidePath))
+            foreach (var s in Directory.EnumerateFiles(_groupsSetAsidePath))
             {
                 TabsSetAside.Add(new TabGroup(s));
             }
@@ -76,10 +76,10 @@ namespace RibbonFileManager
         public static void SetTabsAside(MainWindow window)
         {
             DateTime now = DateTime.Now;
-            string outName = now.Year + "-" + now.Month + "-" + now.Day + "-" + now.Hour + "-" + now.Minute;
-            List<string> paths = new List<string>();
+            var outName = now.Year + "-" + now.Month + "-" + now.Day + "-" + now.Hour + "-" + now.Minute;
+            List<String> paths = new List<String>();
 
-            string thumbnailDir = Path.Combine(_groupsSetAsidePath, outName);
+            var thumbnailDir = Path.Combine(_groupsSetAsidePath, outName);
             if (!Directory.Exists(thumbnailDir))
                 Directory.CreateDirectory(thumbnailDir);
             /*else
@@ -89,7 +89,7 @@ namespace RibbonFileManager
             foreach (TabItem item in window.ContentTabControl.Items)
             {
                 var loc = (item.Content as WindowContent).CurrentLocation;
-                string path = loc.LocationPath.Replace(@"/", SlashReplacement).Replace(@"\", SlashReplacement);
+                var path = loc.LocationPath.Replace(@"/", SlashReplacement).Replace(@"\", SlashReplacement);
                 if (loc is ShellLocation shellLoc)
                     path = shellLoc.LocationGuid.ToString();
 
@@ -100,7 +100,7 @@ namespace RibbonFileManager
                 //content.CurrentLocation.LocationPath.Replace(@"\", _slashReplacement))
                 using (var fileStream = new FileStream(Path.Combine(thumbnailDir, loc.Name + ".png"), FileMode.Create))
                 {
-                    RenderTargetBitmap bitmap = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(content.ActualWidth), (int)SystemScaling.WpfUnitsToRealPixels(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                    RenderTargetBitmap bitmap = new RenderTargetBitmap((Int32)SystemScaling.WpfUnitsToRealPixels(content.ActualWidth), (Int32)SystemScaling.WpfUnitsToRealPixels(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
                     bitmap.Render(content);
 
                     BitmapEncoder encoder = new PngBitmapEncoder();
@@ -126,17 +126,17 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(nameof(Content), typeof(WindowContent), typeof(LocationTab), new PropertyMetadata(null));*/
 
-        public string Title
+        public String Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (String)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(string), typeof(LocationTab), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(String), typeof(LocationTab), new PropertyMetadata(String.Empty));
 
         TabItem _item = null;
-        string _path = string.Empty;
-        string _group = string.Empty;
+        String _path = String.Empty;
+        String _group = String.Empty;
 
         public LocationTab(TabItem item)
         {
@@ -148,7 +148,7 @@ namespace RibbonFileManager
             Thumbnail = GetThumbnail();
         }
 
-        public LocationTab(string path, string groupPath)
+        public LocationTab(String path, String groupPath)
         {
             _path = path.Replace(TabManager.SlashReplacement, @"\");
             _group = groupPath;
@@ -175,7 +175,7 @@ namespace RibbonFileManager
             if (_item != null)
             {
                 var content = _item.Content as WindowContent;
-                RenderTargetBitmap bitmap = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(Window.GetWindow(_item).ActualWidth), (int)SystemScaling.WpfUnitsToRealPixels(Window.GetWindow(_item).ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                RenderTargetBitmap bitmap = new RenderTargetBitmap((Int32)SystemScaling.WpfUnitsToRealPixels(content.ActualWidth), (Int32)SystemScaling.WpfUnitsToRealPixels(content.ActualHeight), 96, 96, PixelFormats.Pbgra32);
                 bitmap.Render(content);
                 return new ImageBrush(bitmap)
                 {
@@ -184,7 +184,7 @@ namespace RibbonFileManager
             }
             else
             {
-                string name = string.Empty;
+                var name = String.Empty;
                 if (Directory.Exists(_path))
                     name = new DirectoryQuery(_path).Name;
                 else if (Guid.TryParse(_path, out Guid guid))
@@ -199,7 +199,7 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageBrush), typeof(LocationTab), new PropertyMetadata(new ImageBrush()));
 
-        public Icon Icon
+        Icon Icon
         {
             get => (Icon)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
@@ -238,31 +238,31 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty TabsProperty = DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<LocationTab>), typeof(TabGroup), new PropertyMetadata(new ObservableCollection<LocationTab>()));
 
-        public string Time
+        public String Time
         {
-            get => (string)GetValue(TimeProperty);
+            get => (String)GetValue(TimeProperty);
             set => SetValue(TimeProperty, value);
         }
 
-        public static readonly DependencyProperty TimeProperty = DependencyProperty.Register(nameof(Time), typeof(string), typeof(TabGroup), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty TimeProperty = DependencyProperty.Register(nameof(Time), typeof(String), typeof(TabGroup), new PropertyMetadata(String.Empty));
 
-        string _path = string.Empty;
+        String _path = String.Empty;
 
-        public TabGroup(string path)
+        public TabGroup(String path)
         {
             Tabs.Clear();
 
-            foreach (string s in File.ReadAllLines(path))
+            foreach (var s in File.ReadAllLines(path))
             {
                 _path = path.Replace(TabManager.SlashReplacement, @"/").Replace(TabManager.SlashReplacement, @"\");
                 Tabs.Add(new LocationTab(s, _path));
             }
 
-            string[] timePartStrings = Path.GetFileNameWithoutExtension(_path).Split('-');
-            int[] timeParts = new int[timePartStrings.Length];
+            String[] timePartStrings = Path.GetFileNameWithoutExtension(_path).Split('-');
+            Int32[] timeParts = new Int32[timePartStrings.Length];
 
-            for (int i = 0; i < timePartStrings.Length; i++)
-                timeParts[i] = int.Parse(timePartStrings[i]);
+            for (var i = 0; i < timePartStrings.Length; i++)
+                timeParts[i] = Int32.Parse(timePartStrings[i]);
 
             DateTime time = new DateTime(timeParts[0], timeParts[1], timeParts[2], timeParts[3], timeParts[4], 0);
 

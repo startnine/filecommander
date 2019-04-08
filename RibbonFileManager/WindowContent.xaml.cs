@@ -84,7 +84,7 @@ namespace RibbonFileManager
             set => SetValue(IconSizeProperty, value);
         }
 
-        public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(nameof(IconSize), typeof(double), typeof(WindowContent), new PropertyMetadata((double)48.0));
+        public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(nameof(IconSize), typeof(Double), typeof(WindowContent), new PropertyMetadata((Double)48.0));
 
         public Boolean ShowDetailsPane
         {
@@ -139,15 +139,15 @@ namespace RibbonFileManager
             Loaded += WindowContent_Loaded;
         }
 
-        static string _shellLocationPrefix = "shell:::";
+        static String _shellLocationPrefix = "shell:::";
 
-        public Location GetLocation(string path)
+        public Location GetLocation(String path)
         {
             if (Directory.Exists(path))
                 return new DirectoryQuery(path);
             else if (path.ToLowerInvariant().StartsWith(_shellLocationPrefix))
             {
-                string guidString = path.Replace(_shellLocationPrefix, string.Empty);
+                var guidString = path.Replace(_shellLocationPrefix, String.Empty);
                 return new ShellLocation(Guid.Parse(guidString));
             }
             else if (Guid.TryParse(path, out Guid guid))
@@ -204,7 +204,7 @@ namespace RibbonFileManager
 
         async Task Navigate(Location l, CancellationTokenSource source, Boolean clearTextBox = true)
         {
-            string query = string.Empty;
+            var query = String.Empty;
             if (l is SearchQuery search)
                 query = search.Query;
 
@@ -219,7 +219,7 @@ namespace RibbonFileManager
             {
                 var results = new ObservableCollection<DiskItem>();
                 CurrentDirectoryListView.ItemsSource = results;
-                int nextDirectoryIndex = 0;
+                var nextDirectoryIndex = 0;
                 Debug.WriteLine("l type: " + l.GetType().ToString());
                 await foreach (var path in l.GetLocationContents(source.Token, false))
                 {
@@ -333,9 +333,9 @@ namespace RibbonFileManager
             OwnerWindow.ValidateCommandStates(CurrentDirectoryListView.SelectedItems.Count, item);
         }
 
-        public async Task OpenPath(string path)
+        public async Task OpenPath(String path)
         {
-            string expanded = Environment.ExpandEnvironmentVariables(path);
+            var expanded = Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(expanded))
                 await NavigateAsync(new DirectoryQuery(expanded));
             else if (File.Exists(expanded))
@@ -409,16 +409,16 @@ namespace RibbonFileManager
             if (Clipboard.ContainsFileDropList())
             {
                 clipboard = Clipboard.GetFileDropList();
-                foreach (string s in clipboard)
+                foreach (var s in clipboard)
                 {
-                    string outPath = Path.Combine(CurrentLocation.LocationPath, Path.GetFileName(s));
+                    var outPath = Path.Combine(CurrentLocation.LocationPath, Path.GetFileName(s));
                     if (File.Exists(s))
                     {
                         if (s.ToLowerInvariant() == outPath.ToLowerInvariant())
                         {
-                            string fixBasePath = outPath + " - Copy";
-                            string fixedPath = fixBasePath;
-                            int cycle = 1;
+                            var fixBasePath = outPath + " - Copy";
+                            var fixedPath = fixBasePath;
+                            var cycle = 1;
                             while (File.Exists(fixedPath))
                             {
                                 fixedPath = fixBasePath + " (" + cycle.ToString() + ")";
@@ -428,8 +428,8 @@ namespace RibbonFileManager
                         }
                         else if (File.Exists(outPath))
                         {
-                            string fixedPath = outPath;
-                            int cycle = 1;
+                            var fixedPath = outPath;
+                            var cycle = 1;
                             while (File.Exists(fixedPath))
                             {
                                 fixedPath = outPath + " (" + cycle.ToString() + ")";
@@ -444,9 +444,9 @@ namespace RibbonFileManager
                     {
                         if (s.ToLowerInvariant() == outPath.ToLowerInvariant())
                         {
-                            string fixBasePath = outPath + " - Copy";
-                            string fixedPath = fixBasePath;
-                            int cycle = 1;
+                            var fixBasePath = outPath + " - Copy";
+                            var fixedPath = fixBasePath;
+                            var cycle = 1;
                             while (Directory.Exists(fixedPath))
                             {
                                 fixedPath = fixBasePath + " (" + cycle.ToString() + ")";
@@ -456,8 +456,8 @@ namespace RibbonFileManager
                         }
                         else if (Directory.Exists(outPath))
                         {
-                            string fixedPath = outPath;
-                            int cycle = 1;
+                            var fixedPath = outPath;
+                            var cycle = 1;
                             while (Directory.Exists(fixedPath))
                             {
                                 fixedPath = outPath + " (" + cycle.ToString() + ")";
@@ -639,7 +639,7 @@ namespace RibbonFileManager
             }
         }
 
-        private GroupStyle SelectGroupStyle(CollectionViewGroup group, int level)
+        private GroupStyle SelectGroupStyle(CollectionViewGroup group, Int32 level)
         {
 
             return (GroupStyle)FindResource("myGroupStyle");
@@ -649,7 +649,7 @@ namespace RibbonFileManager
         GridViewColumnHeader _currentDirectoryListViewLastHeaderClicked = null;
         ListSortDirection _currentDirectoryListViewLastSortDirection = ListSortDirection.Ascending;
 
-        private void CurrentDirectoryListView_GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void CurrentDirectoryListView_GridViewColumnHeader_Click(Object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader header = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection sortDirection = ListSortDirection.Ascending;
@@ -660,7 +660,7 @@ namespace RibbonFileManager
                     sortDirection = ListSortDirection.Descending;
 
                 var columnBinding = header.Column.DisplayMemberBinding as Binding;
-                var sortBy = columnBinding?.Path.Path ?? header.Column.Header as string;
+                var sortBy = columnBinding?.Path.Path ?? header.Column.Header as String;
 
                 SortCurrentDirectoryListView(sortBy, sortDirection);
 
@@ -674,7 +674,7 @@ namespace RibbonFileManager
             }
         }
 
-        private void SortCurrentDirectoryListView(string sortBy, ListSortDirection direction)
+        private void SortCurrentDirectoryListView(String sortBy, ListSortDirection direction)
         {
             ICollectionView currentDirectoryItemsSource = CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
 
