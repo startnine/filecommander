@@ -48,16 +48,31 @@ namespace RibbonFileManager
             {
                 CommandBarControl.Visibility = Visibility.Visible;
                 MenuBar.IsEnabled = true;
+                MenuBarToolBar.Visibility = Visibility.Visible;
+                DefaultToolBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Collapsed;
                 RibbonTitle.Visibility = Visibility.Collapsed;
+                NavigationBarGrid.Visibility = Visibility.Visible;
             }
             else if (InterfaceMode == Config.InterfaceModeType.Ribbon)
             {
                 CommandBarControl.Visibility = Visibility.Collapsed;
                 MenuBar.IsEnabled = false;
-                MenuBar.Visibility = Visibility.Collapsed;
+                MenuBarToolBar.Visibility = Visibility.Collapsed;
+                DefaultToolBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Visible;
                 RibbonTitle.Visibility = Visibility.Visible;
+                NavigationBarGrid.Visibility = Visibility.Visible;
+            }
+            else if (InterfaceMode == Config.InterfaceModeType.None)
+            {
+                CommandBarControl.Visibility = Visibility.Collapsed;
+                MenuBar.IsEnabled = true;
+                MenuBarToolBar.Visibility = Visibility.Visible;
+                DefaultToolBar.Visibility = Visibility.Visible;
+                Ribbon.Visibility = Visibility.Collapsed;
+                RibbonTitle.Visibility = Visibility.Collapsed;
+                NavigationBarGrid.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -738,7 +753,7 @@ namespace RibbonFileManager
                     ActiveContent.RenameSelection();
             }
             
-            if ((Keyboard.GetKeyStates(Key.LeftAlt) != KeyStates.None) || (Keyboard.GetKeyStates(Key.RightAlt) != KeyStates.None))
+            if ((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))
             {
                 if (e.Key == Key.Left)
                 {
@@ -832,6 +847,11 @@ namespace RibbonFileManager
         {
             if (TabsOverviewContentControl.IsVisible)
                 ShowHideTabsOverview(false);
+        }
+
+        private void TabPreviewsButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

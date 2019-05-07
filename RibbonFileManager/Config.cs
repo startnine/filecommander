@@ -26,7 +26,8 @@ namespace RibbonFileManager
         public enum InterfaceModeType
         {
             CommandBar,
-            Ribbon
+            Ribbon,
+            None
         }
 
         public InterfaceModeType InterfaceMode

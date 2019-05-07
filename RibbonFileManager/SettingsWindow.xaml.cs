@@ -38,7 +38,13 @@ namespace RibbonFileManager
         {
             if (((Boolean) e.OldValue == false) && ((Boolean) e.NewValue == true))
             {
-                InterfaceModeComboBox.SelectedIndex = Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar ? 0 : 1;
+                //InterfaceModeComboBox.SelectedIndex = Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar ? 0 : 1;
+                if (Config.Instance.InterfaceMode == Config.InterfaceModeType.Ribbon)
+                    InterfaceModeComboBox.SelectedIndex = 0;
+                else if (Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar)
+                    InterfaceModeComboBox.SelectedIndex = 1;
+                else
+                    InterfaceModeComboBox.SelectedIndex = 2;
 
                 StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
                 TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
@@ -52,7 +58,13 @@ namespace RibbonFileManager
 
         private void ApplyButton_Click(Object sender, RoutedEventArgs e)
         {
-            Config.Instance.InterfaceMode = InterfaceModeComboBox.SelectedIndex == 0 ? Config.InterfaceModeType.CommandBar : Config.InterfaceModeType.Ribbon;
+            //Config.Instance.InterfaceMode = InterfaceModeComboBox.SelectedIndex == 0 ? Config.InterfaceModeType.CommandBar : Config.InterfaceModeType.Ribbon;
+            if (InterfaceModeComboBox.SelectedIndex == 0)
+                Config.Instance.InterfaceMode = Config.InterfaceModeType.Ribbon;
+            else if (InterfaceModeComboBox.SelectedIndex == 1)
+                Config.Instance.InterfaceMode = Config.InterfaceModeType.CommandBar;
+            else
+                Config.Instance.InterfaceMode = Config.InterfaceModeType.None;
 
             Config.Instance.ShowStatusBar = StatusBarToggleSwitch.IsChecked.Value;
 

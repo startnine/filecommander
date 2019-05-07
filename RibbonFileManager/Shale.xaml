@@ -6,7 +6,6 @@
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
                     xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
                     xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
-                    xmlns:tic="clr-namespace:Start9.UI.Wpf.Statics;assembly=Start9.UI.Wpf"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
                     xmlns:e="http://schemas.microsoft.com/xaml/behaviors">
     <ResourceDictionary.MergedDictionaries>
@@ -30,12 +29,12 @@
     <!--#region Main Window Styles-->
 
     <Style x:Key="{x:Type local:MainWindow}" TargetType="{x:Type local:MainWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
+        <Setter Property="Padding" Value="0"/>
         <!--Setter Property="BorderThickness" Value="0,64,0,0"/-->
         <!--Setter Property="ShowTitlebarText" Value="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"/-->
         <Style.Triggers>
             <Trigger Property="InterfaceMode" Value="Ribbon">
                 <Setter Property="TitlebarHeight" Value="62"/><!--54-->
-                <Setter Property="Padding" Value="0"/>
                 <!--Setter Property="Padding" Value="0,-24,0,0"/-->
                 <!--Setter Property="BorderThickness" Value="0,54,0,0"/-->
             </Trigger>
@@ -1631,11 +1630,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0" Grid.ColumnSpan="3">
+                        <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0" Grid.ColumnSpan="3">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1"  GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
                             </Border.Background>
-                            <Border CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                            <Border CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
                                 </Border.Background>
@@ -1736,11 +1735,11 @@
                                         <!--Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}"-->
                                         <!--Background="#01000000"-->
                                     </Border>
-                                    <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1,1,0,1" Opacity="0" IsHitTestVisible="False" Grid.Column="0">
+                                    <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1,1,0,1" Opacity="0" IsHitTestVisible="False" Grid.Column="0">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1"  GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
                                         </Border.Background>
-                                        <Border x:Name="InnerHoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0" IsHitTestVisible="False">
+                                        <Border x:Name="InnerHoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0" IsHitTestVisible="False">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
                                             </Border.Background>
@@ -1758,11 +1757,11 @@
                                     </Border>
                                     <Border x:Name="Submenu_Border" HorizontalAlignment="Stretch" Margin="0" Width="Auto" Visibility="Collapsed" BorderThickness="1" Grid.Column="1" />
                                     <!--Background="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.Background}" BorderBrush="{DynamicResource Fluent.Ribbon.Brushes.Button.MouseOver.BorderBrush}"-->
-                                    <Border x:Name="SubmenuHoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,3,3,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0" IsHitTestVisible="False" Grid.Column="1">
+                                    <Border x:Name="SubmenuHoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,3,3,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0" IsHitTestVisible="False" Grid.Column="1">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1"  GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
                                         </Border.Background>
-                                        <Border x:Name="SubmenuInnerHoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,2,2,0;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0" IsHitTestVisible="False">
+                                        <Border x:Name="SubmenuInnerHoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,2,2,0;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0" IsHitTestVisible="False">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
                                             </Border.Background>
@@ -2630,11 +2629,11 @@
                     <Grid Background="Transparent">
                         <!--Border x:Name="hoverBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.MouseOver}" />
                         <Border x:Name="selectedBorder" Visibility="Collapsed" Background="{DynamicResource Fluent.Ribbon.Brushes.GalleryItem.Selected}" /-->
-                        <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
+                        <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
                             </Border.Background>
-                            <Border x:Name="InnerHoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                            <Border x:Name="InnerHoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
                                 </Border.Background>
@@ -2715,11 +2714,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:InRibbonGallery}">
                     <Grid Width="Auto" Height="Auto" x:Name="PART_LayoutRoot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <!--Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <!--Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                             </Border.Background>
-                            <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                            <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource TextBoxIdleBackgroundGradientStops}"/>
                                 </Border.Background>
@@ -2728,28 +2727,28 @@
                         <Border x:Name="border" Width="Auto" Height="{TemplateBinding GalleryPanelContainerHeight}" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" ClipToBounds="True" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Grid Width="Auto" Height="Auto">
                                 <Grid>
-                                    <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0,0,18,0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,1,0,1">
+                                    <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0,0,18,0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,1,0,1">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                                         </Border.Background>
-                                        <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                        <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource TextBoxIdleBackgroundGradientStops}"/>
                                             </Border.Background>
                                         </Border>
                                     </Border>
-                                    <ScrollViewer Margin="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                    <ScrollViewer Margin="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                         <ScrollViewer.Resources>
                                             <Style TargetType="{x:Type ScrollBar}">
                                                 <Setter Property="HorizontalAlignment" Value="Right"/>
                                                 <Setter Property="Width" Value="16"/>
-                                                <Setter Property="tic:AttachedProperties.CornerCurves" Value="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                <Setter Property="ui:AttachedProperties.CornerCurves" Value="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                                 <Setter Property="Margin" Value="0,-2"/>
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ScrollBar}">
                                                             <StackPanel HorizontalAlignment="Stretch">
-                                                                <RepeatButton x:Name="upButton" Height="21" Command="ScrollBar.PageUpCommand" Margin="0" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                                                <RepeatButton x:Name="upButton" Height="21" Command="ScrollBar.PageUpCommand" Margin="0" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                                                     <RepeatButton.Style>
                                                                         <Style TargetType="{x:Type RepeatButton}">
                                                                             <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
@@ -2763,11 +2762,11 @@
                                                                                 <Setter.Value>
                                                                                     <ControlTemplate TargetType="{x:Type RepeatButton}">
                                                                                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                                                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,3,0,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1">
+                                                                                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,3,0,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1">
                                                                                                 <Border.Background>
                                                                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                                                                                                 </Border.Background>
-                                                                                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,2,0,0;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
+                                                                                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,2,0,0;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
                                                                                             </Border>
                                                                                             <Border x:Name="HoverBackground" CornerRadius="{Binding CornerRadius, ElementName=IdleBackground}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
                                                                                                 <Border.Background>
@@ -2981,7 +2980,7 @@
                                         </Grid>
                                     </ScrollViewer>
                                 </Grid>
-                                <Fluent:ToggleButton IsDefinitive="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="16" Height="19" x:Name="PART_ExpandButton" Margin="2,0" ClickMode="Press" CanAddToQuickAccessToolBar="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <Fluent:ToggleButton IsDefinitive="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="16" Height="19" x:Name="PART_ExpandButton" Margin="2,0" ClickMode="Press" CanAddToQuickAccessToolBar="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                     <Fluent:ToggleButton.Style>
                                         <Style TargetType="{x:Type Fluent:ToggleButton}">
                                             <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
@@ -2995,11 +2994,11 @@
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="{x:Type Fluent:ToggleButton}">
                                                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,0,3,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,0,1,1">
+                                                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,0,3,0;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,0,1,1">
                                                                 <Border.Background>
                                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                                                                 </Border.Background>
-                                                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,0,2,0;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
+                                                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='0,0,2,0;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
                                                             </Border>
                                                             <Border x:Name="HoverBackground" CornerRadius="{Binding CornerRadius, ElementName=IdleBackground}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1,0,1,1" Opacity="0">
                                                                 <Border.Background>
@@ -3401,7 +3400,6 @@
     <DropShadowEffect x:Key="IconOuterShadow" Color="Black" Direction="270" ShadowDepth="3" BlurRadius="12.5" Opacity="0.375" />
     <DropShadowEffect x:Key="IconStrongOuterShadow" Color="Black" Direction="270" ShadowDepth="3" BlurRadius="12.5" Opacity="0.625" />
     <DropShadowEffect x:Key="IconInnerShadow" Color="Black" Direction="270" ShadowDepth="3" BlurRadius="12.5" Opacity="0.625" />
-    <DropShadowEffect x:Key="IconAltInnerShadow" Color="Black" Direction="270" ShadowDepth="3" BlurRadius="12.5" Opacity="0.625" />
     
     <LinearGradientBrush x:Key="IconPrimaryFillBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource DarkIconGradientStops}"/>
     <LinearGradientBrush x:Key="IconSecondaryFillBrush" StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource DarkIconGradientStops2}"/>
@@ -3440,7 +3438,7 @@
     <Grid x:Key="PasteButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="24" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="3" CornerRadius="1" Effect="{DynamicResource IconOuterShadow}">
-                <Path Data="M 0 6 L 7 0 L 14 6 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-6" Effect="{DynamicResource IconAltInnerShadow}"/>
+                <Path Data="M 0 6 L 7 0 L 14 6 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-6" Effect="{DynamicResource IconInnerShadow}"/>
             </Border>
         </Grid>
     </Grid>
@@ -3448,7 +3446,7 @@
     <Grid x:Key="PasteButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="12" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1.5" CornerRadius="1" Effect="{DynamicResource IconOuterShadow}">
-                <Path Data="M 0 2 L 3 0 L 7 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconAltInnerShadow}"/>
+                <Path Data="M 0 2 L 3 0 L 7 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconInnerShadow}"/>
             </Border>
         </Grid>
     </Grid>
@@ -3483,7 +3481,7 @@
     <Grid x:Key="PasteShortcutButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#01000000">
         <Border Width="14" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="{DynamicResource IconPrimaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="2" CornerRadius="1" Effect="{DynamicResource IconStrongOuterShadow}">
             <Grid>
-                <Path Data="M 0 2 L 2 0 L 4 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconAltInnerShadow}"/>
+                <Path Data="M 0 2 L 2 0 L 4 2 Z" HorizontalAlignment="Center" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Margin="0,-2" Effect="{DynamicResource IconInnerShadow}"/>
                 <Canvas Width="8" Height="8" Background="{DynamicResource IconForegroundBrush}" Margin="-2,0,1,0">
                     <Canvas.OpacityMask>
                         <VisualBrush>
@@ -3652,6 +3650,130 @@
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1"/>
             <Border Background="{DynamicResource IconTertiaryFillBrush}" BorderBrush="Transparent" BorderThickness="1"/>
         </UniformGrid>
+    </Grid>
+
+    <Grid x:Key="ComputerOpenButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
+                <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+                <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Path Data="M 8 0 L 0 8 L 5 8 L 5 16 L 11 16 L 11 8 L 16 8 Z" Fill="{DynamicResource SelectedHighlightBrush}" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True" Margin="4,8,-4,-8"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerAccessMediaButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="6" Height="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,1.5" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            <Ellipse Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+        </Grid>
+        <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" StrokeThickness="0" Effect="{DynamicResource IconOuterShadow}"/>
+        <Grid Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Effect="{DynamicResource IconOuterShadow}" Margin="0,0,2,0">
+            <Rectangle Width="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Fill="{DynamicResource IconPrimaryFillBrush}" Margin="0,0,4,8"/>
+            <Grid Height="8" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="{DynamicResource IconSecondaryFillBrush}">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Height="2" Margin="4,0" Orientation="Horizontal">
+                    <Ellipse Width="2" Fill="{DynamicResource SelectedHighlightBrush}" Margin="0,0,3,0"/>
+                    <Ellipse Width="2" Fill="{DynamicResource SelectedHighlightBrush}" Margin="0,0,3,0"/>
+                </StackPanel>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Center" Height="2" Margin="4,0" Width="6" CornerRadius="1" Background="{DynamicResource IconForegroundBrush}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerMapNetworkDriveButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="26" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="{DynamicResource IconPrimaryFillBrush}" Effect="{DynamicResource IconOuterShadow}">
+            <Grid Height="26" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Ellipse Fill="{DynamicResource IconSecondaryFillBrush}" Margin="2"/>
+                <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconForegroundBrush}" StrokeThickness="0"/>
+                <Path Data="M 0 12 L 15 0 L 3 15 Z" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="{DynamicResource IconForegroundBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Rectangle Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="2" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerAddNetworkLocationButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Width="22" HorizontalAlignment="Right" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleX="0.875" ScaleY="0.875"/>
+                </Grid.RenderTransform>
+                <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,18,0,2" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+                <Rectangle Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+                <Rectangle Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{DynamicResource IconTertiaryFillBrush}" StrokeThickness="2" Stroke="{DynamicResource IconSecondaryFillBrush}"/>
+            </Grid>
+        </Border>
+        <Grid Width="22" HorizontalAlignment="Left" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,18,0,2" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+            <Rectangle Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+            <Border Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource IconTertiaryFillBrush}" BorderThickness="2" BorderBrush="{DynamicResource IconSecondaryFillBrush}">
+                <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconForegroundBrush}" StrokeThickness="0" Effect="{DynamicResource IconInnerShadow}"/>
+            </Border>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerOpenControlPanelButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Rectangle Width="16" Height="6" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconPrimaryFillBrush}" StrokeThickness="0"/>
+            <Border Height="26" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{DynamicResource IconTertiaryFillBrush}" BorderThickness="2" BorderBrush="{DynamicResource IconSecondaryFillBrush}">
+                <DockPanel Margin="4" Effect="{DynamicResource IconInnerShadow}">
+                    <Ellipse Width="10" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" VerticalAlignment="Center" Stroke="{DynamicResource IconForegroundBrush}" Fill="{DynamicResource SelectedHighlightBrush}" StrokeThickness="2" Margin="0,0,2,0" DockPanel.Dock="Left"/>
+                    <UniformGrid Columns="1" Margin="0,2">
+                        <Border BorderBrush="{DynamicResource IconForegroundBrush}" BorderThickness="1" Height="4">
+                            <Rectangle Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{DynamicResource SelectedHighlightBrush}"/>
+                        </Border>
+                        <Border BorderBrush="{DynamicResource IconForegroundBrush}" BorderThickness="1" Height="4">
+                            <Rectangle Width="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{DynamicResource SelectedHighlightBrush}"/>
+                        </Border>
+                    </UniformGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerOpenSettingsButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 11.96875 -0.001953125 L 7.390625 1.9980469 L 9.109375 5.9394531 C 7.8460921 6.7902446 6.7532639 7.8746698 5.8847656 9.125 L 1.8320312 7.5332031 L 0.009765625 12.191406 L 3.9394531 13.730469 C 3.795908 14.474032 3.7148438 15.23954 3.7148438 16.023438 C 3.7148438 16.80601 3.7963812 17.570113 3.9394531 18.3125 L 0.001953125 20.03125 L 2.0019531 24.607422 L 5.8808594 22.916016 C 6.7529657 24.173039 7.8523621 25.261833 9.1230469 26.115234 L 7.5390625 30.166016 L 12.189453 31.990234 L 13.759766 27.976562 C 14.445199 28.097761 15.14636 28.173828 15.865234 28.173828 C 16.682401 28.173828 17.480884 28.089266 18.253906 27.933594 L 20.029297 31.998047 L 24.613281 29.998047 L 22.839844 25.947266 C 24.049179 25.093279 25.103108 24.031367 25.933594 22.804688 L 30.164062 24.460938 L 31.988281 19.810547 L 27.8125 18.173828 C 27.938876 17.474431 28.015625 16.757858 28.015625 16.023438 C 28.015625 15.263896 27.935745 14.522656 27.800781 13.800781 L 32.001953 11.970703 L 30.001953 7.3867188 L 25.890625 9.1835938 C 25.057524 7.9686527 24.007145 6.9150154 22.800781 6.0703125 L 24.464844 1.8359375 L 19.806641 0.01171875 L 18.203125 4.1054688 C 17.445689 3.9562805 16.664771 3.8730469 15.865234 3.8730469 C 15.140959 3.8730469 14.434431 3.9492798 13.744141 4.0722656 L 11.96875 -0.001953125 z M 15.865234 8.4277344 C 20.086589 8.4277344 23.460938 11.80197 23.460938 16.023438 C 23.460938 20.244905 20.086589 23.619141 15.865234 23.619141 C 11.64388 23.619141 8.2695312 20.244905 8.2695312 16.023438 C 8.2695312 11.80197 11.64388 8.4277344 15.865234 8.4277344 z" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+    </Grid>
+
+    <Grid x:Key="UninstallOrChangeProgramIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="12" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle Height="12" HorizontalAlignment="Stretch" VerticalAlignment="Center" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+            <Ellipse Width="8" Height="8" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            <Path Data="M 0 2 L 5 0 L 5 16 L 0 14 Z" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="{DynamicResource IconTertiaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerSystemPropertiesButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="11" HorizontalAlignment="Center" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,9,0,1" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+            <Rectangle Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+            <Border Height="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource IconTertiaryFillBrush}" BorderThickness="1" BorderBrush="{DynamicResource IconSecondaryFillBrush}">
+                <Path Data="M 0 2 L 2 4 L 6 0" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{DynamicResource SelectedHighlightBrush}" StrokeThickness="1">
+                    <Path.RenderTransform>
+                        <TranslateTransform X="0.5" Y="1"/>
+                    </Path.RenderTransform>
+                </Path>
+            </Border>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerManageSystemButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="11" HorizontalAlignment="Center" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,9,0,1" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+            <Rectangle Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+            <Rectangle Height="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{DynamicResource IconTertiaryFillBrush}" StrokeThickness="1" Stroke="{DynamicResource IconSecondaryFillBrush}"/>
+        </Grid>
+        <Grid Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Effect="{DynamicResource IconOuterShadow}">
+            <Border Width="5" Height="3" VerticalAlignment="Top" BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1,1,1,0"/>
+            <Border Height="7" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconSecondaryFillBrush}">
+                <Rectangle Height="2" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            </Border>
+        </Grid>
     </Grid>
 
     <!--#endregion Main Ribbon Icons-->
@@ -3959,9 +4081,9 @@
                 <ControlTemplate TargetType="{x:Type local:SearchBox}">
                     <DockPanel>
                         <ToggleButton x:Name="PART_GoStopToggleButton" DockPanel.Dock="Right">
-                            <tic:AttachedProperties.CornerCurves>
-                                <tic:CornerCurves TopLeft="False" TopRight="True" BottomRight="True" BottomLeft="False"/>
-                            </tic:AttachedProperties.CornerCurves>
+                            <ui:AttachedProperties.CornerCurves>
+                                <ui:CornerCurves TopLeft="False" TopRight="True" BottomRight="True" BottomLeft="False"/>
+                            </ui:AttachedProperties.CornerCurves>
                             <ToggleButton.Style>
                                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
                                     <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}"/>
@@ -3969,11 +4091,11 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ToggleButton}">
                                                 <Grid>
-                                                    <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1">
+                                                    <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1">
                                                         <Border.Background>
                                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                                                         </Border.Background>
-                                                        <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
+                                                        <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0"/>
                                                     </Border>
                                                     <Border x:Name="HoverBackground" CornerRadius="{Binding CornerRadius, ElementName=IdleBackground}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
                                                         <Border.Background>
@@ -4139,11 +4261,11 @@
                             </ToggleButton.Style>
                         </ToggleButton>
                         <Grid>
-                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,1,0,1">
+                            <Border x:Name="IdleBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,0,0,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonIdleBorderBrush}" BorderThickness="1,1,0,1">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                                 </Border.Background>
-                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                <Border x:Name="IdleInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,0,0,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource TextBoxIdleBackgroundGradientStops}"/>
                                     </Border.Background>
@@ -4243,6 +4365,27 @@
 
     <Style x:Key="ToolbarBackgroundContentControlStyle" TargetType="ContentControl">
         <Setter Property="Panel.ZIndex" Value="9999"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Padding}"/>
+                        <ContentPresenter/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="None">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource HorizontalPanelBackgroundGradientStops}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush" Value="{DynamicResource HorizontalPanelBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!--Style x:Key="FileLabelStyle" TargetType="Label">
@@ -4264,7 +4407,7 @@
         </Setter>
     </Style-->
 
-    <Style x:Key="CurrentDirectoryListViewStyle" TargetType="{x:Type ListView}">
+    <Style x:Key="CurrentDirectoryListViewStyle" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
         <Style.Resources>
             <DataTemplate x:Key="CurrentDirectoryListViewColumnHeaderAscendingTemplate">
                 <Grid>
@@ -4317,18 +4460,18 @@
                                     </Rectangle.Fill>
                                 </Rectangle>
                                 <ScrollBar x:Name="PART_VerticalScrollBar" Value="{TemplateBinding VerticalOffset}" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
-                                    <tic:AttachedProperties.CornerCurves>
-                                        <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
-                                    </tic:AttachedProperties.CornerCurves>
+                                    <ui:AttachedProperties.CornerCurves>
+                                        <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                                    </ui:AttachedProperties.CornerCurves>
                                 </ScrollBar>
                                 <ScrollBar x:Name="PART_HorizontalScrollBar" Orientation="Horizontal" Value="{TemplateBinding HorizontalOffset}" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Grid.Column="0" Grid.Row="2">
-                                    <tic:AttachedProperties.CornerCurves>
-                                        <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
-                                    </tic:AttachedProperties.CornerCurves>
+                                    <ui:AttachedProperties.CornerCurves>
+                                        <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                                    </ui:AttachedProperties.CornerCurves>
                                 </ScrollBar>
                             </Grid>
                             <ControlTemplate.Triggers>
-                                <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Details">
+                                <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Details">
                                     <Setter TargetName="GridViewHeaderRow" Property="Height" Value="24"/>
                                 </DataTrigger>
                                 <MultiTrigger>
@@ -4353,6 +4496,13 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="GridView.AllowsColumnReorder" Value="True"/>
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListView">
@@ -4379,21 +4529,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                     <!--Setter Property="ContextMenu" Value="{DynamicResource ItemContextMenu}"/-->
-                    <Setter Property="tic:AttachedProperties.CornerCurves">
+                    <Setter Property="ui:AttachedProperties.CornerCurves">
                         <Setter.Value>
-                            <tic:CornerCurves TopLeft="True" TopRight="True" BottomRight="True" BottomLeft="True"/>
+                            <ui:CornerCurves TopLeft="True" TopRight="True" BottomRight="True" BottomLeft="True"/>
                         </Setter.Value>
                     </Setter>
                     <!--Setter Property="Opacity" Value="0"/>
@@ -4424,25 +4567,25 @@
         </Setter>
         <Style.Triggers>
             <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
-                <Setter Property="tic:AttachedProperties.CornerCurves">
+                <Setter Property="ui:AttachedProperties.CornerCurves">
                     <Setter.Value>
-                        <tic:CornerCurves TopLeft="False" TopRight="True" BottomRight="False" BottomLeft="False"/>
+                        <ui:CornerCurves TopLeft="False" TopRight="True" BottomRight="False" BottomLeft="False"/>
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
             <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="CommandBar">
-                <Setter Property="tic:AttachedProperties.CornerCurves">
+                <Setter Property="ui:AttachedProperties.CornerCurves">
                     <Setter.Value>
-                        <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                        <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Icons">
+            <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Icons">
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
                             <Grid>
-                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                     <ItemsPresenter/>
                                 </ScrollViewer>
                             </Grid>
@@ -4526,14 +4669,14 @@
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                 <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" KeyboardNavigation.DirectionalNavigation="Local"/>
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter-->
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Details">
+            <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Details">
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListView}">
@@ -4586,7 +4729,7 @@
                                                     <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
                                                     <!-- Click="PropertiesMenuItem_Click"-->
                                                     <e:Interaction.Behaviors>
-                                                        <local:ItemContextMenuBehavior WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                                        <local:ItemContextMenuBehavior WindowContent="{Binding Path=WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
                                                     </e:Interaction.Behaviors>
                                                 </ContextMenu>
                                             </DockPanel.ContextMenu>
@@ -4609,7 +4752,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Tiles">
+            <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
@@ -4689,14 +4832,14 @@
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                 <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" KeyboardNavigation.DirectionalNavigation="Local"/>
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter-->
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="List">
+            <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
@@ -4776,14 +4919,14 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                 <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Content">
+            <DataTrigger Binding="{Binding Path=CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
@@ -4912,7 +5055,7 @@
                 <!--Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate>
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                 <StackPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
                             </ScrollViewer>
                         </ControlTemplate>
@@ -5056,11 +5199,11 @@
 
     <ControlTemplate x:Key="CurrentDirectoryListViewItemControlTemplate" TargetType="{x:Type ListViewItem}">
         <Grid>
-            <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
+            <Border x:Name="HoverBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='3,3,3,3;0,0,0,0'}" Margin="0" Padding="0" BorderBrush="{DynamicResource ButtonHoverBorderBrush}" BorderThickness="1" Opacity="0">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverBackgroundGradientStops}"/>
                 </Border.Background>
-                <Border x:Name="HoverInnerBackground" CornerRadius="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                <Border x:Name="HoverInnerBackground" CornerRadius="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CornerCurvesToCornerRadiusConverter}, ConverterParameter='2,2,2,2;0,0,0,0'}" Margin="1" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonHoverSecondaryBackgroundGradientStops}"/>
                     </Border.Background>
@@ -5364,9 +5507,9 @@
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Margin" Value="-3,-4,0,-3"/>
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="tic:AttachedProperties.CornerCurves">
+        <Setter Property="ui:AttachedProperties.CornerCurves">
             <Setter.Value>
-                <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Content" Value="{DynamicResource StatusBarDetailsViewToggleButtonIcon}"/>
@@ -5391,9 +5534,9 @@
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Margin" Value="-1,-4,-3,-3"/>
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="tic:AttachedProperties.CornerCurves">
+        <Setter Property="ui:AttachedProperties.CornerCurves">
             <Setter.Value>
-                <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="True" BottomLeft="False"/>
+                <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="True" BottomLeft="False"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Content" Value="{DynamicResource StatusBarIconsViewToggleButtonIcon}"/>
@@ -5413,7 +5556,7 @@
             </DataTemplate>
         </Style.Resources>
         <Setter Property="Height" Value="31"/>
-        <Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Mode=OneWay}"/>
+        <!--Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Mode=OneWay}"/-->
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LineTabItemStyle}">
@@ -5535,7 +5678,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
-                    <ScrollViewer Style="{DynamicResource TabScrollViewerStyle}" Margin="0,1,0,0" Padding="0" HorizontalAlignment="Left" MaxWidth="{TemplateBinding ActualWidth}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ScrollViewer Style="{DynamicResource TabScrollViewerStyle}" Margin="0,1,0,0" Padding="0" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                         <Grid x:Name="RootGrid">
                             <ui:TravellingSelector x:Name="TravellingSelector" AnimationDuration="0:0:0.250" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=HeaderPanel, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=HeaderPanel, Mode=OneWay}" TargetPanel="{Binding ElementName=HeaderPanel, Mode=OneWay}" CollectionSize="{Binding Items.Count, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" SelectedObjectIndex="{Binding SelectedIndex, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <ui:TravellingSelector.AnimationEase>
@@ -5576,6 +5719,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="TabStripPanelStyle" TargetType="{x:Type Panel}">
+        <Setter Property="Margin" Value="0,0,135,0"/>
     </Style>
 
     <Grid x:Key="TabsSetAsideToggleButtonIcon" x:Shared="False" Height="10">
@@ -5731,9 +5878,9 @@
                         <Rectangle Fill="{DynamicResource HorizontalPanelBorderBrush}" Width="1" Margin="0,4" DockPanel.Dock="Right"/>
                         <TextBlock Text="Tabs You've Set Aside" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" FontSize="14" Opacity="0.5" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" DockPanel.Dock="Top"/>
                         <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                            <tic:AttachedProperties.CornerCurves>
-                                <tic:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
-                            </tic:AttachedProperties.CornerCurves>
+                            <ui:AttachedProperties.CornerCurves>
+                                <ui:CornerCurves TopLeft="False" TopRight="False" BottomRight="False" BottomLeft="False"/>
+                            </ui:AttachedProperties.CornerCurves>
                             <ItemsPresenter/>
                         </ScrollViewer>
                     </DockPanel>
@@ -5830,7 +5977,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ui:CommandBar}">
                     <Grid>
-                        <Border Style="{DynamicResource HorizontalBarBorderStyle}" HorizontalAlignment="Stretch" BorderThickness="{TemplateBinding BorderThickness}" tic:AttachedProperties.CornerCurves="{Binding Path=(tic:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                        <Border Style="{DynamicResource HorizontalBarBorderStyle}" HorizontalAlignment="Stretch" BorderThickness="{TemplateBinding BorderThickness}" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                             <StackPanel Orientation="Horizontal" IsItemsHost="True" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <!--Rectangle x:Name="ShadowRectangle" VerticalAlignment="Bottom" Margin="0,-18" Height="18" IsHitTestVisible="False">

@@ -71,14 +71,14 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <ListView x:Name="ContentListViewItem" Grid.Column="0" Grid.RowSpan="3">
+                                <!--ListView x:Name="ContentListViewItem" Grid.Column="0" Grid.RowSpan="3">
                                     <ListViewItem>Navigation Bar</ListViewItem>
                                     <ListViewItem>Command Bar</ListViewItem>
                                     <ListViewItem>ToolBar Tray</ListViewItem>
                                     <ListViewItem>Details Pane</ListViewItem>
                                     <ListViewItem>Navigation Pane</ListViewItem>
                                     <ListViewItem>Preview Pane</ListViewItem>
-                                </ListView>
+                                </ListView-->
                                 <Button Grid.Column="1" Grid.Row="0">Move up</Button>
                                 <Button Grid.Column="1" Grid.Row="1">Move down</Button>
                                 <ComboBox Grid.Column="1" Grid.Row="2" SelectedIndex="1">

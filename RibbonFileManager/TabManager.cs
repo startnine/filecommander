@@ -1,4 +1,4 @@
-﻿using Start9.UI.Wpf.Statics;
+﻿using Start9.UI.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -199,7 +199,7 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageBrush), typeof(LocationTab), new PropertyMetadata(new ImageBrush()));
 
-        Icon Icon
+        public Icon Icon
         {
             get => (Icon)GetValue(IconProperty);
             set => SetValue(IconProperty, value);

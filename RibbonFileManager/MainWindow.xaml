@@ -26,15 +26,20 @@
     <Grid Style="{DynamicResource RootGridStyle}">
         <DockPanel>
             <Grid DockPanel.Dock="Top">
-                <Fluent:RibbonTitleBar x:Name="RibbonTitle" Opacity="0"/>
-                <DockPanel>
-                    <ToggleButton x:Name="TabsSetAsideToggleButton" Style="{DynamicResource TabsSetAsideToggleButtonStyle}" Click="TabsSetAsideToggleButton_Click" ToolTip="Tabs Overview" DockPanel.Dock="Left"/>
-                    <Button x:Name="SetTabsAsideButton" Style="{DynamicResource SetTabsAsideButtonStyle}" Click="SetTabsAsideButton_Click" ToolTip="Set Tabs Aside" DockPanel.Dock="Left"/>
-                    <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab" DockPanel.Dock="Right"/>
-                    <Grid>
-                        <TabControl x:Name="ContentTabControl" Style="{DynamicResource TitleBarTabControlStyle}" SelectionChanged="ContentTabControl_SelectionChanged"/>
-                    </Grid>
+                <DockPanel Style="{DynamicResource TabStripPanelStyle}" HorizontalAlignment="Stretch" Height="1" IsHitTestVisible="False">
+                    <Rectangle Width="{Binding ActualWidth, Source={x:Reference TabsSetAsideToggleButton}}" DockPanel.Dock="Left"/>
+                    <Rectangle Width="{Binding ActualWidth, Source={x:Reference SetTabsAsideButton}}" DockPanel.Dock="Left"/>
+                    <Rectangle Width="{Binding ActualWidth, Source={x:Reference NewTabButton}}" DockPanel.Dock="Right"/>
+                    <Rectangle x:Name="TabControlSizingAidRectangle" VerticalAlignment="Stretch"/>
                 </DockPanel>
+                <Fluent:RibbonTitleBar x:Name="RibbonTitle" Opacity="0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <ToggleButton x:Name="TabsSetAsideToggleButton" Style="{DynamicResource TabsSetAsideToggleButtonStyle}" Click="TabsSetAsideToggleButton_Click" ToolTip="Tabs Overview"/>
+                    <Button x:Name="SetTabsAsideButton" Style="{DynamicResource SetTabsAsideButtonStyle}" Click="SetTabsAsideButton_Click" ToolTip="Set Tabs Aside"/>
+                    <TabControl x:Name="ContentTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}" SelectionChanged="ContentTabControl_SelectionChanged"/>
+                    <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab"/>
+                    <!--Button x:Name="TabPreviewsButton" Style="{DynamicResource NewTabButtonStyle}" Click="TabPreviewsButton_Click" ToolTip="Show Tab Previews" Visibility="Collapsed"/-->
+                </StackPanel>
             </Grid>
             <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
                 <DockPanel>
@@ -52,20 +57,30 @@
                         <Button ui:CommandBar.Layers="Folder,ItemSelected">Share with v</Button>
                         <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="NewFolderButton_Click">New Folder</Button>
                     </ui:CommandBar>
-                    <Menu x:Name="MenuBar" Visibility="Collapsed" DockPanel.Dock="Bottom">
-                        <MenuItem Header="File">
-                            <MenuItem IsEnabled="False"/>
-                        </MenuItem>
-                        <MenuItem Header="Edit">
-                            <MenuItem IsEnabled="False"/>
-                        </MenuItem>
-                        <MenuItem Header="View">
-                            <MenuItem IsEnabled="False"/>
-                        </MenuItem>
-                        <MenuItem Header="Tools">
-                            <MenuItem Header="Folder options..." Click="FolderAndSearchOptionsMenuItem_Click"/>
-                        </MenuItem>
-                    </Menu>
+                    <ToolBarTray x:Name="ToolBarTray" Background="Transparent" DockPanel.Dock="Bottom">
+                        <ToolBar x:Name="MenuBarToolBar" Visibility="Collapsed">
+                            <Menu x:Name="MenuBar">
+                                <MenuItem Header="File">
+                                    <MenuItem IsEnabled="False"/>
+                                </MenuItem>
+                                <MenuItem Header="Edit">
+                                    <MenuItem IsEnabled="False"/>
+                                </MenuItem>
+                                <MenuItem Header="View">
+                                    <MenuItem IsEnabled="False"/>
+                                </MenuItem>
+                                <MenuItem Header="Tools">
+                                    <MenuItem Header="Folder options..." Click="FolderAndSearchOptionsMenuItem_Click"/>
+                                </MenuItem>
+                            </Menu>
+                        </ToolBar>
+                        <ToolBar x:Name="DefaultToolBar" Visibility="Collapsed" Band="1">
+                            <Button Click="NavBackButton_Click">Back</Button>
+                            <Button Click="NavForwardButton_Click">Forward</Button>
+                            <Button Click="NavUpButton_Click">Up</Button>
+                            <Separator/>
+                        </ToolBar>
+                    </ToolBarTray>
                     <!--mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/-->
                     <ContentControl x:Name="NavigationBarGrid" Style="{DynamicResource NavigationBarBackgroundStyle}" DockPanel.Dock="Bottom">
                         <DockPanel>
@@ -124,20 +139,20 @@
                         <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" KeyTip="C">
                             <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
                                 <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="PR"/>
-                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" SizeDefinition="Large,Middle" KeyTip="O"/>
+                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O"/>
                                 <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Network" Header="Network">
-                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" SizeDefinition="Large,Middle" KeyTip="M"/>
-                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" SizeDefinition="Large,Middle" KeyTip="N"/>
-                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" SizeDefinition="Large,Middle" KeyTip="L"/>
+                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" LargeIcon="{DynamicResource ComputerAccessMediaButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="M"/>
+                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" LargeIcon="{DynamicResource ComputerMapNetworkDriveButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="N"/>
+                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" LargeIcon="{DynamicResource ComputerAddNetworkLocationButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="L"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="SystemBox" Header="System">
-                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" SizeDefinition="Large" KeyTip="C"/>
-                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" SizeDefinition="Large" KeyTip="S"/>
-                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" SizeDefinition="Middle,Small" KeyTip="U"/>
-                                <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" SizeDefinition="Middle,Small" KeyTip="S"/>
-                                <Fluent:Button x:Name="ManageSystemButton" Header="Manage" SizeDefinition="Middle,Small" KeyTip="G"/>
+                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C"/>
+                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" LargeIcon="{DynamicResource ComputerOpenSettingsButtonLargeIcon}" SizeDefinition="Large" KeyTip="S"/>
+                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" Icon="{DynamicResource UninstallOrChangeProgramIcon}" SizeDefinition="Middle,Small" KeyTip="U"/>
+                                <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" Icon="{DynamicResource ComputerSystemPropertiesButtonIcon}" SizeDefinition="Middle,Small" KeyTip="S"/>
+                                <Fluent:Button x:Name="ManageSystemButton" Header="Manage" Icon="{DynamicResource ComputerManageSystemButtonIcon}" SizeDefinition="Middle,Small" KeyTip="G"/>
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
                         <Fluent:RibbonTabItem x:Name="HomeRibbonTabItem" Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
