@@ -25,8 +25,17 @@
 	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ColorMine">
+      <HintPath>..\..\start9-ui\Themes\Shale\bin\Debug\net40\ColorMine.dll</HintPath>
+    </Reference>
     <Reference Include="Start9.UI.Wpf">
       <HintPath>..\..\start9-ui\Start9.UI.Wpf\bin\Debug\netcoreapp3.0\Start9.UI.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Start9.Wpf.Styles.Shale">
+      <HintPath>..\..\start9-ui\Themes\Shale\bin\Debug\netcoreapp3.0\Start9.Wpf.Styles.Shale.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <COMReference Include="Shell32">
       <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>

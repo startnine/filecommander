@@ -59,7 +59,7 @@ namespace RibbonFileManager
             {
                 token.ThrowIfCancellationRequested();
                 yield return await Task.Run(() => new DiskItem(enumer.Current));
-                token.ThrowIfCancellationRequested();
+                //token.ThrowIfCancellationRequested();
             }
         }
     }

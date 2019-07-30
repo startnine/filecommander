@@ -208,7 +208,7 @@ namespace RibbonFileManager
             if (l is SearchQuery search)
                 query = search.Query;
 
-            var old = CurrentDirectoryListView.ItemsSource;
+            //var old = CurrentDirectoryListView.ItemsSource;
 
             OwnerWindow.Navigate(l);
 
@@ -218,7 +218,7 @@ namespace RibbonFileManager
             try
             {
                 var results = new ObservableCollection<DiskItem>();
-                CurrentDirectoryListView.ItemsSource = results;
+                //CurrentDirectoryListView.ItemsSource = results;
                 var nextDirectoryIndex = 0;
                 Debug.WriteLine("l type: " + l.GetType().ToString());
                 await foreach (var path in l.GetLocationContents(source.Token, false))
@@ -233,7 +233,7 @@ namespace RibbonFileManager
                     source.Token.ThrowIfCancellationRequested();
                 }
 
-
+                CurrentDirectoryListView.ItemsSource = results;
 
                 CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
 
@@ -253,8 +253,9 @@ namespace RibbonFileManager
             }
             catch (Exception ex) // else, fall back to the previous results
             {
-                Debug.WriteLine(ex);
-                CurrentDirectoryListView.ItemsSource = old;
+                Debug.WriteLine("NAVIGATION ERROR:\nException: " + ex.ToString() + "\nStack Trace: \n" + ex.StackTrace + "\nEND ERROR INFO");
+                //CurrentDirectoryListView.ItemsSource = old;
+                MessageBox<OkActionSet>.Show(ex.ToString(), "Navigation error");
             }
         }
 
@@ -273,7 +274,7 @@ namespace RibbonFileManager
                 else
                 {
                     var failText = expText;
-                    MessageBox<MessageBoxEnums.OkButton>.Show("Ribbon File Browser can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
+                    MessageBox<OkActionSet>.Show("Ribbon File Browser can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
                 }
             }
             else if (e.Key == Key.Escape)
@@ -341,7 +342,7 @@ namespace RibbonFileManager
             else if (File.Exists(expanded))
                 new DiskItem(expanded).Open();
             else
-                Start9.UI.Wpf.Windows.MessageBox<Start9.UI.Wpf.Windows.MessageBoxEnums.OkButton>.Show("File Commander can't find '" + expanded + "'. Check the #SPEELING and try again.", "File Commander");
+                MessageBox<OkActionSet>.Show("File Commander can't find '" + expanded + "'. Check the #SPEELING and try again.", "File Commander");
         }
 
         public async Task OpenSelectionAsync(DiskItem.OpenVerbs verb = DiskItem.OpenVerbs.Normal)
@@ -557,7 +558,7 @@ namespace RibbonFileManager
                 while (Directory.Exists(path))
                 {
                     path = Path.Combine(CurrentLocation.LocationPath, @"New Folder (" + cycle.ToString() + ")");
-                    MessageBox.Show(path);
+                    MessageBox<OkActionSet>.Show(path, string.Empty);
                     cycle++;
                 }
                 Directory.CreateDirectory(path);

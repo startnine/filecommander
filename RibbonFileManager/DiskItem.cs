@@ -215,9 +215,14 @@ namespace RibbonFileManager
             NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out var list);
             var resultHandle = IntPtr.Zero;
             list.GetIcon(shInfo.iIcon, 1, ref resultHandle);
-            var finalResult = (Icon) Icon.FromHandle(resultHandle).Clone();
-            NativeMethods.DestroyIcon(resultHandle);
-            return finalResult;
+            if (resultHandle != IntPtr.Zero)
+            {
+                var finalResult = (Icon)Icon.FromHandle(resultHandle).Clone();
+                NativeMethods.DestroyIcon(resultHandle);
+                return finalResult;
+            }
+            else
+                return null;
         }
 
         public Double ItemSize
@@ -267,7 +272,7 @@ namespace RibbonFileManager
 
         public DiskItem(String path)
         {
-            ItemPath = Environment.ExpandEnvironmentVariables(path);
+            ItemPath = path;//Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(ItemPath))
                 ItemCategory = DiskItemCategory.Directory;
         }
@@ -276,9 +281,7 @@ namespace RibbonFileManager
         {
             _info = info;
             if (info is DirectoryInfo)
-            {
                 ItemCategory = DiskItemCategory.Directory;
-            }
         }
 
         FileSystemWatcher _watcher;
@@ -312,12 +315,12 @@ namespace RibbonFileManager
         String SetFSInfo(String path)
         {
             var returnValue = Environment.ExpandEnvironmentVariables(path);
-            if (Directory.Exists(path))
-                _info = new DirectoryInfo(path);
-            else if (File.Exists(path))
-                _info = new FileInfo(path);
+            if (Directory.Exists(returnValue))
+                _info = new DirectoryInfo(returnValue);
+            else if (File.Exists(returnValue))
+                _info = new FileInfo(returnValue);
             else
-                throw new IOException("File does not exist: " + path);
+                throw new IOException("File does not exist: " + returnValue);
 
             return returnValue;
         }

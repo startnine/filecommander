@@ -7,7 +7,6 @@
         xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
         xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
         xmlns:Fluent="urn:fluent-ribbon"
-        mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
     <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
@@ -139,7 +138,7 @@
                         <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" KeyTip="C">
                             <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
                                 <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="PR"/>
-                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O"/>
+                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O" Click="OpenButton_Click"/>
                                 <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Network" Header="Network">

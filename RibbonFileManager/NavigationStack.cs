@@ -54,6 +54,11 @@ namespace RibbonFileManager
     {
         Int32 _index = 0;
 
+        public Int32 Index
+        {
+            get => _index;
+        }
+
         protected override void InsertItem(Int32 index, T item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));

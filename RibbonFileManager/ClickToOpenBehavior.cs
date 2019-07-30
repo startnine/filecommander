@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
@@ -38,6 +39,7 @@ namespace RibbonFileManager
 
         private async void ParentListViewItem_PreviewMouseDoubleClick(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            await Dispatcher.BeginInvoke(new Action(() => WindowContent = ((MainWindow)Window.GetWindow(AssociatedObject)).ActiveContent));
             await WindowContent.OpenSelectionAsync();
         }
     }

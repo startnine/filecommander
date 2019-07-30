@@ -7,7 +7,7 @@
         xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
         xmlns:local="clr-namespace:RibbonFileManager"
         mc:Ignorable="d"
-        Title="File Commander Settings" ResizeMode="NoResize" IsVisibleChanged="SettingsWindow_IsVisibleChanged">
+        Title="File Commander Settings" Width="500" Height="500" ResizeMode="NoResize" IsVisibleChanged="SettingsWindow_IsVisibleChanged">
     <DockPanel>
         <ContentControl Style="{DynamicResource FooterContentControlStyle}" DockPanel.Dock="Bottom">
             <UniformGrid Columns="4">
@@ -22,56 +22,59 @@
         </ContentControl>
         <TabControl SelectedIndex="1">
             <TabItem Header="General">
-                <StackPanel Orientation="Vertical">
-                    <GroupBox Header="Browse folders" IsEnabled="False">
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in the same window</RadioButton>
-                            <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in its own window</RadioButton>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Header="Click items as follows" IsEnabled="False">
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="ItemOpenModeRadioButtons">Single-click to open an item (point to select)</RadioButton>
-                            <RadioButton GroupName="ItemOpenModeRadioButtons">Double-click to open an item (single-click to select)</RadioButton>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Header="Click items as follows" IsEnabled="False">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox>Show all folders</CheckBox>
-                            <CheckBox>Automatically expand to current folder</CheckBox>
-                        </StackPanel>
-                    </GroupBox>
-                </StackPanel>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Browse folders" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in the same window</RadioButton>
+                                <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in its own window</RadioButton>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Click items as follows" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton GroupName="ItemOpenModeRadioButtons">Single-click to open an item (point to select)</RadioButton>
+                                <RadioButton GroupName="ItemOpenModeRadioButtons">Double-click to open an item (single-click to select)</RadioButton>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Click items as follows" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox>Show all folders</CheckBox>
+                                <CheckBox>Automatically expand to current folder</CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Layout">
-                <StackPanel Orientation="Vertical">
-                    <GroupBox Header="Frame">
-                        <StackPanel Orientation="Vertical">
-                            <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}">
-                                <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left">Interface mode:</TextBlock>
-                                <ComboBox x:Name="InterfaceModeComboBox">
-                                    <ComboBoxItem>Command Bar</ComboBoxItem>
-                                    <ComboBoxItem>Ribbon</ComboBoxItem>
-                                    <ComboBoxItem>None</ComboBoxItem>
-                                </ComboBox>
-                            </DockPanel>
-                            <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder in Titlebar</ui:ToggleSwitch>
-                            <ui:ToggleSwitch x:Name="StatusBarToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Status Bar</ui:ToggleSwitch>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Header="Content">
-                        <StackPanel Orientation="Vertical">
-                            <Grid Visibility="Collapsed">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <!--ListView x:Name="ContentListViewItem" Grid.Column="0" Grid.RowSpan="3">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Frame">
+                            <StackPanel Orientation="Vertical">
+                                <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}">
+                                    <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left">Interface mode:</TextBlock>
+                                    <ComboBox x:Name="InterfaceModeComboBox">
+                                        <ComboBoxItem>Ribbon</ComboBoxItem>
+                                        <ComboBoxItem>Command Bar</ComboBoxItem>
+                                        <ComboBoxItem>None</ComboBoxItem>
+                                    </ComboBox>
+                                </DockPanel>
+                                <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder in Titlebar</ui:ToggleSwitch>
+                                <ui:ToggleSwitch x:Name="StatusBarToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Status Bar</ui:ToggleSwitch>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Content">
+                            <StackPanel Orientation="Vertical">
+                                <Grid Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <!--ListView x:Name="ContentListViewItem" Grid.Column="0" Grid.RowSpan="3">
                                     <ListViewItem>Navigation Bar</ListViewItem>
                                     <ListViewItem>Command Bar</ListViewItem>
                                     <ListViewItem>ToolBar Tray</ListViewItem>
@@ -79,55 +82,58 @@
                                     <ListViewItem>Navigation Pane</ListViewItem>
                                     <ListViewItem>Preview Pane</ListViewItem>
                                 </ListView-->
-                                <Button Grid.Column="1" Grid.Row="0">Move up</Button>
-                                <Button Grid.Column="1" Grid.Row="1">Move down</Button>
-                                <ComboBox Grid.Column="1" Grid.Row="2" SelectedIndex="1">
-                                    <ComboBoxItem>Left</ComboBoxItem>
-                                    <ComboBoxItem>Top</ComboBoxItem>
-                                    <ComboBoxItem>Right</ComboBoxItem>
-                                    <ComboBoxItem>Bottom</ComboBoxItem>
-                                </ComboBox>
-                            </Grid>
-                            <Border BorderBrush="Black" BorderThickness="1" Width="200" Height="200">
-                                <DockPanel LastChildFill="False">
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
-                                        <TextBlock Text="Navigation Bar"/>
-                                    </Border>
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
-                                        <TextBlock Text="ToolBar Tray"/>
-                                    </Border>
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
-                                        <TextBlock Text="Command Bar"/>
-                                    </Border>
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom">
-                                        <TextBlock Text="Details Pane"/>
-                                    </Border>
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
-                                        <TextBlock Text="Navigation Pane"/>
-                                    </Border>
-                                    <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
-                                        <TextBlock Text="Preview Pane"/>
-                                    </Border>
+                                    <Button Grid.Column="1" Grid.Row="0">Move up</Button>
+                                    <Button Grid.Column="1" Grid.Row="1">Move down</Button>
+                                    <ComboBox Grid.Column="1" Grid.Row="2" SelectedIndex="1">
+                                        <ComboBoxItem>Left</ComboBoxItem>
+                                        <ComboBoxItem>Top</ComboBoxItem>
+                                        <ComboBoxItem>Right</ComboBoxItem>
+                                        <ComboBoxItem>Bottom</ComboBoxItem>
+                                    </ComboBox>
+                                </Grid>
+                                <Border BorderBrush="Black" BorderThickness="1" Width="200" Height="200">
+                                    <DockPanel LastChildFill="False">
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                                            <TextBlock Text="Navigation Bar"/>
+                                        </Border>
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                                            <TextBlock Text="ToolBar Tray"/>
+                                        </Border>
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                                            <TextBlock Text="Command Bar"/>
+                                        </Border>
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom">
+                                            <TextBlock Text="Details Pane"/>
+                                        </Border>
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Left">
+                                            <TextBlock Text="Navigation Pane"/>
+                                        </Border>
+                                        <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
+                                            <TextBlock Text="Preview Pane"/>
+                                        </Border>
+                                    </DockPanel>
+                                </Border>
+                                <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}" Visibility="Collapsed">
+                                    <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left">Details Pane Placement:</TextBlock>
+                                    <ComboBox x:Name="DetailsPanePositionComboBox">
+                                        <ComboBoxItem>Bottom</ComboBoxItem>
+                                        <ComboBoxItem>Left</ComboBoxItem>
+                                        <ComboBoxItem>Right</ComboBoxItem>
+                                        <ComboBoxItem>Top</ComboBoxItem>
+                                    </ComboBox>
                                 </DockPanel>
-                            </Border>
-                            <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}" Visibility="Collapsed">
-                                <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left">Details Pane Placement:</TextBlock>
-                                <ComboBox x:Name="DetailsPanePositionComboBox">
-                                    <ComboBoxItem>Bottom</ComboBoxItem>
-                                    <ComboBoxItem>Left</ComboBoxItem>
-                                    <ComboBoxItem>Right</ComboBoxItem>
-                                    <ComboBoxItem>Top</ComboBoxItem>
-                                </ComboBox>
-                            </DockPanel>
-                        </StackPanel>
-                    </GroupBox>
-                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="View" IsEnabled="False">
-                
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Search" IsEnabled="False">
-
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </DockPanel>

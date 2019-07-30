@@ -44,7 +44,9 @@
                 </ScrollViewer>
             </Grid>
         </ContentControl>
-        <ListView x:Name="CurrentDirectoryListView" DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown" GridViewColumnHeader.Click="CurrentDirectoryListView_GridViewColumnHeader_Click">
+        <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown">
+            <!--DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"-->
+            <!--GridViewColumnHeader.Click="CurrentDirectoryListView_GridViewColumnHeader_Click"-->
             <ListView.GroupStyle>
                 <GroupStyle HeaderTemplate="{StaticResource CurrentDirectoryListViewGroupHeaderTemplate}" ContainerStyle="{StaticResource CurrentDirectoryListViewGroupContainerStyle}"/>
             </ListView.GroupStyle>

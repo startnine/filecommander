@@ -50,8 +50,11 @@ namespace RibbonFileManager
 
         private void OpenMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-            if (TargetItem != null)
-                WindowContent.OpenPath(TargetItem.ItemPath);
+            /*if (TargetItem != null)
+                WindowContent.OpenPath(TargetItem.ItemPath);*/
+
+            if (WindowContent.CurrentDirectoryListView.SelectedItems.Count == 1)
+                WindowContent.OpenPath(((DiskItem)WindowContent.CurrentDirectoryListView.SelectedItem).ItemPath);
         }
 
         public MenuItem RunAsAdminMenuItem
@@ -71,7 +74,7 @@ namespace RibbonFileManager
 
         private void RunAsAdminMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-
+            WindowContent.OpenSelectionAsync(DiskItem.OpenVerbs.Admin);
         }
 
         public MenuItem CopyMenuItem
@@ -160,8 +163,9 @@ namespace RibbonFileManager
 
         private void RenameMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
-            if (RenameTextBox != null)
-                RenameTextBox.Visibility = Visibility.Visible;
+            /*if (RenameTextBox != null)
+                RenameTextBox.Visibility = Visibility.Visible;*/
+            WindowContent.RenameSelection();
         }
 
         public MenuItem PropertiesMenuItem
@@ -181,15 +185,20 @@ namespace RibbonFileManager
 
         private void PropertiesMenuItem_Click(System.Object sender, RoutedEventArgs e)
         {
+            WindowContent.ShowPropertiesForSelection();
+        }
 
-       }
-
-        ContextMenu _menu;
+        //ContextMenu _menu;
 
         protected override void OnAttached()
         {
             base.OnAttached();
-            _menu = AssociatedObject as ContextMenu;
+            //_menu = AssociatedObject as ContextMenu;
+
+            AssociatedObject.Loaded += (sneder, args) =>
+            {
+                WindowContent = ((MainWindow)Window.GetWindow(AssociatedObject.PlacementTarget)).ActiveContent;
+            };
         }
     }
 }
