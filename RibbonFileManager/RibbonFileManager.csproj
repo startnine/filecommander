@@ -21,7 +21,7 @@
     <None Remove="WindowContent.xaml" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="Fluent.Ribbon" version="7.0.0-alpha0623" />
+	  <PackageReference Include="Fluent.Ribbon" version="7.0.0-alpha0661" />
 	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>

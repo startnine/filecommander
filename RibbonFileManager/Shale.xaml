@@ -1157,16 +1157,18 @@
         </Setter>
     </Style>
 
-    <Style x:Key="zFluent:KeyTip" TargetType="{x:Type Fluent:KeyTip}">
+    <Style x:Key="{x:Type Fluent:KeyTip}" TargetType="{x:Type Fluent:KeyTip}">
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="3"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:KeyTip}">
                     <!--Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"-->
-                        <Border UseLayoutRounding="True" Effect="{DynamicResource DropShadow}" CornerRadius="3" Margin="4,3,4,5">
+                    <Border SnapsToDevicePixels="True" UseLayoutRounding="True" Effect="{DynamicResource DropShadow}" CornerRadius="3" Margin="4,3,4,5">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                             </Border.Background>
@@ -1184,7 +1186,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="zFluent:ScreenTip" TargetType="{x:Type Fluent:ScreenTip}">
+    <Style x:Key="{x:Type Fluent:ScreenTip}" TargetType="{x:Type Fluent:ScreenTip}">
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />

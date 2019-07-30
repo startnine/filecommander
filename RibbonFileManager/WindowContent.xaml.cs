@@ -274,7 +274,7 @@ namespace RibbonFileManager
                 else
                 {
                     var failText = expText;
-                    MessageBox<OkActionSet>.Show("Ribbon File Browser can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
+                    MessageBox<OkActionSet>.Show("File Commander can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
                 }
             }
             else if (e.Key == Key.Escape)
