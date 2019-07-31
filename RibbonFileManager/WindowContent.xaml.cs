@@ -191,7 +191,8 @@ namespace RibbonFileManager
         
         public async Task NavigateAsync(Location location, CancellationToken token = default)
         {
-            NavigationStack.Add(location);
+            //NavigationStack.Add(location);
+            NavigationStack.Insert(NavigationStack.Index + 1, location);
             NavigationStack.Forward();
 
             RecentLocations.Navigate(location);

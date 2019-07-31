@@ -150,7 +150,7 @@
                                     <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" LargeIcon="{DynamicResource ComputerAddNetworkLocationButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="L"/>
                                 </Fluent:RibbonGroupBox>
                                 <Fluent:RibbonGroupBox x:Name="SystemBox" Header="System">
-                                    <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C"/>
+                                    <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C" Click="OpenControlPanelButton_Click"/>
                                     <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" LargeIcon="{DynamicResource ComputerOpenSettingsButtonLargeIcon}" SizeDefinition="Large" KeyTip="S"/>
                                     <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" Icon="{DynamicResource UninstallOrChangeProgramIcon}" SizeDefinition="Middle,Small" KeyTip="U"/>
                                     <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" Icon="{DynamicResource ComputerSystemPropertiesButtonIcon}" SizeDefinition="Middle,Small" KeyTip="S"/>

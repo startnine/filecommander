@@ -4654,7 +4654,40 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <Rectangle HorizontalAlignment="Center" Width="48" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                <Grid HorizontalAlignment="Center" Width="48" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}">
+                                    <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                    <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
+                                        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                                <!--M 0 0 L 36 0 L 36 22 L 38 24 L 38 34 L 36 36 L 0 36 Z-->
+                                                <!--M 0 0 L 30 6 L 30 27 L 33 30 L 33 42 L 0 36 Z-->
+                                                <!--M 0 0 L 30 0 L 30 24 L 32 26 L 32 38 L 0 38 Z-->
+                                        <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
+                                            <!--Background="{DynamicResource IconTertiaryFillBrush}"-->
+                                            <!--Border.RenderTransform>
+                                                <SkewTransform AngleX="0" AngleY="11.667"/>
+                                                <!-AngleY="15" AngleY="6.125"->
+                                            </Border.RenderTransform-->
+                                            <!--Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
+                                            </Border.Background-->
+                                            <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding FirstChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                        </Border>
+                                        <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
+                                            <!--Background="{DynamicResource IconTertiaryFillBrush}"-->
+                                            <!--Border.RenderTransform>
+                                                <SkewTransform AngleX="0" AngleY="23.333"/>
+                                                <!-AngleY="30" AngleY="17.375"->
+                                            </Border.RenderTransform-->
+                                            <!--Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
+                                            </Border.Background-->
+                                            <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding SecondChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                        </Border>
+                                        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                                <!--M 0 0 L 10.5 7.5 L 12 48 L 0 36 Z-->
+                                                <!--M 0 0 L 11 8 L 11 32 L 10 33 L 10 48 L 0 38 Z-->
+                                    </Grid>
+                                </Grid>
                                 <!--Width="48" Height="48"-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
                                 <Grid x:Name="NameGrid" Width="48">
@@ -4682,6 +4715,22 @@
                                 <Trigger SourceName="RenameTextBox" Property="IsVisible" Value="True">
                                     <Setter TargetName="NameTextBlock" Property="Visibility" Value="Collapsed"/>
                                 </Trigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ItemCategory}" Value="Directory"/>
+                                        <Condition Binding="{Binding IsDrive}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>

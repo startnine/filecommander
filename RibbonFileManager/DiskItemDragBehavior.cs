@@ -35,11 +35,11 @@ namespace RibbonFileManager
         {
             if ((e.LeftButton == System.Windows.Input.MouseButtonState.Pressed) && (_prevPoint != null) && ((e.GetPosition(sender as Panel).X != _prevPoint.X) | (e.GetPosition(sender as Panel).Y != _prevPoint.Y)) && (TargetItem != null))
             {
-                var data = new DataObject();
-                data.SetData(DataFormats.FileDrop, new System.Collections.Specialized.StringCollection()
+                var data = new DataObject(DataFormats.FileDrop, new string[] { TargetItem.ItemPath });
+                /*data.SetData(DataFormats.FileDrop, new System.Collections.Specialized.StringCollection()
                 {
                     TargetItem.ItemPath
-                });
+                });*/
                 DragDrop.DoDragDrop(sender as Panel, data, DragDropEffects.Copy | DragDropEffects.Move);
             }
             _prevPoint = e.GetPosition(sender as Panel);

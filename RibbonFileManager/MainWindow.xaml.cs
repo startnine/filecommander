@@ -729,7 +729,7 @@ namespace RibbonFileManager
 
         private async void MainWindow_PreviewKeyDown(Object sender, KeyEventArgs e)
         {
-            if ((Keyboard.GetKeyStates(Key.LeftCtrl) != KeyStates.None) || (Keyboard.GetKeyStates(Key.RightCtrl) != KeyStates.None))
+            if (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)) //((Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down))
             {
                 if (e.Key == Key.T)
                     AddTab();
@@ -753,7 +753,7 @@ namespace RibbonFileManager
                     ActiveContent.RenameSelection();
             }
             
-            if ((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))
+            if (e.KeyboardDevice.IsKeyDown(Key.LeftAlt) || e.KeyboardDevice.IsKeyDown(Key.RightAlt)) //((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))
             {
                 if (e.Key == Key.Left)
                 {
@@ -852,6 +852,11 @@ namespace RibbonFileManager
         private void TabPreviewsButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void OpenControlPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("control.exe");
         }
     }
 }

@@ -170,7 +170,7 @@ namespace RibbonFileManager
         {
             get
             {
-                return GetIcon(0x00000001 | 0x100);
+                return GetIcon(0x00000001 | 0x100, ItemPath);
             }
         }
 
@@ -178,7 +178,7 @@ namespace RibbonFileManager
         {
             get
             {
-                return GetIcon(0x000000000 | 0x100);
+                return GetIcon(0x000000000 | 0x100, ItemPath);
             }
         }
 
@@ -186,7 +186,7 @@ namespace RibbonFileManager
         {
             get
             {
-                return GetIcon(0x000000000 | 0x100, 0x2);
+                return GetIcon(0x000000000 | 0x100, 0x2, ItemPath);
             }
         }
 
@@ -194,23 +194,45 @@ namespace RibbonFileManager
         {
             get
             {
-                return GetIcon(0x000000000 | 0x100, 0x4);
+                return GetIcon(0x000000000 | 0x100, 0x4, ItemPath);
             }
         }
 
-        Icon GetIcon(UInt32 flags)
+        public Icon FirstChildIcon
+        {
+            get
+            {
+                if (SubItems.Count > 0)
+                    return SubItems[0].ItemJumboIcon;
+                else
+                    return null;
+            }
+        }
+
+        public Icon SecondChildIcon
+        {
+            get
+            {
+                if (SubItems.Count > 1)
+                    return SubItems[1].ItemJumboIcon;
+                else
+                    return null;
+            }
+        }
+
+        static Icon GetIcon(UInt32 flags, string path)
         {
             var shInfo = new NativeMethods.ShFileInfo();
-            NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
+            NativeMethods.SHGetFileInfo(path, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
             var result = (Icon) Icon.FromHandle(shInfo.hIcon).Clone();
             NativeMethods.DestroyIcon(shInfo.hIcon);
             return result;
         }
 
-        Icon GetIcon(UInt32 flags, Int32 imageList)
+        static Icon GetIcon(UInt32 flags, Int32 imageList, string path)
         {
             var shInfo = new NativeMethods.ShFileInfo();
-            NativeMethods.SHGetFileInfo(ItemPath, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
+            NativeMethods.SHGetFileInfo(path, 0, ref shInfo, (UInt32)Marshal.SizeOf(shInfo), flags);
 
             NativeMethods.SHGetImageList(imageList, ref NativeMethods.iidImageList, out var list);
             var resultHandle = IntPtr.Zero;
