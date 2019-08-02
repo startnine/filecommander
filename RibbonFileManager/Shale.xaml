@@ -4687,6 +4687,7 @@
                                                 <!--M 0 0 L 10.5 7.5 L 12 48 L 0 36 Z-->
                                                 <!--M 0 0 L 11 8 L 11 32 L 10 33 L 10 48 L 0 38 Z-->
                                     </Grid>
+                                    <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
                                 </Grid>
                                 <!--Width="48" Height="48"-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
@@ -4730,6 +4731,11 @@
                                 <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
                                     <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
                                     <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
@@ -5133,6 +5139,80 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <Grid x:Key="DesktopFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Border CornerRadius="1" Background="{DynamicResource IconTertiaryFillBrush}" Width="30" Height="22" Effect="{DynamicResource IconInnerShadow}" UseLayoutRounding="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-5,10,5,-10">
+            <Border BorderBrush="{DynamicResource TitlebarBorderBrush}" BorderThickness="1" CornerRadius="0,0,1,1" Height="5" VerticalAlignment="Bottom">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource TitlebarActiveGradientStops}"/>
+                </Border.Background>
+                <StackPanel Orientation="Horizontal" Margin="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Rectangle Fill="{DynamicResource TitlebarBorderBrush}" Width="1" Height="1" Margin="0,0,1,0"/>
+                    <Rectangle Fill="{DynamicResource TitlebarBorderBrush}" Width="1" Height="1" Margin="0,0,1,0"/>
+                    <Rectangle Fill="{DynamicResource TitlebarBorderBrush}" Width="1" Height="1" Margin="0,0,1,0"/>
+                </StackPanel>
+            </Border>
+        </Border>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
+
+    <Grid x:Key="DocumentsFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Width="26" Height="32" Effect="{DynamicResource IconInnerShadow}" Margin="-5,3,5,-3">
+            <Path Data="M 0 0 L 21 0 L 26 5 L 26 32 L 0 32 Z" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+        </Grid>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
+
+    <Grid x:Key="DownloadsFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Path Data="M 0 0 L 0 4 L 16 20 L 32 4 L 32 0 L 28 0 L 16 12 L 4 0 Z" Fill="{DynamicResource IconTertiaryFillBrush}" HorizontalAlignment="Right" VerticalAlignment="Top" UseLayoutRounding="True" Effect="{DynamicResource IconInnerShadow}" Margin="-5,9,5,-9"/>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
+
+    <Grid x:Key="MusicFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Grid Width="16" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" UseLayoutRounding="True" Effect="{DynamicResource IconInnerShadow}" Margin="-16,3,15,-3">
+            <Rectangle Width="5" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,4">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,32" GradientStops="{DynamicResource DarkIconGradientStops3}" MappingMode="Absolute"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Ellipse Height="11" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,-23" EndPoint="0,9" GradientStops="{DynamicResource DarkIconGradientStops3}" MappingMode="Absolute"/>
+                </Ellipse.Fill>
+            </Ellipse>
+        </Grid>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
+
+    <Grid x:Key="PicturesFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Border CornerRadius="1" Background="{DynamicResource IconForegroundBrush}" BorderBrush="{DynamicResource IconTertiaryFillBrush}" BorderThickness="1" Width="30" Height="22" Effect="{DynamicResource IconInnerShadow}" UseLayoutRounding="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-5,10,5,-10">
+            <Path Data="M 0 0 L 11 4 L 22 6 L 26 11 L 0 11 Z" Fill="{DynamicResource IconPrimaryFillBrush}" VerticalAlignment="Bottom"/>
+        </Border>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
+
+    <Grid x:Key="VideosFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        <Grid Width="32" Height="24" Effect="{DynamicResource IconInnerShadow}" UseLayoutRounding="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-5,9,5,-9">
+            <Path Data="M 0 2 Q 4,0.5 16,0 Q 28,0.5 32,2 L 32 22 Q 28,23.5 16,24 Q 4,23.5 0,22 Z" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            <!--M 0 2 C 0,2 7,0 16,0 C 23,0 32,2 32,2 L 32 18 C 32,18 23,20 16,20 C  0,18-->
+            <!--m 7.9375 0.52917 c 0 0 -1.5162244 -0.52916 -3.96875 -0.52916 C 1.5162244 0 0 0.52917 0 0.52917 v 4.23334 c 0 0 1.5162244 0.52916 3.96875 0.52916 2.4525256 0 3.96875 -0.52916 3.96875 -0.52916 z-->
+            <!--Path Data="M 0 0 L 11 4 L 22 6 L 26 11 L 0 11 Z" Fill="{DynamicResource IconPrimaryFillBrush}" VerticalAlignment="Bottom"/-->
+            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{DynamicResource IconForegroundBrush}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5" Effect="{DynamicResource IconInnerShadow}">
+                <!--Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}}"-->
+                <Path.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Path.RenderTransform>
+            </Path>
+        </Grid>
+        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+    </Grid>
 
 
 

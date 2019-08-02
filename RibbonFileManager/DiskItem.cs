@@ -135,6 +135,21 @@ namespace RibbonFileManager
             }
         }
 
+        public bool HasSpecialIcon { get; set; } = false;
+
+        public string SpecialIconKey { get; set; } = string.Empty;
+        
+        public System.Windows.UIElement SpecialIcon
+        {
+            get
+            {
+                if (HasSpecialIcon)
+                    return (System.Windows.UIElement)System.Windows.Application.Current.Resources[SpecialIconKey];
+                else
+                    return null;
+            }
+        }
+
         public Boolean IsDrive => ((ItemCategory == DiskItemCategory.Directory) && (ItemPath.Length == 3) && (Char.IsLetter(ItemPath.ToCharArray()[0])) && (ItemPath.ToCharArray()[1] == ':'));
 
         public Double DriveFreeSpace

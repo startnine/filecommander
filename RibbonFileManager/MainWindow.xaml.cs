@@ -751,6 +751,51 @@ namespace RibbonFileManager
                 }
                 else if (e.Key == Key.R)
                     ActiveContent.RenameSelection();
+                else if (e.Key == Key.D1 || e.Key == Key.NumPad1)
+                {
+                    if (ContentTabControl.Items.Count > 0)
+                    ContentTabControl.SelectedIndex = 0;
+                }
+                else if (e.Key == Key.D2 || e.Key == Key.NumPad2)
+                {
+                    if (ContentTabControl.Items.Count > 1)
+                        ContentTabControl.SelectedIndex = 1;
+                }
+                else if (e.Key == Key.D3 || e.Key == Key.NumPad3)
+                {
+                    if (ContentTabControl.Items.Count > 2)
+                        ContentTabControl.SelectedIndex = 2;
+                }
+                else if (e.Key == Key.D4 || e.Key == Key.NumPad4)
+                {
+                    if (ContentTabControl.Items.Count > 3)
+                        ContentTabControl.SelectedIndex = 3;
+                }
+                else if (e.Key == Key.D5 || e.Key == Key.NumPad5)
+                {
+                    if (ContentTabControl.Items.Count > 4)
+                        ContentTabControl.SelectedIndex = 4;
+                }
+                else if (e.Key == Key.D6 || e.Key == Key.NumPad6)
+                {
+                    if (ContentTabControl.Items.Count > 5)
+                        ContentTabControl.SelectedIndex = 5;
+                }
+                else if (e.Key == Key.D7 || e.Key == Key.NumPad7)
+                {
+                    if (ContentTabControl.Items.Count > 6)
+                        ContentTabControl.SelectedIndex = 6;
+                }
+                else if (e.Key == Key.D8 || e.Key == Key.NumPad8)
+                {
+                    if (ContentTabControl.Items.Count > 7)
+                        ContentTabControl.SelectedIndex = 7;
+                }
+                else if (e.Key == Key.D9 || e.Key == Key.NumPad9)
+                {
+                    if (ContentTabControl.Items.Count > 0)
+                        ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                }
             }
             
             if (e.KeyboardDevice.IsKeyDown(Key.LeftAlt) || e.KeyboardDevice.IsKeyDown(Key.RightAlt)) //((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))

@@ -145,19 +145,49 @@ namespace RibbonFileManager
         {
             if (LocationGuid == ThisPcGuid)
             {
-                var entries = new List<String>()
+                var entries = new List<DiskItem>()
                     {
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop"),
+                        /*Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Music"),
                         Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures"),
-                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")
+                        Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos")*/
+                        new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "DesktopFolderIcon"
+                        },
+                        new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "DocumentsFolderIcon"
+                        },
+                        new DiskItem(Environment.ExpandEnvironmentVariables(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "DownloadsFolderIcon"
+                        },
+                        new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "MusicFolderIcon"
+                        },
+                        new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "PicturesFolderIcon"
+                        },
+                        new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos))
+                        {
+                            HasSpecialIcon = true,
+                            SpecialIconKey = "VideosFolderIcon"
+                        }
                     };
 
                 foreach (var s in entries)
                 {
-                    yield return await Task.Run(() => new DiskItem(s));
+                    yield return s;
                     token.ThrowIfCancellationRequested();
                 }
 
