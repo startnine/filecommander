@@ -11,7 +11,19 @@ namespace RibbonFileManager
         {
             base.OnAttached();
 
-            double size = AssociatedObject.Height / 48;
+            UpdateSize();
+
+            AssociatedObject.LayoutUpdated += (sneder, args) => UpdateSize();
+            AssociatedObject.IsVisibleChanged += (sneder, args) =>
+            {
+                if (AssociatedObject.IsVisible)
+                    UpdateSize();
+            };
+        }
+
+        void UpdateSize()
+        {
+            double size = AssociatedObject.Width / 48;
             (AssociatedObject.Content as FrameworkElement).LayoutTransform = new ScaleTransform(size, size);
         }
     }

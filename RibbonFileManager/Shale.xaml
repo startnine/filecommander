@@ -4413,7 +4413,7 @@
         </Setter>
     </Style-->
 
-    <Control x:Key="DiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Center" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
+    <Control x:Key="DiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Center" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderTransformOrigin="0.5,0.5">
         <!--RenderOptions.EdgeMode="Aliased"-->
         <!--DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"-->
         <Control.Style>
@@ -4706,7 +4706,7 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="48">
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="48">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
@@ -4835,7 +4835,7 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="32">
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
@@ -4902,7 +4902,7 @@
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <!--Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="16">
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
@@ -4978,7 +4978,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <!--Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="32" Grid.Column="0" Grid.Row="0">
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32" Grid.Column="0" Grid.Row="0">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
@@ -5396,7 +5396,7 @@
                             <ContentControl.Effect>
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
                             </ContentControl.Effect>
-                            <Path Data="M 3 16 L 8 12 L 13 16 L 11 9 L 16 6 L 10 6 L 8 0 L 6 6 L 0 6 L 5 9" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" Effect="{DynamicResource DropShadow}" UseLayoutRounding="True"/>
+                            <Path Data="M 3 16 L 8 12 L 13 16 L 11 9 L 16 6 L 10 6 L 8 0 L 6 6 L 0 6 L 5 9" Fill="{DynamicResource EmblemPathFillBrush}" Effect="{DynamicResource DropShadow}" UseLayoutRounding="True"/>
                             <!--RenderOptions.EdgeMode="Aliased"-->
                             <!--ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,0,0"/-->
                         </ContentControl>
@@ -5421,14 +5421,14 @@
                             <Grid.Effect>
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
                             </Grid.Effect>
-                            <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
+                            <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="{DynamicResource EmblemPathFillBrush}" UseLayoutRounding="True"/>
                             <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="#36000000" StrokeThickness="0" UseLayoutRounding="True"/>
                             <Rectangle Height="13" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="{DynamicResource EmblemPathFillBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
                             <!--Rectangle.Effect>
                                     <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.125" />
                                 </Rectangle.Effect>
                             </Rectangle-->
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
+                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{DynamicResource EmblemPathFillBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
                             <Rectangle Height="2" VerticalAlignment="Bottom" Fill="#26000000" StrokeThickness="0" UseLayoutRounding="True"/>
                         </Grid>
                         <!--ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,0,0"/-->
@@ -5443,7 +5443,7 @@
         <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
         <StackPanel Orientation="Horizontal" Height="16">
             <!--Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/-->
-            <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="16">
+            <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
                 <e:Interaction.Behaviors>
                     <local:IconScaleBehavior/>
                 </e:Interaction.Behaviors>
