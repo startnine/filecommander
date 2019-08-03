@@ -5423,13 +5423,13 @@
                             </Grid.Effect>
                             <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
                             <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="#36000000" StrokeThickness="0" UseLayoutRounding="True"/>
-                            <Rectangle Height="10" VerticalAlignment="Top" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
+                            <Rectangle Height="13" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="{DynamicResource EmblemPathFillBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
                             <!--Rectangle.Effect>
                                     <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.125" />
                                 </Rectangle.Effect>
                             </Rectangle-->
-                            <Rectangle Height="3" VerticalAlignment="Bottom" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
-                            <Rectangle Height="3" VerticalAlignment="Bottom" Fill="#26000000" StrokeThickness="0" UseLayoutRounding="True"/>
+                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{DynamicResource EmblemPathFillBrush}" Stroke="{DynamicResource EmblemPathStrokeBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
+                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="#26000000" StrokeThickness="0" UseLayoutRounding="True"/>
                         </Grid>
                         <!--ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,0,0"/-->
                         <TextBlock Margin="5,0,0,0">This PC</TextBlock>
@@ -5442,7 +5442,12 @@
     <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type local:DiskItem}" ItemsSource="{Binding SubItems}">
         <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
         <StackPanel Orientation="Horizontal" Height="16">
-            <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>
+            <!--Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/-->
+            <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="16">
+                <e:Interaction.Behaviors>
+                    <local:IconScaleBehavior/>
+                </e:Interaction.Behaviors>
+            </ContentPresenter>
             <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
                 <ContentPresenter.Resources>
                     <Style TargetType="{x:Type TextBlock}">

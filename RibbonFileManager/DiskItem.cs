@@ -8,6 +8,18 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using Start9.UI.Wpf;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+
 namespace RibbonFileManager
 {
     public class DiskItem : INotifyPropertyChanged
@@ -312,6 +324,8 @@ namespace RibbonFileManager
             ItemPath = path;//Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(ItemPath))
                 ItemCategory = DiskItemCategory.Directory;
+
+            EvaluateIsSpecialFolder();
         }
 
         public DiskItem(FileSystemInfo info)
@@ -319,6 +333,45 @@ namespace RibbonFileManager
             _info = info;
             if (info is DirectoryInfo)
                 ItemCategory = DiskItemCategory.Directory;
+
+            EvaluateIsSpecialFolder();
+        }
+
+        void EvaluateIsSpecialFolder()
+        {
+            if (ItemCategory == DiskItemCategory.Directory)
+            {
+                if (ItemPath == Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "DesktopFolderIcon";
+                }
+                else if (ItemPath == Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "DocumentsFolderIcon";
+                }
+                else if (ItemPath == Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "DownloadsFolderIcon";
+                }
+                else if (ItemPath == Environment.GetFolderPath(Environment.SpecialFolder.MyMusic))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "MusicFolderIcon";
+                }
+                else if (ItemPath == Environment.GetFolderPath(Environment.SpecialFolder.MyPictures))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "PicturesFolderIcon";
+                }
+                else if (ItemPath == Environment.GetFolderPath(Environment.SpecialFolder.MyVideos))
+                {
+                    HasSpecialIcon = true;
+                    SpecialIconKey = "VideosFolderIcon";
+                }
+            }
         }
 
         FileSystemWatcher _watcher;
