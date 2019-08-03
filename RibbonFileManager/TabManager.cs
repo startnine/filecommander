@@ -44,7 +44,7 @@ namespace RibbonFileManager
 
         static void OnVisibilityPropertyChangedCallback(Object sender, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine("OnVisibilityPropertyChangedCallback");
+            //Debug.WriteLine("OnVisibilityPropertyChangedCallback");
 
             if (((Visibility)e.NewValue) == Visibility.Visible)
                 (sender as TabManager).Populate();
@@ -220,8 +220,8 @@ namespace RibbonFileManager
 
                     mainWin.ContentTabControl.SelectedItem = _item;
                 }
-                else
-                    Debug.WriteLine("WINDOW CONTAINING SELECTED TAB WAS NOT FOUND");
+                /*else
+                    Debug.WriteLine("WINDOW CONTAINING SELECTED TAB WAS NOT FOUND");*/
             }
             else
                 throw new Exception("Cannot switch to a tab which only exists in set aside form.");

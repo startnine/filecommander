@@ -210,7 +210,7 @@ namespace RibbonFileManager
 
                 var tabHeaderBinding = new Binding()
                 {
-                    Source = (item.Content as WindowContent).NavigationStack,
+                    Source = (item.Content as WindowContent).NavManager,
                     Path = new PropertyPath("Current"),
                     Mode = BindingMode.OneWay,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
@@ -243,7 +243,7 @@ namespace RibbonFileManager
 
         public void ValidateNavButtonStates()
         {
-            Boolean canGoUp;
+            /*Boolean canGoUp;
             try
             {
                 canGoUp = Directory.GetParent(((DirectoryQuery)ActiveContent.NavigationStack.Current).Item.ItemPath) != null;
@@ -251,8 +251,15 @@ namespace RibbonFileManager
             catch
             {
                 canGoUp = false;
-            }
-            ValidateNavButtonStates(ActiveContent.NavigationStack.CanGoBack, ActiveContent.NavigationStack.CanGoForward, canGoUp);
+            }*/
+            //ValidateNavButtonStates(ActiveContent.NavigationStack.CanGoBack, ActiveContent.NavigationStack.CanGoForward, canGoUp);
+
+            NavBackButton.IsEnabled = ActiveContent.NavManager.CanGoBack;
+            NavForwardButton.IsEnabled = ActiveContent.NavManager.CanGoForward;
+            if (ActiveContent.NavManager.Current is DirectoryQuery query)
+                NavUpButton.IsEnabled = Directory.GetParent(query.Item.ItemPath) != null;
+            else
+                NavUpButton.IsEnabled = false;
         }
 
         public void ValidateCommandStates(Int32 selectedCount, DiskItem activeItem)
@@ -520,7 +527,7 @@ namespace RibbonFileManager
 
         public async Task<Boolean> NavigateBackAsync()
         {
-            if (ActiveContent.NavigationStack.CanGoBack)
+            /*if (ActiveContent.NavigationStack.CanGoBack)
             {
                 ActiveContent.NavigationStack.Back();
                 ActiveContent.RecentLocations.Back();
@@ -528,12 +535,13 @@ namespace RibbonFileManager
                 await ActiveContent.RefreshAsync();
                 return true;
             }
-            else return false;
+            else return false;*/
+            return ActiveContent.NavManager.GoBack();
         }
 
         public async Task<Boolean> NavigateForwardAsync()
         {
-            if (ActiveContent.NavigationStack.CanGoForward)
+            /*if (ActiveContent.NavigationStack.CanGoForward)
             {
                 ActiveContent.NavigationStack.Forward();
                 ActiveContent.RecentLocations.Forward();
@@ -541,7 +549,8 @@ namespace RibbonFileManager
                 await ActiveContent.RefreshAsync();
                 return true;
             }
-            else return false;
+            else return false;*/
+            return ActiveContent.NavManager.GoFoward();
         }
 
         public async Task<Boolean> NavigateUpAsync()
@@ -551,8 +560,8 @@ namespace RibbonFileManager
             if (Directory.Exists(path))
             {
                 var q = new DirectoryQuery(path);
-                await ActiveContent.NavigateAsync(q);
-                ActiveContent.RecentLocations.Navigate(q);
+                //await ActiveContent.NavigateAsync(q, true);
+                ActiveContent.NavManager.MoveTo(q);
                 ValidateNavButtonStates();
                 return true;
             }
@@ -602,7 +611,7 @@ namespace RibbonFileManager
         public void InitialNavigate(String path)
         {
             var q = new DirectoryQuery(path);
-            ActiveContent.NavigationStack.Add(q);
+            ActiveContent.NavManager.MoveTo(q);
             Navigate(q);
         }
 
@@ -620,13 +629,13 @@ namespace RibbonFileManager
             IconsViewButton.IsChecked = true;
         }
 
-        public void ValidateNavButtonStates(Boolean canGoBack, Boolean canGoForward, Boolean canGoUp)
+        /*public void ValidateNavButtonStates(Boolean canGoBack, Boolean canGoForward, Boolean canGoUp)
         {
             NavBackButton.IsEnabled = canGoBack;
             NavForwardButton.IsEnabled = canGoForward;
             NavHistoryButton.IsEnabled = canGoBack || canGoForward;
             NavUpButton.IsEnabled = canGoUp;
-        }
+        }*/
 
         private async void NavBackButton_Click(Object sender, RoutedEventArgs e)
         {
@@ -642,8 +651,8 @@ namespace RibbonFileManager
 
         private void NavHistoryButton_Click(Object sender, RoutedEventArgs e)
         {
-            foreach (var s in ActiveContent.NavigationStack)
-                Debug.WriteLine(ActiveContent.NavigationStack.IndexOf(s).ToString() + ": " + s);
+            /*foreach (var s in ActiveContent.NavManager)
+                Debug.WriteLine(ActiveContent.NavManager.IndexOf(s).ToString() + ": " + s);*/
         }
 
         private async void NavUpButton_Click(Object sender, RoutedEventArgs e)
@@ -687,14 +696,15 @@ namespace RibbonFileManager
         }
 
         private async void AddressBox_PathUpdated(Object sender, EventArgs e)
-        {   
+        {
             if (!_resettingAddress)
-                await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path));
+                ActiveContent.NavManager.MoveTo(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path));
+                //await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path), true);
         }
 
         private void ContentTabControl_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            if (ContentTabControl.SelectedItem != null)
+            if ((ContentTabControl.SelectedItem != null) && ((ContentTabControl.SelectedItem as TabItem).IsLoaded))
             {
                 Navigate(ActiveContent.CurrentLocation);
                 NavigationPaneMenuItem.IsChecked = ActiveContent.ShowNavigationPane;
@@ -860,13 +870,13 @@ namespace RibbonFileManager
                 if (sb.Text == "")
                 {
                     if (Directory.Exists(path))
-                        await ActiveContent.NavigateAsync(new DirectoryQuery(path), cts.Token);
+                        ActiveContent.NavManager.MoveTo(new DirectoryQuery(path)); //await ActiveContent.NavigateAsync(new DirectoryQuery(path), true, cts.Token);
                     else
-                        await ActiveContent.NavigateAsync(new ShellLocation(id), cts.Token);
+                        ActiveContent.NavManager.MoveTo(new ShellLocation(id)); //await ActiveContent.NavigateAsync(new ShellLocation(id), true, cts.Token);
                 }
                 else
                 {
-                    await ActiveContent.NavigateAsync(new SearchQuery(path, sb.Text), cts.Token);
+                    ActiveContent.NavManager.MoveTo(new SearchQuery(path, sb.Text)); //await ActiveContent.NavigateAsync(new SearchQuery(path, sb.Text), true, cts.Token);
                 }
             }
             catch (OperationCanceledException)

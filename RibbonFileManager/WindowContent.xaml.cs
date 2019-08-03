@@ -59,15 +59,17 @@ namespace RibbonFileManager
         }
 
 
-        public NavigationStack<Location> NavigationStack { get; set; } = new NavigationStack<Location>();
+        /*public NavigationStack<Location> NavigationStack { get; set; } = new NavigationStack<Location>();
 
-        public RecentLocationsList<Location> RecentLocations { get; set; } = new RecentLocationsList<Location>();
+        public RecentLocationsList<Location> RecentLocations { get; set; } = new RecentLocationsList<Location>();*/
 
-        public IEnumerable<Location> HistoryElements => RecentLocations.Reverse();
+        public NavigationManager<Location> NavManager { get; set; } = new NavigationManager<Location>();
+
+        public IEnumerable<Location> HistoryElements => NavManager.Reverse();
 
         public Location CurrentLocation
         {
-            get => NavigationStack.Current;
+            get => NavManager.Current;
         }
 
         public String CurrentDisplayName
@@ -133,9 +135,6 @@ namespace RibbonFileManager
         {
             InitializeComponent();
             _initLocation = GetLocation(path);
-            if (NavigationStack.Count == 0)
-                NavigationStack.Add(_initLocation);
-
             Loaded += WindowContent_Loaded;
         }
 
@@ -156,10 +155,13 @@ namespace RibbonFileManager
                 return null;
         }
 
-        private async void WindowContent_Loaded(Object sender, RoutedEventArgs e)
+
+        private void WindowContent_Loaded(Object sender, RoutedEventArgs e)
         {
+            NavManager.Navigated += (sneder, args) => NavigateToLocationAsync(NavManager.Current, args.IsBackForwardNavigation);
+            NavManager.MoveTo(_initLocation);
+            OwnerWindow.Navigate(NavManager.Current);
             Loaded -= WindowContent_Loaded;
-            await NavigateAsync(_initLocation);
         }
 
         static async IAsyncEnumerable<DiskItem> GetaDirectoryContents(String path, String query, CancellationToken token, Boolean recursive)
@@ -176,6 +178,7 @@ namespace RibbonFileManager
 
         public async Task RefreshAsync(Location location, CancellationToken token = default)
         {
+            //Debug.WriteLine("RefreshAsync(");
             _source?.Cancel();
             _source = new CancellationTokenSource();
             var source = CancellationTokenSource.CreateLinkedTokenSource(_source.Token, token);
@@ -189,22 +192,30 @@ namespace RibbonFileManager
             }
         }
         
-        public async Task NavigateAsync(Location location, CancellationToken token = default)
+        private void/*async Task */NavigateToLocationAsync(Location location, bool replaceFuture, CancellationToken token = default)
         {
+            //Debug.WriteLine("NavigateToLocationAsync(");
             //NavigationStack.Add(location);
-            NavigationStack.Insert(NavigationStack.Index + 1, location);
+            /*if (replaceFuture)
+                NavigationStack.ReplaceFuture(NavigationStack.Index + 1, location);
+            else
+                NavigationStack.Insert(NavigationStack.Index + 1, location);
             NavigationStack.Forward();
 
-            RecentLocations.Navigate(location);
-            await RefreshAsync(location, token);
+            RecentLocations.Navigate(location);*/
+            /*await */
+            RefreshAsync(location, token);
             CurrentDisplayName = location.Name;
 
             if (location is DirectoryQuery query)
                 SetPanes(query.Item);
+
+            OwnerWindow.ValidateNavButtonStates();
         }
 
         async Task Navigate(Location l, CancellationTokenSource source, Boolean clearTextBox = true)
         {
+            //Debug.WriteLine("Navigate(");
             var query = String.Empty;
             if (l is SearchQuery search)
                 query = search.Query;
@@ -216,12 +227,12 @@ namespace RibbonFileManager
             if (clearTextBox)
                 OwnerWindow.SearchTextBox.Clear();
 
-            try
-            {
+            /*try
+            {*/
                 var results = new ObservableCollection<DiskItem>();
                 //CurrentDirectoryListView.ItemsSource = results;
                 var nextDirectoryIndex = 0;
-                Debug.WriteLine("l type: " + l.GetType().ToString());
+                //Debug.WriteLine("l type: " + l.GetType().ToString());
                 await foreach (var path in l.GetLocationContents(source.Token, false))
                 {
                     if (path.ItemCategory == DiskItemCategory.Directory)
@@ -235,6 +246,7 @@ namespace RibbonFileManager
                 }
 
                 CurrentDirectoryListView.ItemsSource = results;
+                //Debug.WriteLine("CurrentDirectoryListView.ItemsSource = results");
 
                 CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
 
@@ -242,23 +254,23 @@ namespace RibbonFileManager
                 {
                     foreach (PropertyGroupDescription desc in shell.PropertyGroupDescriptions)
                     {
-                        Debug.WriteLine("Adding " + desc.PropertyName);
+                        //Debug.WriteLine("Adding " + desc.PropertyName);
                         collectionView.GroupDescriptions.Add(desc);
                     }
                 }
                 else
                     collectionView.GroupDescriptions.Clear();
+                /*}
+                catch (OperationCanceledException) when (!String.IsNullOrEmpty(query)) // if the user canceled a search, then preserve what's been searched
+                {
+                }
+                catch (Exception ex) // else, fall back to the previous results
+                {
+                    Debug.WriteLine("NAVIGATION ERROR:\nException: " + ex.ToString() + "\nStack Trace: \n" + ex.StackTrace + "\nEND ERROR INFO");
+                    //CurrentDirectoryListView.ItemsSource = old;
+                    MessageBox<OkActionSet>.Show(ex.ToString(), "Navigation error");
+                }*/
             }
-            catch (OperationCanceledException) when (!String.IsNullOrEmpty(query)) // if the user canceled a search, then preserve what's been searched
-            {
-            }
-            catch (Exception ex) // else, fall back to the previous results
-            {
-                Debug.WriteLine("NAVIGATION ERROR:\nException: " + ex.ToString() + "\nStack Trace: \n" + ex.StackTrace + "\nEND ERROR INFO");
-                //CurrentDirectoryListView.ItemsSource = old;
-                MessageBox<OkActionSet>.Show(ex.ToString(), "Navigation error");
-            }
-        }
 
         private async void AddressBox_KeyDown(Object sender, KeyEventArgs e)
         {
@@ -268,7 +280,8 @@ namespace RibbonFileManager
                 var expText = Environment.ExpandEnvironmentVariables(bar.Text);
                 if (Directory.Exists(expText))
                 {
-                    await NavigateAsync(new DirectoryQuery(expText));
+                    //await NavigateAsync(new DirectoryQuery(expText), true);
+                    NavManager.MoveTo(new DirectoryQuery(expText));
                     CurrentDirectoryListView.Focus();
                     //NavBar_PathTextBox_LostFocus(null, null);
                 }
@@ -300,13 +313,13 @@ namespace RibbonFileManager
             }
         }
 
-        private async void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
+        private void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
             if (e.NewValue is DiskItem val)
-                await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)));
+                NavManager.MoveTo(new DirectoryQuery(val.ItemPath)); //await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)), true);
             else
             {
-                Debug.WriteLine("Tree SelectedValuePath: " + NavigationPaneTreeView.SelectedValuePath);
+                //Debug.WriteLine("Tree SelectedValuePath: " + NavigationPaneTreeView.SelectedValuePath);
                 /*if (NavigationPaneTreeView.SelectedValuePath == MyComputerTreeViewItem.Header)
                     await NavigateAsync(new ShellLocation(ShellLocation.ThisPcGuid));*/
             }
@@ -339,7 +352,7 @@ namespace RibbonFileManager
         {
             var expanded = Environment.ExpandEnvironmentVariables(path);
             if (Directory.Exists(expanded))
-                await NavigateAsync(new DirectoryQuery(expanded));
+                NavManager.MoveTo(new DirectoryQuery(expanded)); //await NavigateAsync(new DirectoryQuery(expanded), true);
             else if (File.Exists(expanded))
                 new DiskItem(expanded).Open();
             else
@@ -354,7 +367,8 @@ namespace RibbonFileManager
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1)
                     {
-                        await NavigateAsync(new DirectoryQuery(i.ItemPath));
+                        NavManager.MoveTo(new DirectoryQuery(i.ItemPath));
+                        //await NavigateAsync(new DirectoryQuery(i.ItemPath), true);
                         break;
                     }
                 }
@@ -405,7 +419,7 @@ namespace RibbonFileManager
 
         public async Task PasteCurrentAsync()
         {
-            if (!(NavigationStack.Current is DirectoryQuery curr)) return;
+            if (!(NavManager.Current is DirectoryQuery curr)) return;
 
             System.Collections.Specialized.StringCollection clipboard = null;
             if (Clipboard.ContainsFileDropList())
