@@ -4413,6 +4413,58 @@
         </Setter>
     </Style-->
 
+    <Control x:Key="DiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Center" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
+        <!--RenderOptions.EdgeMode="Aliased"-->
+        <!--DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"-->
+        <Control.Style>
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Control}">
+                            <Grid Width="48" Height="48">
+                                <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" RenderOptions.BitmapScalingMode="Linear"/>
+                                <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
+                                    <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                    <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
+                                        <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding FirstChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                    </Border>
+                                    <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
+                                        <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding SecondChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                    </Border>
+                                    <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                </Grid>
+                                <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ItemCategory}" Value="Directory"/>
+                                        <Condition Binding="{Binding IsDrive}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Control.Style>
+    </Control>
+
     <Style x:Key="CurrentDirectoryListViewStyle" TargetType="{x:Type ListView}">
         <Style.Resources>
             <DataTemplate x:Key="CurrentDirectoryListViewColumnHeaderAscendingTemplate">
@@ -4654,43 +4706,11 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <Grid HorizontalAlignment="Center" Width="48" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}">
-                                    <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
-                                    <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
-                                        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
-                                                <!--M 0 0 L 36 0 L 36 22 L 38 24 L 38 34 L 36 36 L 0 36 Z-->
-                                                <!--M 0 0 L 30 6 L 30 27 L 33 30 L 33 42 L 0 36 Z-->
-                                                <!--M 0 0 L 30 0 L 30 24 L 32 26 L 32 38 L 0 38 Z-->
-                                        <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
-                                            <!--Background="{DynamicResource IconTertiaryFillBrush}"-->
-                                            <!--Border.RenderTransform>
-                                                <SkewTransform AngleX="0" AngleY="11.667"/>
-                                                <!-AngleY="15" AngleY="6.125"->
-                                            </Border.RenderTransform-->
-                                            <!--Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
-                                            </Border.Background-->
-                                            <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding FirstChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
-                                        </Border>
-                                        <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
-                                            <!--Background="{DynamicResource IconTertiaryFillBrush}"-->
-                                            <!--Border.RenderTransform>
-                                                <SkewTransform AngleX="0" AngleY="23.333"/>
-                                                <!-AngleY="30" AngleY="17.375"->
-                                            </Border.RenderTransform-->
-                                            <!--Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
-                                            </Border.Background-->
-                                            <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding SecondChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
-                                        </Border>
-                                        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
-                                                <!--M 0 0 L 10.5 7.5 L 12 48 L 0 36 Z-->
-                                                <!--M 0 0 L 11 8 L 11 32 L 10 33 L 10 48 L 0 38 Z-->
-                                    </Grid>
-                                    <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
-                                </Grid>
-                                <!--Width="48" Height="48"-->
-                                <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="48">
+                                    <e:Interaction.Behaviors>
+                                        <local:IconScaleBehavior/>
+                                    </e:Interaction.Behaviors>
+                                </ContentPresenter>
                                 <Grid x:Name="NameGrid" Width="48">
                                     <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
                                         <TextBlock x:Name="NameTextBlock" Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" TextWrapping="Wrap"/>
@@ -4716,27 +4736,6 @@
                                 <Trigger SourceName="RenameTextBox" Property="IsVisible" Value="True">
                                     <Setter TargetName="NameTextBlock" Property="Visibility" Value="Collapsed"/>
                                 </Trigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding ItemCategory}" Value="Directory"/>
-                                        <Condition Binding="{Binding IsDrive}" Value="False"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Visible"/>
-                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
-                                </MultiDataTrigger>
-                                <DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
-                                    <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Collapsed"/>
-                                    <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="Transparent"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
-                                    <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
-                                    <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
-                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Collapsed"/>
-                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
-                                    <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>
@@ -4836,32 +4835,11 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
-                                <DockPanel.ContextMenu>
-                                    <ContextMenu x:Name="ItemContextMenu">
-                                        <!-- Opened="TouchableContextMenu_Opened"-->
-                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
-                                        <!--Click="OpenMenuItem_Click"-->
-                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
-                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
-                                        <!-- Click="RunAsAdminMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
-                                        <!-- Click="CopyMenuItem_Click"-->
-                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
-                                        <!-- Click="CutMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
-                                        <!-- Click="DeleteMenuItem_Click"-->
-                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
-                                        <Separator/>
-                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
-                                        <!-- Click="PropertiesMenuItem_Click"-->
-                                        <e:Interaction.Behaviors>
-                                            <local:ItemContextMenuBehavior WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
-                                        </e:Interaction.Behaviors>
-                                    </ContextMenu>
-                                </DockPanel.ContextMenu>
-                                <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="32">
+                                    <e:Interaction.Behaviors>
+                                        <local:IconScaleBehavior/>
+                                    </e:Interaction.Behaviors>
+                                </ContentPresenter>
                                 <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Center">
                                     <Grid>
                                         <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
@@ -4923,32 +4901,12 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
-                                <DockPanel.ContextMenu>
-                                    <ContextMenu x:Name="ItemContextMenu">
-                                        <!-- Opened="TouchableContextMenu_Opened"-->
-                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
-                                        <!--Click="OpenMenuItem_Click"-->
-                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
-                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
-                                        <!-- Click="RunAsAdminMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
-                                        <!-- Click="CopyMenuItem_Click"-->
-                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
-                                        <!-- Click="CutMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
-                                        <!-- Click="DeleteMenuItem_Click"-->
-                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
-                                        <Separator/>
-                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
-                                        <!-- Click="PropertiesMenuItem_Click"-->
-                                        <e:Interaction.Behaviors>
-                                            <local:ItemContextMenuBehavior WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
-                                        </e:Interaction.Behaviors>
-                                    </ContextMenu>
-                                </DockPanel.ContextMenu>
-                                <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
+                                <!--Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/-->
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="16">
+                                    <e:Interaction.Behaviors>
+                                        <local:IconScaleBehavior/>
+                                    </e:Interaction.Behaviors>
+                                </ContentPresenter>
                                 <Grid>
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
                                     <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
@@ -5010,31 +4968,6 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
-                                <Grid.ContextMenu>
-                                    <ContextMenu x:Name="ItemContextMenu">
-                                        <!-- Opened="TouchableContextMenu_Opened"-->
-                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
-                                        <!--Click="OpenMenuItem_Click"-->
-                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
-                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
-                                        <!-- Click="RunAsAdminMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
-                                        <!-- Click="CopyMenuItem_Click"-->
-                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
-                                        <!-- Click="CutMenuItem_Click"-->
-                                        <Separator/>
-                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
-                                        <!-- Click="DeleteMenuItem_Click"-->
-                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
-                                        <Separator/>
-                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
-                                        <!-- Click="PropertiesMenuItem_Click"-->
-                                        <e:Interaction.Behaviors>
-                                            <local:ItemContextMenuBehavior WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference Name=OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference Name=RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference Name=CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference Name=CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference Name=RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference Name=RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference Name=PropertiesMenuItem}}" TargetItem="{Binding}"/>
-                                        </e:Interaction.Behaviors>
-                                    </ContextMenu>
-                                </Grid.ContextMenu>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32"/>
                                     <ColumnDefinition/>
@@ -5044,7 +4977,12 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
+                                <!--Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/-->
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Height="32" Grid.Column="0" Grid.Row="0">
+                                    <e:Interaction.Behaviors>
+                                        <local:IconScaleBehavior/>
+                                    </e:Interaction.Behaviors>
+                                </ContentPresenter>
                                 <Grid HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
                                     <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
