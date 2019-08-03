@@ -37,20 +37,22 @@ namespace RibbonFileManager
 
             _tabItem.PreviewMouseLeftButtonDown += (sneder, args) =>
             {
-                int mousePressCounter = 0;
+                //int mousePressCounter = 0;
                 Timer timer = new Timer(10);
                 Point initialPoint = SystemScaling.CursorPosition;
                 _tabItem.RenderTransform = new TranslateTransform(0, 0);
+
+                bool isDragging = false;
                 timer.Elapsed += (sneder, args) =>
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        if (mousePressCounter < 10)
+                        if (!isDragging) //mousePressCounter < 25)
                         {
                             if (Mouse.LeftButton == MouseButtonState.Released)
                                 timer.Stop();
-                            else
-                                mousePressCounter++;
+                            else if ((SystemScaling.CursorPosition.X > initialPoint.X + 10) || (SystemScaling.CursorPosition.X < initialPoint.X - 10) || (SystemScaling.CursorPosition.Y > initialPoint.Y + 10) || (SystemScaling.CursorPosition.Y < initialPoint.Y - 10))
+                                isDragging = true;
                         }
                         else
                         {
@@ -100,8 +102,9 @@ namespace RibbonFileManager
                                     else
                                         animate = true;
                                 }
-                                
+
                                 (_tabItem.RenderTransform as TranslateTransform).X = 0;
+                                //TODO sliding animations
                             }
                             else
                             {
