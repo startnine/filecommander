@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -21,6 +22,19 @@ namespace RibbonFileManager
     /// </summary>
     public partial class MainWindow : DecoratableWindow
     {
+        public TabControl ContentTabControl
+        {
+            get
+            {
+                if (Config.Instance.TabsMode == Config.TabDisplayMode.Titlebar)
+                    return TitlebarTabControl;
+                else if (Config.Instance.TabsMode == Config.TabDisplayMode.Toolbar)
+                    return ToolbarTabControl;
+                else
+                    return null;
+            }
+        }
+
         public WindowContent ActiveContent
         {
             get => (ContentTabControl.SelectedItem as TabItem)?.Content as WindowContent;
@@ -39,10 +53,10 @@ namespace RibbonFileManager
 
         static void OnInterfaceModeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as MainWindow).UpdateInterface();
+            (d as MainWindow).UpdateInterfaceMode();
         }
 
-        void UpdateInterface()
+        void UpdateInterfaceMode()
         {
             if (InterfaceMode == Config.InterfaceModeType.CommandBar)
             {
@@ -88,9 +102,41 @@ namespace RibbonFileManager
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             BindingOperations.SetBinding(this, InterfaceModeProperty, interfaceModeBinding);
-            UpdateInterface();
+            UpdateInterfaceMode();
+            Config_ConfigUpdated(Config.Instance, null);
+            Config.ConfigUpdated += Config_ConfigUpdated;
 
             WindowManager.OpenWindows.Add(this);
+        }
+
+        private void Config_ConfigUpdated(object sender, EventArgs e)
+        {
+            if (sender is Config Instance)
+            {
+                BindingOperations.ClearBinding(TabContentDisplayContentControl, ContentProperty);
+                if (Instance.TabsMode == Config.TabDisplayMode.Titlebar)
+                {
+                    var contentBinding = new Binding()
+                    {
+                        Source = TitlebarTabControl,
+                        Path = new PropertyPath("SelectedContent"),
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    };
+                    BindingOperations.SetBinding(TabContentDisplayContentControl, ContentProperty, contentBinding);
+                }
+                else if (Instance.TabsMode == Config.TabDisplayMode.Toolbar)
+                {
+                    var contentBinding = new Binding()
+                    {
+                        Source = ToolbarTabControl,
+                        Path = new PropertyPath("SelectedContent"),
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    };
+                    BindingOperations.SetBinding(TabContentDisplayContentControl, ContentProperty, contentBinding);
+                }
+            }
         }
 
         String _firstNavigationPath = WindowManager.WindowDefaultPath;
@@ -193,7 +239,7 @@ namespace RibbonFileManager
 
         private TabItem CreateTab(String path)
         {
-            if (Config.Instance.EnableTabs)
+            if (Config.Instance.TabsMode != Config.TabDisplayMode.Disabled)
             {
                 var item = new TabItem()
                 {
@@ -227,7 +273,7 @@ namespace RibbonFileManager
 
         private void CloseCurrentLocation()
         {
-            if (Config.Instance.EnableTabs)
+            if (Config.Instance.TabsMode != Config.TabDisplayMode.Disabled)
                 RemoveTab(ContentTabControl.SelectedItem as TabItem);
             else
                 Close();
@@ -844,15 +890,15 @@ namespace RibbonFileManager
         private async void SearchTextBox_ActionSubmitted(Object sender, ActionSubmittedEventArgs e)
         {
             var cts = new CancellationTokenSource();
-            var sb = (SearchBox)sender;
+            var sb = (ActionBox)sender;
 
             void Cancellation(Object sender, RoutedEventArgs e)
             {   
                 cts.Cancel();
-                sb.CancelSearch();
+                sb.CancelAction();
             }
 
-            sb.SearchCanceled += Cancellation;
+            sb.ActionCanceled += Cancellation;
 
             var path = ActiveContent.CurrentLocation switch
             {
@@ -884,8 +930,8 @@ namespace RibbonFileManager
                 // do nothing, user canceled search
             }
 
-            sb.SearchCanceled -= Cancellation;
-            sb.CancelSearch();
+            sb.ActionCanceled -= Cancellation;
+            sb.CancelAction();
         }
 
         private void CurrentlyOpenTabsListView_SelectionChanged(Object sender, SelectionChangedEventArgs e)

@@ -225,7 +225,7 @@ namespace RibbonFileManager
             }
         }
 
-        public Icon FirstChildIcon
+        /*public Icon FirstChildIcon
         {
             get
             {
@@ -245,7 +245,7 @@ namespace RibbonFileManager
                 else
                     return null;
             }
-        }
+        }*/
 
         static Icon GetIcon(UInt32 flags, string path)
         {

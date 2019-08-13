@@ -344,8 +344,13 @@ namespace RibbonFileManager
         {
             DiskItem item = null;
             if (CurrentDirectoryListView.SelectedItem != null)
+            {
                 item = CurrentDirectoryListView.SelectedItem as DiskItem;
+                SetPanes(item);
+            }
+
             OwnerWindow.ValidateCommandStates(CurrentDirectoryListView.SelectedItems.Count, item);
+            OwnerWindow.UpdateStatusBar();
         }
 
         public async Task OpenPath(String path)
@@ -626,7 +631,7 @@ namespace RibbonFileManager
                 else
                 {
                     var ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
-                    if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg")
+                    if (ext == ".bmp" || ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                     {
                         (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
                         SetPreviewPaneLayer(2);

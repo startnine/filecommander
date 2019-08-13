@@ -26,6 +26,7 @@
     <local:DiskItemSubItemsTreeFilterConverter x:Key="DiskItemSubItemsTreeFilterConverter"/>
     <local:DriveFreeSpaceToUsedSpaceConverter x:Key="DriveFreeSpaceToUsedSpaceConverter"/>
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>
+    <conv:DoubleComparisonConverter x:Key="DoubleComparisonConverter"/>
 
     <!--#endregion Converters-->
 
@@ -4425,11 +4426,11 @@
                                 <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" RenderOptions.BitmapScalingMode="Linear"/>
                                 <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
                                     <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
-                                    <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
-                                        <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding FirstChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                    <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
+                                        <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                     </Border>
-                                    <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0">
-                                        <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding SecondChildIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                    <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
+                                        <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                     </Border>
                                     <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
                                 </Grid>
@@ -4444,18 +4445,26 @@
                                     <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Visible"/>
                                     <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
                                 </MultiDataTrigger>
-                                <DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
+                                <!--DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
                                     <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Collapsed"/>
                                     <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="Transparent"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
                                     <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
                                     <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
-                                </DataTrigger>
+                                </DataTrigger-->
                                 <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
                                     <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Collapsed"/>
                                     <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
                                     <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g0}" Value="True">
+                                    <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="{Binding SubItems[0].ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g1}" Value="True">
+                                    <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="{Binding SubItems[1].ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
                                 </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -4706,11 +4715,43 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="48">
-                                    <e:Interaction.Behaviors>
-                                        <local:IconScaleBehavior/>
-                                    </e:Interaction.Behaviors>
-                                </ContentPresenter>
+                                <Grid>
+                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="48">
+                                        <e:Interaction.Behaviors>
+                                            <local:IconScaleBehavior/>
+                                        </e:Interaction.Behaviors>
+                                    </ContentPresenter>
+                                    <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="54" Height="54" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                            <Rectangle x:Name="Item0Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="0">
+                                            <Rectangle x:Name="Item1Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="1">
+                                            <Rectangle x:Name="Item2Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="2">
+                                            <Rectangle x:Name="Item3Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="1" Grid.Row="2">
+                                            <Rectangle x:Name="Item4Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="2">
+                                            <Rectangle x:Name="Item5Icon" RadiusX="3" RadiusY="3" />
+                                        </Border>
+                                    </Grid>
+                                </Grid>
                                 <Grid x:Name="NameGrid" Width="48">
                                     <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
                                         <TextBlock x:Name="NameTextBlock" Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" TextWrapping="Wrap"/>
@@ -4736,6 +4777,34 @@
                                 <Trigger SourceName="RenameTextBox" Property="IsVisible" Value="True">
                                     <Setter TargetName="NameTextBlock" Property="Visibility" Value="Collapsed"/>
                                 </Trigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding HasSpecialIcon}" Value="False"/>
+                                        <Condition Binding="{Binding ItemCategory}" Value="Directory"/>
+                                        <Condition Binding="{Binding IsDrive}" Value="False"/>
+                                        <Condition Binding="{Binding ShowEnhancedFolderIcons, Source={x:Static local:Config.Instance}}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="IconContentPresenter" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="ChildIconsGrid" Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g0}" Value="True">
+                                    <Setter TargetName="Item0Icon" Property="Fill" Value="{Binding SubItems[0].ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g1}" Value="True">
+                                    <Setter TargetName="Item1Icon" Property="Fill" Value="{Binding SubItems[1].ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g2}" Value="True">
+                                    <Setter TargetName="Item2Icon" Property="Fill" Value="{Binding SubItems[2].ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g3}" Value="True">
+                                    <Setter TargetName="Item3Icon" Property="Fill" Value="{Binding SubItems[3].ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g4}" Value="True">
+                                    <Setter TargetName="Item4Icon" Property="Fill" Value="{Binding SubItems[4].ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SubItems.Count, Converter={StaticResource DoubleComparisonConverter}, ConverterParameter=g5}" Value="True">
+                                    <Setter TargetName="Item5Icon" Property="Fill" Value="{Binding SubItems[5].ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                                </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>

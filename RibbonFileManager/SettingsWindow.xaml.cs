@@ -36,19 +36,36 @@ namespace RibbonFileManager
 
         private void SettingsWindow_IsVisibleChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (((Boolean) e.OldValue == false) && ((Boolean) e.NewValue == true))
-            {
-                //InterfaceModeComboBox.SelectedIndex = Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar ? 0 : 1;
-                if (Config.Instance.InterfaceMode == Config.InterfaceModeType.Ribbon)
-                    InterfaceModeComboBox.SelectedIndex = 0;
-                else if (Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar)
-                    InterfaceModeComboBox.SelectedIndex = 1;
-                else
-                    InterfaceModeComboBox.SelectedIndex = 2;
+            if (((Boolean)e.OldValue == false) && ((Boolean)e.NewValue == true))
+                PopulateGui();
+        }
 
-                StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
-                TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
-            }
+        public void PopulateGui()
+        {
+            //Interface mode
+            if (Config.Instance.InterfaceMode == Config.InterfaceModeType.Ribbon)
+                InterfaceModeComboBox.SelectedIndex = 0;
+            else if (Config.Instance.InterfaceMode == Config.InterfaceModeType.CommandBar)
+                InterfaceModeComboBox.SelectedIndex = 1;
+            else
+                InterfaceModeComboBox.SelectedIndex = 2;
+
+            //Tabs mode
+            if (Config.Instance.TabsMode == Config.TabDisplayMode.Toolbar)
+                (TabBehaviourRadioButtonsStackPanel.Children[1] as RadioButton).IsChecked = true;
+            else if (Config.Instance.TabsMode == Config.TabDisplayMode.Disabled)
+                (TabBehaviourRadioButtonsStackPanel.Children[2] as RadioButton).IsChecked = true;
+            else
+                (TabBehaviourRadioButtonsStackPanel.Children[0] as RadioButton).IsChecked = true;
+
+            //Enhanced Folder Icons
+            ShowEnhancedFolderIconsCheckBox.IsChecked = Config.Instance.ShowEnhancedFolderIcons;
+
+            //Status bar
+            StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
+
+            //Titlebar text
+            TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
         }
 
         private void Start9SettingsButton_Click(Object sender, RoutedEventArgs e)
@@ -58,7 +75,15 @@ namespace RibbonFileManager
 
         private void ApplyButton_Click(Object sender, RoutedEventArgs e)
         {
-            //Config.Instance.InterfaceMode = InterfaceModeComboBox.SelectedIndex == 0 ? Config.InterfaceModeType.CommandBar : Config.InterfaceModeType.Ribbon;
+            ApplySettings();
+
+            if (sender == OkButton)
+                Close();
+        }
+
+        public void ApplySettings()
+        {
+            //Interface mode
             if (InterfaceModeComboBox.SelectedIndex == 0)
                 Config.Instance.InterfaceMode = Config.InterfaceModeType.Ribbon;
             else if (InterfaceModeComboBox.SelectedIndex == 1)
@@ -66,12 +91,24 @@ namespace RibbonFileManager
             else
                 Config.Instance.InterfaceMode = Config.InterfaceModeType.None;
 
+            //Tabs mode
+            if ((TabBehaviourRadioButtonsStackPanel.Children[1] as RadioButton).IsChecked.Value)
+                Config.Instance.TabsMode = Config.TabDisplayMode.Toolbar;
+            else if ((TabBehaviourRadioButtonsStackPanel.Children[2] as RadioButton).IsChecked.Value)
+                Config.Instance.TabsMode = Config.TabDisplayMode.Disabled;
+            else
+                Config.Instance.TabsMode = Config.TabDisplayMode.Titlebar;
+
+            //Enhanced Folder Icons
+            Config.Instance.ShowEnhancedFolderIcons = ShowEnhancedFolderIconsCheckBox.IsChecked.Value;
+
+            //Status bar
             Config.Instance.ShowStatusBar = StatusBarToggleSwitch.IsChecked.Value;
 
+            //Titlebar text
             Config.Instance.ShowTitlebarText = TitlebarTextToggleSwitch.IsChecked.Value;
 
-            if (sender == OkButton)
-                Close();
+            Config.InvokeConfigUpdated();
         }
 
         private void CancelButton_Click(Object sender, RoutedEventArgs e)

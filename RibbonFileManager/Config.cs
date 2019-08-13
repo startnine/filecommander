@@ -15,12 +15,12 @@ namespace RibbonFileManager
     {
         public ObservableCollection<DiskItem> QuickDestinations { get; set; } = new ObservableCollection<DiskItem>()
         {
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Desktop")),
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads")),
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents")),
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Music")),
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures")),
-            new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos"))
+            new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)), //(@"%userprofile%\Desktop")),
+            new DiskItem(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")), //Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads")),
+            new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)), //Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents")),
+            new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)), //Environment.ExpandEnvironmentVariables(@"%userprofile%\Music")),
+            new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)), //Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures")),
+            new DiskItem(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos)), //Environment.ExpandEnvironmentVariables(@"%userprofile%\Videos"))
         };
 
         public enum InterfaceModeType
@@ -30,6 +30,13 @@ namespace RibbonFileManager
             None
         }
 
+        public enum TabDisplayMode
+        {
+            Titlebar,
+            Toolbar,
+            Disabled
+        }
+
         public InterfaceModeType InterfaceMode
         {
             get => (InterfaceModeType)GetValue(InterfaceModeProperty);
@@ -37,7 +44,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty InterfaceModeProperty =
-            DependencyProperty.Register("InterfaceMode", typeof(InterfaceModeType), typeof(Config), new FrameworkPropertyMetadata(InterfaceModeType.Ribbon, FrameworkPropertyMetadataOptions.AffectsRender));
+            DependencyProperty.Register(nameof(InterfaceMode), typeof(InterfaceModeType), typeof(Config), new FrameworkPropertyMetadata(InterfaceModeType.Ribbon, FrameworkPropertyMetadataOptions.AffectsRender));
 
         public Boolean ShowStatusBar
         {
@@ -46,16 +53,25 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty ShowStatusBarProperty =
-            DependencyProperty.Register("ShowStatusBar", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(ShowStatusBar), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
-        public Boolean EnableTabs
+        public Boolean ShowEnhancedFolderIcons
         {
-            get => (Boolean) GetValue(EnableTabsProperty);
-            set => SetValue(EnableTabsProperty, value);
+            get => (Boolean)GetValue(ShowEnhancedFolderIconsProperty);
+            set => SetValue(ShowEnhancedFolderIconsProperty, value);
         }
 
-        public static readonly DependencyProperty EnableTabsProperty =
-            DependencyProperty.Register("EnableTabs", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+        public static readonly DependencyProperty ShowEnhancedFolderIconsProperty =
+            DependencyProperty.Register(nameof(ShowEnhancedFolderIcons), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
+        public TabDisplayMode TabsMode
+        {
+            get => (TabDisplayMode)GetValue(TabsModeProperty);
+            set => SetValue(TabsModeProperty, value);
+        }
+
+        public static readonly DependencyProperty TabsModeProperty =
+            DependencyProperty.Register(nameof(TabsMode), typeof(TabDisplayMode), typeof(Config), new PropertyMetadata(TabDisplayMode.Titlebar));
 
         public Boolean ShowTitlebarText
         {
@@ -64,7 +80,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty ShowTitlebarTextProperty =
-            DependencyProperty.Register("ShowTitlebarText", typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(ShowTitlebarText), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
         public System.Windows.Controls.Dock DetailsPanePlacement
         {
@@ -73,7 +89,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty DetailsPanePlacementProperty =
-            DependencyProperty.Register("DetailsPanePlacement", typeof(System.Windows.Controls.Dock), typeof(Config), new PropertyMetadata(System.Windows.Controls.Dock.Right));
+            DependencyProperty.Register(nameof(DetailsPanePlacement), typeof(System.Windows.Controls.Dock), typeof(Config), new PropertyMetadata(System.Windows.Controls.Dock.Right));
 
         public static Boolean ShowItemCheckboxes { get; set; } = false;
 
@@ -214,5 +230,12 @@ namespace RibbonFileManager
 
         private Config()
         { }
+
+        internal static void InvokeConfigUpdated()
+        {
+            ConfigUpdated?.Invoke(Instance, null);
+        }
+
+        public static event EventHandler ConfigUpdated;
     }
 }
