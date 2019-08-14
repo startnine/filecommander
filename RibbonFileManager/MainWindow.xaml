@@ -33,11 +33,11 @@
                         <Rectangle Width="{Binding ActualWidth, Mode=OneWay, Source={x:Reference NewTabButton}}" DockPanel.Dock="Right"/>
                         <Rectangle x:Name="TabControlSizingAidRectangle" VerticalAlignment="Stretch"/>
                     </DockPanel>
-                    <Fluent:RibbonTitleBar x:Name="RibbonTitle" Opacity="0"/>
+                    <Fluent:RibbonTitleBar x:Name="RibbonTitle" Visibility="Collapsed"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <ToggleButton x:Name="TabsSetAsideToggleButton" Style="{DynamicResource TabsSetAsideToggleButtonStyle}" Click="TabsSetAsideToggleButton_Click" ToolTip="Tabs Overview"/>
                         <Button x:Name="SetTabsAsideButton" Style="{DynamicResource SetTabsAsideButtonStyle}" Click="SetTabsAsideButton_Click" ToolTip="Set Tabs Aside"/>
-                        <TabControl x:Name="TitlebarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}" SelectionChanged="ContentTabControl_SelectionChanged"/>
+                        <TabControl x:Name="TitlebarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}" ItemsSource="{Binding Tabs}" SelectedIndex="{Binding CurrentTabIndex}"/>
                         <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab"/>
                         <!--Button x:Name="TabPreviewsButton" Style="{DynamicResource NewTabButtonStyle}" Click="TabPreviewsButton_Click" ToolTip="Show Tab Previews" Visibility="Collapsed"/-->
                     </StackPanel>
@@ -82,7 +82,7 @@
                                 <Separator/>
                             </ToolBar>
                             <ToolBar x:Name="TabsToolBar" Visibility="Collapsed" Band="2">
-                                <TabControl x:Name="ToolbarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}" SelectionChanged="ContentTabControl_SelectionChanged"/>
+                                <TabControl x:Name="ToolbarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}"/>
                             </ToolBar>
                         </ToolBarTray>
                         <!--mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/-->
@@ -94,7 +94,7 @@
                                         <!--IsEnabled="{TemplateBinding IsBackButtonEnabled}"-->
                                         <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" IsEnabled="False" Click="NavForwardButton_Click"/>
                                         <!--IsEnabled="{TemplateBinding IsForwardButtonEnabled}"-->
-                                        <Fluent:DropDownButton x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Size="Small" SizeDefinition="Small" ItemsSource="{Binding ActiveContent.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
+                                        <Fluent:DropDownButton x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Size="Small" SizeDefinition="Small" ItemsSource="{Binding CurrentTab.Content.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
                                         <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Click="NavUpButton_Click"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -308,7 +308,9 @@
                         </StackPanel>
                     </StatusBarItem>
                 </StatusBar>
-                <ContentControl x:Name="TabContentDisplayContentControl"/>
+                <ContentPresenter x:Name="TabContentDisplayContentControl" Content="{Binding ContentTabControl.SelectedContent.(local:FolderTabItem.Content)}"/>
+                <!--CurrentTab.Content-->
+                <!--ContentSource="{Binding Path=(local:MainWindow.CurrentTab).Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"-->
                 <!--/DockPanel-->
                 <!--mgrbase:FileManagerBase x:Name="FileManagerControl"/-->
             </DockPanel>
@@ -334,7 +336,7 @@
 
             <ContentControl x:Name="TabsOverviewContentControl" Style="{DynamicResource TabsOverviewContentControlStyle}" IsManipulationEnabled="False">
                 <ContentControl.DataContext>
-                    <local:TabManager x:Name="TabMgr"/>
+                    <local:TabOverviewManager x:Name="TabMgr"/>
                 </ContentControl.DataContext>
                 <DockPanel>
                     <ListView x:Name="TabsSetAsideListView" Style="{DynamicResource TabsSetAsideListViewStyle}" ItemsSource="{Binding TabsSetAside, Source={x:Reference TabMgr}, Mode=OneWay}"  DockPanel.Dock="Left"/>

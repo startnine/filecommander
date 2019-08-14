@@ -27,6 +27,7 @@
     <local:DriveFreeSpaceToUsedSpaceConverter x:Key="DriveFreeSpaceToUsedSpaceConverter"/>
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>
     <conv:DoubleComparisonConverter x:Key="DoubleComparisonConverter"/>
+    <local:ObjectToTypeConverter x:Key="ObjectToTypeConverter"/>
 
     <!--#endregion Converters-->
 
@@ -5240,8 +5241,7 @@
                                     <Grid Margin="4">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
-                                            <!--RowDefinition x:Name="ContentRow" Height="{Binding DesiredHeight, ElementName=Content}" /-->
-                                            <RowDefinition/>
+                                            <RowDefinition x:Name="ContentRow" Height="{Binding DesiredSize.Height, ElementName=Content}"/>
                                         </Grid.RowDefinitions>
                                         <DockPanel Grid.Row="0">
                                             <ToggleButton OverridesDefaultStyle="True" IsChecked="{Binding IsExpanded, Mode=TwoWay,  RelativeSource={RelativeSource TemplatedParent}}" DockPanel.Dock="Left">
@@ -5262,9 +5262,7 @@
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="ToggleButton">
                                                                     <Grid Background="#01000000" Effect="{DynamicResource DropShadow}" RenderOptions.EdgeMode="Aliased" UseLayoutRounding="True">
-                                                                        <!--ContentPresenter x:Name="ContentPresenter" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="8,0"-->
                                                                         <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{TemplateBinding Foreground}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
-                                                                            <!--Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}}"-->
                                                                             <Path.RenderTransform>
                                                                                 <RotateTransform Angle="0"/>
                                                                             </Path.RenderTransform>
@@ -5335,7 +5333,6 @@
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </Trigger.ExitActions>
-                                        <!--Setter TargetName="ContentRow" Property="Height" Value="{Binding DesiredHeight, ElementName=Content}" /-->
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -5882,6 +5879,31 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="{x:Type local:FolderTabItem}">
+                    <DockPanel VerticalAlignment="Stretch">
+                        <!--ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" Width="48" Height="48" RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter.LayoutTransform>
+                                <ScaleTransform ScaleX="0.333333333333333" ScaleY="0.333333333333333"/>
+                            </ContentPresenter.LayoutTransform>
+                        </ContentPresenter-->
+                        <!--Rectangle x:Name="IconRectangle" Width="16" Height="16" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" VerticalAlignment="Center" DockPanel.Dock="Left"/-->
+                        <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="48" Height="48" DockPanel.Dock="Left">
+                            <ContentPresenter.LayoutTransform>
+                                <ScaleTransform ScaleX="0.333333333333333" ScaleY="0.333333333333333"/>
+                            </ContentPresenter.LayoutTransform>
+                        </ContentPresenter>
+                        <TextBlock Text="{Binding Name}" Margin="6,0" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <!--DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Content.CurrentLocation, Converter={StaticResource ObjectToTypeConverter}}" Value="{x:Type local:DirectoryQuery}">
+                            <Setter TargetName="IconRectangle" Property="Fill" Value="{Binding Content.CurrentLocation.(local:DirectoryQuery.Item).ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers-->
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="TabStripPanelStyle" TargetType="{x:Type Panel}">
@@ -5991,7 +6013,7 @@
         </Setter>
     </Style>
 
-    <DataTemplate x:Key="LocationTabDataTemplate" DataType="{x:Type local:LocationTab}">
+    <DataTemplate x:Key="LocationTabDataTemplate" DataType="{x:Type local:OverviewLocationTab}">
         <Grid Width="174" Height="154">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

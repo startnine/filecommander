@@ -197,7 +197,7 @@ namespace RibbonFileManager
 
             AssociatedObject.Loaded += (sneder, args) =>
             {
-                WindowContent = ((MainWindow)Window.GetWindow(AssociatedObject.PlacementTarget)).ActiveContent;
+                WindowContent = ((MainWindow)Window.GetWindow(AssociatedObject.PlacementTarget)).CurrentTab.Content;
             };
         }
     }

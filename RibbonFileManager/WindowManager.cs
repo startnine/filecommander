@@ -12,23 +12,23 @@ namespace RibbonFileManager
 {
     public static class WindowManager
     {
-        public static String WindowDefaultPath = "shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"; //Environment.ExpandEnvironmentVariables(@"%userprofile%");
+        public static Location WindowDefaultLocation = new ShellLocation(new Guid("20D04FE0-3AEA-1069-A2D8-08002B30309D")); //Environment.ExpandEnvironmentVariables(@"%userprofile%");
 
         public static List<MainWindow> OpenWindows = new List<MainWindow>();
 
         public static MainWindow CreateWindow()
         {
-            return CreateWindow(WindowDefaultPath);
+            return CreateWindow(WindowDefaultLocation);
         }
 
-        public static MainWindow CreateWindow(String targetPath)
+        public static MainWindow CreateWindow(Location targetLocation)
         {
-            var path = Environment.ExpandEnvironmentVariables(targetPath);
+            //var path = Environment.ExpandEnvironmentVariables(targetPath);
             var found = false;
 
             if (!found)
             {
-                var win = new MainWindow(path);
+                var win = new MainWindow(targetLocation);
                 win.Show();
                 win.Focus();
                 win.Activate();

@@ -131,10 +131,10 @@ namespace RibbonFileManager
         //String _initPath;
         Location _initLocation;
 
-        public WindowContent(String path)
+        public WindowContent(Location initLocation)
         {
             InitializeComponent();
-            _initLocation = GetLocation(path);
+            _initLocation = initLocation;
             Loaded += WindowContent_Loaded;
         }
 
@@ -160,7 +160,7 @@ namespace RibbonFileManager
         {
             NavManager.Navigated += (sneder, args) => NavigateToLocationAsync(NavManager.Current, args.IsBackForwardNavigation);
             NavManager.MoveTo(_initLocation);
-            OwnerWindow.Navigate(NavManager.Current);
+            //OwnerWindow.Navigate(NavManager.Current);
             Loaded -= WindowContent_Loaded;
         }
 

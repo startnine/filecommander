@@ -27,7 +27,7 @@
                         <GroupBox Header="Tab Behaviour">
                             <StackPanel x:Name="TabBehaviourRadioButtonsStackPanel" Orientation="Vertical">
                                 <RadioButton GroupName="TabBehaviourRadioButtons">Show tabs in the Titlebar</RadioButton>
-                                <RadioButton GroupName="TabBehaviourRadioButtons" IsEnabled="False">Show tabs as a Toolbar</RadioButton>
+                                <RadioButton GroupName="TabBehaviourRadioButtons">Show tabs as a Toolbar</RadioButton>
                                 <RadioButton GroupName="TabBehaviourRadioButtons">Don't use tabs</RadioButton>
                             </StackPanel>
                         </GroupBox>

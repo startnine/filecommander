@@ -13,18 +13,18 @@ using System.Windows.Media.Imaging;
 
 namespace RibbonFileManager
 {
-    public class TabManager : DependencyObject
+    public class TabOverviewManager : DependencyObject
     {
         static String _groupsSetAsidePath = Environment.ExpandEnvironmentVariables(@"%appdata%\Start9\TempData\FileCommander_TabGroups");
         public static String SlashReplacement = @"((SLASH))";
 
-        public ObservableCollection<LocationTab> OpenTabs
+        public ObservableCollection<OverviewLocationTab> OpenTabs
         {
-            get => (ObservableCollection<LocationTab>)GetValue(OpenTabsProperty);
+            get => (ObservableCollection<OverviewLocationTab>)GetValue(OpenTabsProperty);
             set => SetValue(OpenTabsProperty, value);
         }
 
-        public static readonly DependencyProperty OpenTabsProperty = DependencyProperty.Register(nameof(OpenTabs), typeof(ObservableCollection<LocationTab>), typeof(TabManager), new PropertyMetadata(new ObservableCollection<LocationTab>()));
+        public static readonly DependencyProperty OpenTabsProperty = DependencyProperty.Register(nameof(OpenTabs), typeof(ObservableCollection<OverviewLocationTab>), typeof(TabOverviewManager), new PropertyMetadata(new ObservableCollection<OverviewLocationTab>()));
 
         public ObservableCollection<TabGroup> TabsSetAside
         {
@@ -32,7 +32,7 @@ namespace RibbonFileManager
             set => SetValue(TabsSetAsideProperty, value);
         }
 
-        public static readonly DependencyProperty TabsSetAsideProperty = DependencyProperty.Register(nameof(TabsSetAside), typeof(ObservableCollection<TabGroup>), typeof(TabManager), new PropertyMetadata(new ObservableCollection<TabGroup>()));
+        public static readonly DependencyProperty TabsSetAsideProperty = DependencyProperty.Register(nameof(TabsSetAside), typeof(ObservableCollection<TabGroup>), typeof(TabOverviewManager), new PropertyMetadata(new ObservableCollection<TabGroup>()));
 
         public Visibility Visibility
         {
@@ -40,17 +40,17 @@ namespace RibbonFileManager
             set => SetValue(VisibilityProperty, value);
         }
 
-        public static readonly DependencyProperty VisibilityProperty = DependencyProperty.Register(nameof(Visibility), typeof(Visibility), typeof(TabManager), new PropertyMetadata(Visibility.Visible, OnVisibilityPropertyChangedCallback));
+        public static readonly DependencyProperty VisibilityProperty = DependencyProperty.Register(nameof(Visibility), typeof(Visibility), typeof(TabOverviewManager), new PropertyMetadata(Visibility.Visible, OnVisibilityPropertyChangedCallback));
 
         static void OnVisibilityPropertyChangedCallback(Object sender, DependencyPropertyChangedEventArgs e)
         {
             //Debug.WriteLine("OnVisibilityPropertyChangedCallback");
 
             if (((Visibility)e.NewValue) == Visibility.Visible)
-                (sender as TabManager).Populate();
+                (sender as TabOverviewManager).Populate();
         }
 
-        public TabManager()
+        public TabOverviewManager()
         {
             if (!Directory.Exists(_groupsSetAsidePath))
                 Directory.CreateDirectory(_groupsSetAsidePath);
@@ -64,7 +64,7 @@ namespace RibbonFileManager
             foreach (MainWindow win in WindowManager.OpenWindows)
             {
                 foreach (TabItem t in win.ContentTabControl.Items)
-                    OpenTabs.Add(new LocationTab(t));
+                    OpenTabs.Add(new OverviewLocationTab(t));
             }
 
             foreach (var s in Directory.EnumerateFiles(_groupsSetAsidePath))
@@ -111,12 +111,12 @@ namespace RibbonFileManager
 
             File.WriteAllLines(Path.Combine(_groupsSetAsidePath, outName + ".txt"), paths.ToArray());
             window.ContentTabControl.Items.Clear();
-            window.AddTab();
+            window.AddTab(WindowManager.WindowDefaultLocation);
             window.ShowHideTabsOverview(true);
         }
     }
 
-    public class LocationTab : DependencyObject
+    public class OverviewLocationTab : DependencyObject
     {
         /*public WindowContent Content
         {
@@ -132,13 +132,13 @@ namespace RibbonFileManager
             set => SetValue(TitleProperty, value);
         }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(String), typeof(LocationTab), new PropertyMetadata(String.Empty));
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(nameof(Title), typeof(String), typeof(OverviewLocationTab), new PropertyMetadata(String.Empty));
 
         TabItem _item = null;
         String _path = String.Empty;
         String _group = String.Empty;
 
-        public LocationTab(TabItem item)
+        public OverviewLocationTab(TabItem item)
         {
             _item = item;
             //Content = item.Content as WindowContent;
@@ -148,9 +148,9 @@ namespace RibbonFileManager
             Thumbnail = GetThumbnail();
         }
 
-        public LocationTab(String path, String groupPath)
+        public OverviewLocationTab(String path, String groupPath)
         {
-            _path = path.Replace(TabManager.SlashReplacement, @"\");
+            _path = path.Replace(TabOverviewManager.SlashReplacement, @"\");
             _group = groupPath;
             if (groupPath.Contains(".") && groupPath.Contains(@"\") && (groupPath.LastIndexOf(".") > groupPath.LastIndexOf(@"\")))
                 _group = groupPath.Substring(0, _group.LastIndexOf("."));
@@ -197,7 +197,7 @@ namespace RibbonFileManager
             }
         }
 
-        public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageBrush), typeof(LocationTab), new PropertyMetadata(new ImageBrush()));
+        public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageBrush), typeof(OverviewLocationTab), new PropertyMetadata(new ImageBrush()));
 
         public Icon Icon
         {
@@ -205,7 +205,7 @@ namespace RibbonFileManager
             set => SetValue(IconProperty, value);
         }
 
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(Icon), typeof(LocationTab), new PropertyMetadata(null));
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(Icon), typeof(OverviewLocationTab), new PropertyMetadata(null));
 
         public void SwitchTo()
         {
@@ -230,13 +230,13 @@ namespace RibbonFileManager
 
     public class TabGroup : DependencyObject
     {
-        public ObservableCollection<LocationTab> Tabs
+        public ObservableCollection<OverviewLocationTab> Tabs
         {
-            get => (ObservableCollection<LocationTab>)GetValue(TabsProperty);
+            get => (ObservableCollection<OverviewLocationTab>)GetValue(TabsProperty);
             set => SetValue(TabsProperty, value);
         }
 
-        public static readonly DependencyProperty TabsProperty = DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<LocationTab>), typeof(TabGroup), new PropertyMetadata(new ObservableCollection<LocationTab>()));
+        public static readonly DependencyProperty TabsProperty = DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<OverviewLocationTab>), typeof(TabGroup), new PropertyMetadata(new ObservableCollection<OverviewLocationTab>()));
 
         public String Time
         {
@@ -254,8 +254,8 @@ namespace RibbonFileManager
 
             foreach (var s in File.ReadAllLines(path))
             {
-                _path = path.Replace(TabManager.SlashReplacement, @"/").Replace(TabManager.SlashReplacement, @"\");
-                Tabs.Add(new LocationTab(s, _path));
+                _path = path.Replace(TabOverviewManager.SlashReplacement, @"/").Replace(TabOverviewManager.SlashReplacement, @"\");
+                Tabs.Add(new OverviewLocationTab(s, _path));
             }
 
             String[] timePartStrings = Path.GetFileNameWithoutExtension(_path).Split('-');
