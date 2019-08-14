@@ -8,6 +8,7 @@ using Microsoft.Xaml.Behaviors;
 using System.Windows.Input;
 using Start9.UI.Wpf;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace RibbonFileManager
 {
@@ -22,6 +23,15 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty OwnerWindowProperty =
             DependencyProperty.Register(nameof(OwnerWindow), typeof(MainWindow), typeof(ClosableTabItemBehavior), new PropertyMetadata(null));
+
+        public TabControl OwnerControl
+        {
+            get => (TabControl)GetValue(OwnerControlProperty);
+            set => SetValue(OwnerControlProperty, value);
+        }
+
+        public static readonly DependencyProperty OwnerControlProperty =
+            DependencyProperty.Register(nameof(OwnerControl), typeof(TabControl), typeof(ClosableTabItemBehavior), new PropertyMetadata(null));
 
         protected override void OnAttached()
         {
@@ -59,50 +69,113 @@ namespace RibbonFileManager
                             if (Mouse.LeftButton == MouseButtonState.Released)
                             {
                                 timer.Stop();
-                                var tabControl = _tabItem.Parent as TabControl;
+                                var data = _tabItem.DataContext as FolderTabItem;
 
-                                bool after = false;
-                                int index = -1;
-                                foreach (TabItem item in tabControl.Items)
+                                /*if (Window.GetWindow(_tabItem) is MainWindow win)
+                                {*/
+                                //.RemoveTab(data);
+                                //TabControl.ContainerFromElement()
+                                //Debug.WriteLine("_tabItem.TemplatedParent type: " + _tabItem.TemplatedParent.GetType());
+                                //var tabControl = _tabItem.Parent as TabControl;
+                                if (SystemScaling.IsMouseWithin(OwnerControl))
                                 {
-                                    if ((item != _tabItem) && SystemScaling.IsMouseWithin(item))
+                                    bool after = false;
+                                    int index = -1;
+                                    int oldIndex = OwnerWindow.Tabs.IndexOf(data);
+                                    foreach (FolderTabItem f in OwnerWindow.Tabs/*OwnerControl.Items*/)
                                     {
-                                        index = tabControl.Items.IndexOf(item);
-                                        double xMiddle = item.PointToScreen(new Point(0, 0)).X + (item.ActualWidth / 2);
-                                        if (SystemScaling.CursorPosition.X > xMiddle)
-                                            after = true;
+                                        TabItem item = (TabItem)OwnerControl.ItemContainerGenerator.ContainerFromItem(f); //OwnerControl.item.ContainerFromElement(f);
+                                        if ((item != _tabItem) && SystemScaling.IsMouseWithin(item))
+                                        {
+                                            index = /*OwnerControl.Items*/OwnerWindow.Tabs.IndexOf(f);
+                                            double xMiddle = item.PointToScreen(new Point(0, 0)).X + (item.ActualWidth / 2);
+                                            if (SystemScaling.CursorPosition.X > xMiddle)
+                                                after = true;
 
-                                        break;
+                                            break;
+                                        }
+                                    }
+
+
+                                    if ((index >= 0) && ((index + 1) < OwnerWindow.Tabs.Count))
+                                    {
+                                        if (after && ((index + 1) != oldIndex))
+                                            OwnerWindow.Tabs.Move(OwnerWindow.Tabs.IndexOf(data), index + 1);
+                                        else if (index != oldIndex)
+                                            OwnerWindow.Tabs.Move(OwnerWindow.Tabs.IndexOf(data), index);
                                     }
                                 }
-
-                                bool animate = false;
-
-                                if (index != -1)
+                                else if (OwnerWindow.Tabs.Count > 1)
                                 {
-                                    (_tabItem.RenderTransform as TranslateTransform).X = 0;
-                                    int oldIndex = tabControl.Items.IndexOf(_tabItem);
-                                    /*bool invert = ((oldIndex >= (index - 1)) && (oldIndex <= (index + 1)));
-
-                                    if (invert)
-                                        after = !after;*/
-
-                                    if ((after) && ((index + 1) != oldIndex))
+                                    MainWindow window = new MainWindow(); //WindowManager.CreateWindow();
+                                    if (OwnerWindow.WindowState == WindowState.Maximized)
                                     {
-                                        tabControl.Items.Remove(_tabItem);
-                                        tabControl.Items.Insert(index + 1, _tabItem);
-                                        tabControl.SelectedIndex = index + 1;
-                                    }
-                                    else if (index != oldIndex)
-                                    {
-                                        tabControl.Items.Remove(_tabItem);
-                                        tabControl.Items.Insert(index, _tabItem);
-                                        tabControl.SelectedIndex = index;
+                                        window.WindowState = WindowState.Maximized;
+
+                                        if (OwnerWindow.IsFullscreen)
+                                            window.IsFullscreen = true;
                                     }
                                     else
-                                        animate = true;
+                                    {
+                                        var s = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point((int)OwnerWindow.Left, (int)window.Top));
+                                        window.Left = Math.Clamp(OwnerWindow.Left + 15, s.WorkingArea.Left, s.WorkingArea.Right - 45);
+                                        window.Top = Math.Clamp(OwnerWindow.Top + 15, s.WorkingArea.Top, s.WorkingArea.Bottom - 45);
+                                    }
+                                    OwnerWindow.RemoveTab(data);
+                                    window.Tabs.Insert(0, data);
+                                    window.Show();
+                                    /*window.Tabs.Insert(0, data);
+                                    window.CurrentTabIndex = 0;
+                                    for (int i = 1; i < window.Tabs.Count; i++)
+                                        window.Tabs.RemoveAt(1);*/
                                 }
+                                //}
 
+                                if (false)
+                                {
+                                    var tabControl = _tabItem.Parent as TabControl;
+                                    bool after = false;
+                                    int index = -1;
+                                    foreach (TabItem item in tabControl.Items)
+                                    {
+                                        if ((item != _tabItem) && SystemScaling.IsMouseWithin(item))
+                                        {
+                                            index = tabControl.Items.IndexOf(item);
+                                            double xMiddle = item.PointToScreen(new Point(0, 0)).X + (item.ActualWidth / 2);
+                                            if (SystemScaling.CursorPosition.X > xMiddle)
+                                                after = true;
+
+                                            break;
+                                        }
+                                    }
+
+                                    bool animate = false;
+
+                                    if (index != -1)
+                                    {
+                                        (_tabItem.RenderTransform as TranslateTransform).X = 0;
+                                        int oldIndex = tabControl.Items.IndexOf(_tabItem);
+                                        /*bool invert = ((oldIndex >= (index - 1)) && (oldIndex <= (index + 1)));
+
+                                        if (invert)
+                                            after = !after;*/
+
+                                        if ((after) && ((index + 1) != oldIndex))
+                                        {
+                                            tabControl.Items.Remove(_tabItem);
+                                            tabControl.Items.Insert(index + 1, _tabItem);
+                                            tabControl.SelectedIndex = index + 1;
+                                        }
+                                        else if (index != oldIndex)
+                                        {
+                                            tabControl.Items.Remove(_tabItem);
+                                            tabControl.Items.Insert(index, _tabItem);
+                                            tabControl.SelectedIndex = index;
+                                        }
+                                        else
+                                            animate = true;
+                                    }
+                                }
                                 (_tabItem.RenderTransform as TranslateTransform).X = 0;
                                 //TODO sliding animations
                             }

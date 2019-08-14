@@ -4060,23 +4060,19 @@
         <Setter Property="Content" Value="{DynamicResource NavigationUpButtonIcon}"/>
     </Style>
 
+    <Canvas x:Key="ActionBoxSearchIcon" x:Shared="False" Width="16" Height="16">
+        <Path Data="M 0 7 L 7 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Top="9"/>
+        <Ellipse Width="11" Height="11" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Left="5"/>
+    </Canvas>
+
+    <Path x:Key="CancelIconPath" x:Shared="False" Data="M 0 0 L 16 16 M 0 16 L 16 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Visibility="Collapsed"/>
+
     <Style x:Key="NavigationSearchBoxStyle" TargetType="{x:Type ui:ActionBox}" BasedOn="{StaticResource {x:Type ui:ActionBox}}">
         <Setter Property="Margin" Value="5,0,0,0"/>
-        <Setter Property="ButtonContent">
-            <Setter.Value>
-                <Canvas Width="16" Height="16">
-                    <Path Data="M 0 7 L 7 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Top="9"/>
-                    <Ellipse Width="11" Height="11" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Left="5"/>
-                </Canvas>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ButtonContent" Value="{DynamicResource ActionBoxSearchIcon}"/>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="ButtonContent">
-                    <Setter.Value>
-                        <Path x:Name="CancelIconPath" Data="M 0 0 L 16 16 M 0 16 L 16 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Visibility="Collapsed"/>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="ButtonContent" Value="{DynamicResource CancelIconPath}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -5746,7 +5742,7 @@
                                     <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Left" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" Effect="{DynamicResource DropShadow}" TextElement.Foreground="{DynamicResource TitlebarIdleForegroundBrush}"/>
                                     <Button HorizontalAlignment="Right" Margin="0" Style="{DynamicResource CaptionButtonStyle}">
                                         <e:Interaction.Behaviors>
-                                            <local:ClosableTabItemBehavior OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                                            <local:ClosableTabItemBehavior OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" OwnerControl="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}}"/>
                                         </e:Interaction.Behaviors>
                                         <Path Data="M 0 -1 L 2 -1 L 4.5 2 L 7 -1 L 9 -1 L 9 1 L 6 3.5 L 9 6 L 9 8 L 7 8 L 4.5 5 L 2 8 L 0 8 L 0 6 L 3 3.5 L 0 1 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                     </Button>

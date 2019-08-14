@@ -42,7 +42,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty TabsProperty =
-            DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<FolderTabItem>), typeof(MainWindow), new FrameworkPropertyMetadata(new ObservableCollection<FolderTabItem>(), OnTabPropertiesChangedCallback));
+            DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<FolderTabItem>), typeof(MainWindow), new PropertyMetadata(OnTabPropertiesChangedCallback));
 
         public int CurrentTabIndex
         {
@@ -51,7 +51,7 @@ namespace RibbonFileManager
         }
 
         public static readonly DependencyProperty CurrentTabIndexProperty =
-            DependencyProperty.Register(nameof(CurrentTabIndex), typeof(int), typeof(MainWindow), new FrameworkPropertyMetadata(0, OnTabPropertiesChangedCallback));
+            DependencyProperty.Register(nameof(CurrentTabIndex), typeof(int), typeof(MainWindow), new PropertyMetadata(0, OnTabPropertiesChangedCallback));
 
         static void OnTabPropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -61,7 +61,7 @@ namespace RibbonFileManager
 
         public void UpdateCurrentTab()
         {
-            if (CurrentTabIndex < Tabs.Count)
+            if ((CurrentTabIndex >= 0) && (CurrentTabIndex < Tabs.Count))
                 CurrentTab = Tabs.ElementAt(CurrentTabIndex);
             else
                 CurrentTab = null;
@@ -147,28 +147,6 @@ namespace RibbonFileManager
             }
         }
 
-        void Initialize()
-        {
-            InitializeComponent();
-
-            var interfaceModeBinding = new Binding()
-            {
-                Source = Config.Instance,
-                Path = new PropertyPath("InterfaceMode"),
-                Mode = BindingMode.OneWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            BindingOperations.SetBinding(this, InterfaceModeProperty, interfaceModeBinding);
-            UpdateInterfaceMode();
-
-            Tabs.CollectionChanged += (sneder, args) => UpdateCurrentTab();
-
-            Config_ConfigUpdated(Config.Instance, null);
-            Config.ConfigUpdated += Config_ConfigUpdated;
-
-            WindowManager.OpenWindows.Add(this);
-        }
-
         private void Config_ConfigUpdated(object sender, EventArgs e)
         {
             if (sender is Config Instance)
@@ -238,10 +216,29 @@ namespace RibbonFileManager
 
         public MainWindow()
         {
-            Initialize();
+            SetCurrentValue(TabsProperty, new ObservableCollection<FolderTabItem>());
+            InitializeComponent();
+
             AddressBox.Converter = Converter;
 
             Activated += MainWindow_Activated;
+
+            var interfaceModeBinding = new Binding()
+            {
+                Source = Config.Instance,
+                Path = new PropertyPath("InterfaceMode"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(this, InterfaceModeProperty, interfaceModeBinding);
+            UpdateInterfaceMode();
+
+            Tabs.CollectionChanged += (sneder, args) => UpdateCurrentTab();
+
+            Config_ConfigUpdated(Config.Instance, null);
+            Config.ConfigUpdated += Config_ConfigUpdated;
+
+            WindowManager.OpenWindows.Add(this);
         }
 
         private void MainWindow_Activated(Object sender, EventArgs e)
@@ -263,21 +260,23 @@ namespace RibbonFileManager
             }
         }
 
-        MainWindow _copyWindow = null;
-        public MainWindow(MainWindow copyWindow) : this()
+        /*MainWindow _copyWindow = null;
+        public MainWindow(MainWindow copyWindow)
         {
             _copyWindow = copyWindow;
+            Initialize();
         }
 
-        public MainWindow(Location path) : this()
+        public MainWindow(Location path)
         {
             _firstNavigationPath = path;
-        }
+            Initialize();
+        }*/
 
         private void MainWindow_Loaded(Object sender, RoutedEventArgs e)
         {
             Config.ClipboardContents.CollectionChanged += ClipboardContents_CollectionChanged;
-            if (_copyWindow != null)
+            /*if (_copyWindow != null)
             {
                 foreach (var w in _copyWindow.Tabs)
                 {
@@ -292,7 +291,8 @@ namespace RibbonFileManager
                 }
                 //AddTab((w.CurrentLocation as DirectoryQuery).Item.ItemPath);
             }
-            else
+            else*/
+            if (Tabs.Count == 0)
                 AddTab(_firstNavigationPath);
 
             //TabContentDisplayContentControl.Content = CurrentTab.Content;
@@ -327,7 +327,7 @@ namespace RibbonFileManager
                 Close();
         }
 
-        private void RemoveTab(FolderTabItem item)
+        public void RemoveTab(FolderTabItem item)
         {
             if (Tabs.Count <= 1)
                 Close();
@@ -427,7 +427,7 @@ namespace RibbonFileManager
 
         private void NewWindowButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (sender == NewWindowMenuItem)
+            /*if (sender == NewWindowMenuItem)
             {
                 if (_newWindowSubmenuItemClick)
                     _newWindowSubmenuItemClick = false;
@@ -442,7 +442,7 @@ namespace RibbonFileManager
                     WindowManager.CloneWindow(this);
                 else if (sender == NewWindowDefaultLocationButton)
                     WindowManager.CreateWindow();
-            }
+            }*/
         }
 
         private void CurrentViewGalleryItem_Click(Object sender, RoutedEventArgs e)

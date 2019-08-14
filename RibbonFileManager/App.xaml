@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RibbonFileManager"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-             xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
-             StartupUri="MainWindow.xaml">
+             xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -40,6 +40,10 @@ namespace RibbonFileManager
             //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
             base.OnStartup(e);
             Resources.MergedDictionaries.Insert(0, Start9.Wpf.Styles.Shale.ShaleAccents.Blue.Dictionary);
+            var win = new MainWindow();
+            win.Show();
+            win.Focus();
+            win.Activate();
         }
     }
 
