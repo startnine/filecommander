@@ -304,7 +304,8 @@
                                                     <ControlTemplate TargetType="{x:Type Fluent:ToggleButton}">
                                                         <Grid Background="{TemplateBinding Background}">
                                                             <!--ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,1,0" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5"-->
-                                                            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5">
+                                                            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{TemplateBinding Foreground}" StrokeThickness="2" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5">
+                                                                <!--, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}-->
                                                                 <Path.RenderTransform>
                                                                     <RotateTransform Angle="0"/>
                                                                 </Path.RenderTransform>
@@ -828,7 +829,8 @@
                                                         <RowDefinition Height="*" />
                                                         <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
-                                                    <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1" />
+                                                    <Rectangle x:Name="Corner" Grid.Column="1" Fill="Red" Grid.Row="1" />
+                                                    <!--{DynamicResource {x:Static SystemColors.ControlBrushKey}}-->
                                                     <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0" />
                                                     <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" />
                                                     <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" />
@@ -4585,7 +4587,8 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/>
+                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <!--Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"-->
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -4603,7 +4606,7 @@
                                           ColumnHeaderToolTip="{TemplateBinding View.ColumnHeaderToolTip}"
                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"-->
                     <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
-                        <ItemsPresenter/>
+                        <ItemsPresenter MaxWidth="{TemplateBinding ActualWidth}"/>
                         <!--WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"/-->
                     </ScrollViewer>
                     <!--/DockPanel-->
@@ -5702,6 +5705,51 @@
         <Path Data="M 0 0 L 5 2 L 10 3 L 12 5 L 0 5 Z" Fill="{DynamicResource IconPrimaryFillBrush}" VerticalAlignment="Bottom"/>
     </Border>
 
+    <Control x:Key="TabDiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Center" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderTransformOrigin="0.5,0.5">
+        <Control.Style>
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Control}">
+                            <Grid Width="48" Height="48">
+                                <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" RenderOptions.BitmapScalingMode="Linear"/>
+                                <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
+                                    <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                    <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                </Grid>
+                                <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Content.CurrentLocation, Converter={StaticResource ObjectToTypeConverter}}" Value="{x:Type local:DirectoryQuery}"/>
+                                        <Condition Binding="{Binding Content.CurrentLocation.(local:DirectoryQuery.Item).ItemCategory}" Value="Directory"/>
+                                        <Condition Binding="{Binding Content.CurrentLocation.(local:DirectoryQuery.Item).IsDrive}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                </MultiDataTrigger>
+                                <!--DataTrigger Binding="{Binding FirstChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="FirstChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="FirstChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SecondChildIcon}" Value="{x:Null}">
+                                    <Setter TargetName="SecondChildIconBorder" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SecondChildIconRectangle" Property="Fill" Value="Transparent"/>
+                                </DataTrigger-->
+                                <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
+                                    <Setter TargetName="FolderIconGrid" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                                    <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Control.Style>
+    </Control>
+
     <Style x:Key="TitleBarTabControlStyle" TargetType="{x:Type TabControl}" BasedOn="{StaticResource PrimaryTabControlStyle}">
         <Style.Resources>
             <DataTemplate DataType="{x:Type local:Location}">
@@ -5885,7 +5933,7 @@
                             </ContentPresenter.LayoutTransform>
                         </ContentPresenter-->
                         <!--Rectangle x:Name="IconRectangle" Width="16" Height="16" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" VerticalAlignment="Center" DockPanel.Dock="Left"/-->
-                        <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="48" Height="48" DockPanel.Dock="Left">
+                        <ContentPresenter Content="{DynamicResource TabDiskItemIconDisplayControl}" VerticalAlignment="Center" Width="48" Height="48" DockPanel.Dock="Left">
                             <ContentPresenter.LayoutTransform>
                                 <ScaleTransform ScaleX="0.333333333333333" ScaleY="0.333333333333333"/>
                             </ContentPresenter.LayoutTransform>

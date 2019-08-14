@@ -10,7 +10,10 @@ namespace RibbonFileManager
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.GetType();
+            if (value != null)
+                return value.GetType();
+            else
+                return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
