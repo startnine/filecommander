@@ -64,6 +64,24 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ShowEnhancedFolderIconsProperty =
             DependencyProperty.Register(nameof(ShowEnhancedFolderIcons), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
 
+        public Boolean OpenFoldersInNewWindow
+        {
+            get => (Boolean)GetValue(OpenFoldersInNewWindowProperty);
+            set => SetValue(OpenFoldersInNewWindowProperty, value);
+        }
+
+        public static readonly DependencyProperty OpenFoldersInNewWindowProperty =
+            DependencyProperty.Register(nameof(OpenFoldersInNewWindow), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
+        public Boolean ShowItemSelectionCheckBoxes
+        {
+            get => (Boolean)GetValue(ShowItemSelectionCheckBoxesProperty);
+            set => SetValue(ShowItemSelectionCheckBoxesProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowItemSelectionCheckBoxesProperty =
+            DependencyProperty.Register(nameof(ShowItemSelectionCheckBoxes), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
         public TabDisplayMode TabsMode
         {
             get => (TabDisplayMode)GetValue(TabsModeProperty);

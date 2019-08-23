@@ -412,8 +412,22 @@ namespace RibbonFileManager
                 {
                     if (CurrentDirectoryListView.SelectedItems.Count == 1)
                     {
-                        NavManager.MoveTo(new DirectoryQuery(i.ItemPath));
-                        //await NavigateAsync(new DirectoryQuery(i.ItemPath), true);
+                        if (Config.Instance.OpenFoldersInNewWindow)
+                        {
+                            var win = new MainWindow();
+                            win.Tabs.Insert(0, new FolderTabItem(new DirectoryQuery(((DiskItem)CurrentDirectoryListView.SelectedItem).ItemPath)));
+                            while (win.Tabs.Count > 1)
+                                win.Tabs.RemoveAt(1);
+
+                            win.Show();
+                            win.Focus();
+                            win.Activate();
+                        }
+                        else
+                        {
+                            NavManager.MoveTo(new DirectoryQuery(i.ItemPath));
+                            //await NavigateAsync(new DirectoryQuery(i.ItemPath), true);
+                        }
                         break;
                     }
                 }
@@ -750,10 +764,14 @@ namespace RibbonFileManager
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
+                int _oldIconViewLevel = IconViewLevel;
                 if (e.Delta > 0) //scroll up
                     IconViewLevel--;
                 else if (e.Delta < 0) //scroll down
                     IconViewLevel++;
+
+                if (_oldIconViewLevel != IconViewLevel)
+                    e.Handled = true;
             }
         }
     }

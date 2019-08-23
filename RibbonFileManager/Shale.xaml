@@ -4690,13 +4690,14 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate DataType="{x:Type local:DiskItem}">
-                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical">
-                                <e:Interaction.Behaviors>
-                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}" />
-                                    <!--WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay}"-->
-                                    <local:DiskItemDragBehavior TargetItem="{Binding}"/>
-                                </e:Interaction.Behaviors>
-                                <!--StackPanel.ContextMenu>
+                            <Grid>
+                                <StackPanel x:Name="RootStackPanel" Orientation="Vertical">
+                                    <e:Interaction.Behaviors>
+                                        <local:ClickToOpenBehavior x:Name="ClickToOpen" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}" />
+                                        <!--WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay}"-->
+                                        <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                    </e:Interaction.Behaviors>
+                                    <!--StackPanel.ContextMenu>
                                     <ContextMenu x:Name="ItemContextMenu">
                                         <MenuItem x:Name="OpenMenuItem" Header="Open"/>
                                         <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
@@ -4713,67 +4714,69 @@
                                         </e:Interaction.Behaviors>
                                     </ContextMenu>
                                 </StackPanel.ContextMenu-->
-                                <!--Width="52" MinHeight="52"-->
-                                <!--StackPanel.ContextMenu>
+                                    <!--Width="52" MinHeight="52"-->
+                                    <!--StackPanel.ContextMenu>
                             <ui:TouchableContextMenu>
                                 <MenuItem Header="Open"/>
                                 <MenuItem Header="Properties"/>
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
-                                <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <Grid>
-                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}">
-                                        <!--e:Interaction.Behaviors>
+                                    <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
+                                    <Grid>
+                                        <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}">
+                                            <!--e:Interaction.Behaviors>
                                             <local:IconScaleBehavior/>
                                             <!-TargetSize="{Binding Width, ElementName=IconContentPresenter, FallbackValue=-1.0}"->
                                         </e:Interaction.Behaviors-->
-                                    </ContentPresenter>
-                                    <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="54" Height="54" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                                            <Rectangle x:Name="Item0Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="0">
-                                            <Rectangle x:Name="Item1Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="1">
-                                            <Rectangle x:Name="Item2Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="2">
-                                            <Rectangle x:Name="Item3Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="1" Grid.Row="2">
-                                            <Rectangle x:Name="Item4Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
-                                        <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="2">
-                                            <Rectangle x:Name="Item5Icon" RadiusX="3" RadiusY="3" />
-                                        </Border>
+                                        </ContentPresenter>
+                                        <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="54" Height="54" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                                <Rectangle x:Name="Item0Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="0">
+                                                <Rectangle x:Name="Item1Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="1">
+                                                <Rectangle x:Name="Item2Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="2" Grid.Row="2">
+                                                <Rectangle x:Name="Item3Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="1" Grid.Row="2">
+                                                <Rectangle x:Name="Item4Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="1" CornerRadius="3" Grid.Column="0" Grid.Row="2">
+                                                <Rectangle x:Name="Item5Icon" RadiusX="3" RadiusY="3" />
+                                            </Border>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                                <Grid x:Name="NameGrid" Width="48">
-                                    <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
-                                        <TextBlock x:Name="NameTextBlock" Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" TextWrapping="Wrap"/>
-                                        <!-- Style="{DynamicResource FileLabelStyle}"-->
-                                        <!--TextElement.TextWrapping="Wrap"-->
-                                        <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="48" TextWrapping="Wrap">
-                                            <e:Interaction.Behaviors>
-                                                <!--{Binding WindowContent, Source={x:Reference ClickToOpen}}-->
-                                                <local:ItemRenameBehavior TargetItem="{Binding}" IsRenaming="{Binding IsRenaming}"/>
-                                            </e:Interaction.Behaviors>
-                                        </TextBox>
+                                    <Grid x:Name="NameGrid" Width="48">
+                                        <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
+                                            <TextBlock x:Name="NameTextBlock" Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" TextWrapping="Wrap"/>
+                                            <!-- Style="{DynamicResource FileLabelStyle}"-->
+                                            <!--TextElement.TextWrapping="Wrap"-->
+                                            <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
+                                            <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="48" TextWrapping="Wrap">
+                                                <e:Interaction.Behaviors>
+                                                    <!--{Binding WindowContent, Source={x:Reference ClickToOpen}}-->
+                                                    <local:ItemRenameBehavior TargetItem="{Binding}" IsRenaming="{Binding IsRenaming}"/>
+                                                </e:Interaction.Behaviors>
+                                            </TextBox>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </StackPanel>
+                                </StackPanel>
+                                <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            </Grid>
                             <DataTemplate.Triggers>
                                 <!--DataTrigger Binding="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, FallbackValue=1.0}" Value="16">
                                     <Setter TargetName="RootStackPanel" Property="Orientation" Value="Horizontal"/>
@@ -4911,6 +4914,7 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
+                                <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Left"/>
                                 <!--ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
@@ -4978,6 +4982,7 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
+                                <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Left"/>
                                 <!--Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/-->
                                 <!--ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
                                     <e:Interaction.Behaviors>
@@ -5031,9 +5036,17 @@
                     <Setter.Value>
                         <ControlTemplate>
                             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" ui:AttachedProperties.CornerCurves="{Binding Path=(ui:AttachedProperties.CornerCurves), RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
+                                <ItemsPresenter/>
+                                <!--WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/-->
                             </ScrollViewer>
                         </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" KeyboardNavigation.DirectionalNavigation="Local"/>
+                        </ItemsPanelTemplate>
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
@@ -5081,6 +5094,7 @@
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Size:</TextBlock>
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemSize}"/>
                                 </StackPanel>
+                                <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
                             </Grid>
                         </DataTemplate>
                         <!--DataTemplate DataType="{x:Type local:DiskItem}">

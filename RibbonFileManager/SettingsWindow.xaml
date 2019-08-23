@@ -21,33 +21,44 @@
             </UniformGrid>
         </ContentControl>
         <TabControl SelectedIndex="1">
-            <TabItem Header="General">
+            <TabItem Header="Navigation">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Vertical">
                         <GroupBox Header="Tab Behaviour">
                             <StackPanel x:Name="TabBehaviourRadioButtonsStackPanel" Orientation="Vertical">
-                                <RadioButton GroupName="TabBehaviourRadioButtons">Show tabs in the Titlebar</RadioButton>
-                                <RadioButton GroupName="TabBehaviourRadioButtons">Show tabs as a Toolbar</RadioButton>
-                                <RadioButton GroupName="TabBehaviourRadioButtons">Don't use tabs</RadioButton>
+                                <RadioButton GroupName="TabBehaviourRadioButtons" Content="Show tabs in the Titlebar"/>
+                                <RadioButton GroupName="TabBehaviourRadioButtons" Content="Show tabs as a Toolbar"/>
+                                <RadioButton GroupName="TabBehaviourRadioButtons" Content="Don't use tabs"/>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Browse folders" IsEnabled="False">
+                        <GroupBox Header="Browse folders">
                             <StackPanel Orientation="Vertical">
-                                <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in the same window</RadioButton>
-                                <RadioButton GroupName="BrowseFoldersRadioButtons">Open each folder in its own window</RadioButton>
+                                <CheckBox x:Name="OpenFoldersInNewWindowCheckBox" Content="Open each folder in its own window"/>
+                                <CheckBox x:Name="ShowItemSelectionCheckBoxesCheckBox" Content="Use check boxes to select items"/>
+                                <!--RadioButton GroupName="BrowseFoldersRadioButtons" Content="Open each folder in the same window"/>
+                                <RadioButton GroupName="BrowseFoldersRadioButtons" Content="Open each folder in its own window"/-->
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Click items as follows" IsEnabled="False">
+                        <GroupBox Header="File and folder interaction" IsEnabled="False">
                             <StackPanel Orientation="Vertical">
-                                <RadioButton GroupName="ItemOpenModeRadioButtons">Single-click to open an item (point to select)</RadioButton>
-                                <RadioButton GroupName="ItemOpenModeRadioButtons">Double-click to open an item (single-click to select)</RadioButton>
+                                <RadioButton GroupName="ItemOpenModeRadioButtons" Content="Single-click to open an item (point to select)"/>
+                                <RadioButton GroupName="ItemOpenModeRadioButtons" Content="Double-click to open an item (single-click to select)"/>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Click items as follows" IsEnabled="False">
+                        <GroupBox Header="Navigation pane" IsEnabled="False">
                             <StackPanel Orientation="Vertical">
-                                <CheckBox>Show all folders</CheckBox>
-                                <CheckBox>Automatically expand to current folder</CheckBox>
+                                <CheckBox Content="Show all folders"/>
+                                <CheckBox Content="Automatically expand to current folder"/>
                             </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="When typing into list view" IsEnabled="False">
+                            <StackPanel>
+                                <RadioButton Content="Automatically type into the Search Box"/>
+                                <RadioButton Content="Select the typed item in the view"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Recovery" IsEnabled="False">
+                            <CheckBox Content="Restore previous folder windows on module startup" IsEnabled="False"/>
                         </GroupBox>
                     </StackPanel>
                 </ScrollViewer>
@@ -58,18 +69,25 @@
                         <GroupBox Header="Frame">
                             <StackPanel Orientation="Vertical">
                                 <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}">
-                                    <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left">Interface mode:</TextBlock>
+                                    <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left" Text="Interface mode:"/>
                                     <ComboBox x:Name="InterfaceModeComboBox">
                                         <ComboBoxItem>Ribbon</ComboBoxItem>
                                         <ComboBoxItem>Command Bar</ComboBoxItem>
                                         <ComboBoxItem>None</ComboBoxItem>
                                     </ComboBox>
                                 </DockPanel>
+                                <DockPanel Style="{DynamicResource OptionButtonsRowPanelStyle}">
+                                    <TextBlock Style="{DynamicResource OptionSideLabelTextBlockStyle}" DockPanel.Dock="Left" Text="Menu bar:"/>
+                                    <ComboBox x:Name="AutoHideMenuBarComboBox" SelectedIndex="0" IsEnabled="False">
+                                        <ComboBoxItem>Auto-hide</ComboBoxItem>
+                                        <ComboBoxItem>Don't auto-hide</ComboBoxItem>
+                                    </ComboBox>
+                                </DockPanel>
                                 <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder in Titlebar</ui:ToggleSwitch>
                                 <ui:ToggleSwitch x:Name="StatusBarToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Status Bar</ui:ToggleSwitch>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Content">
+                        <GroupBox Header="Content" Visibility="Collapsed">
                             <StackPanel Orientation="Vertical">
                                 <Grid Visibility="Collapsed">
                                     <Grid.ColumnDefinitions>
@@ -134,130 +152,53 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="View">
-                <StackPanel Orientation="Vertical">
-                    <GroupBox Header="Folder Views" IsEnabled="False">
-                        <DockPanel Height="48">
-                            <ContentControl Width="48" DockPanel.Dock="Left" Background="#40FF00FF"/>
-                            <UniformGrid DockPanel.Dock="Bottom">
-                                <Button Content="Apply to Folders"/>
-                                <Button Content="Reset Folders"/>
-                            </UniformGrid>
-                            <TextBlock/>
-                        </DockPanel>
-                    </GroupBox>
-                    <Expander Header="Advanced Settings">
-                        <TreeView>
-                            <TreeViewItem>
-                                <TreeViewItem.Header>
-                                    <CheckBox x:Name="ShowEnhancedFolderIconsCheckBox">Show Enhanced Folder Icons</CheckBox>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Always show icons, never thumbnails"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Always show menus"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Display file icon on thumbnails"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Display file size information in folder tips"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Display the full path in the Titlebar"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Hidden files and folders"/>
-                                        <RadioButton Content="Don't show hidden files, folders, or drives"/>
-                                        <RadioButton Content="Show hidden files, folders, and drives"/>
-                                    </StackPanel>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Hide empty drives"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Hide extensions for known file types"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Hude folder nerge conflicts"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Hide protected operating system files"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Restore previous folder windows on module startup"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Show drive letters"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Show encrypted or compressed NTFS files in color"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Show pop-up description for folder items"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Show preview handlers in preview pane"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Use check boxes to select items"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <CheckBox Content="Use Sharing Wizard"/>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                            <TreeViewItem IsEnabled="False">
-                                <TreeViewItem.Header>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="When typing into list view"/>
-                                        <RadioButton Content="Automatically type into the Search Box"/>
-                                        <RadioButton Content="Select the typed item in the view"/>
-                                    </StackPanel>
-                                </TreeViewItem.Header>
-                            </TreeViewItem>
-                        </TreeView>
-                    </Expander>
-                    <Button Content="Restore Defaults"/>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Search" IsEnabled="False">
+            <TabItem Header="File and Folder Display">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Folder Views" IsEnabled="False">
+                            <DockPanel Height="48">
+                                <ContentControl Width="48" DockPanel.Dock="Left" Background="#40FF00FF"/>
+                                <UniformGrid DockPanel.Dock="Bottom">
+                                    <Button Content="Apply to Folders"/>
+                                    <Button Content="Reset Folders"/>
+                                </UniformGrid>
+                                <TextBlock/>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Header="Icons">
+                            <StackPanel>
+                                <CheckBox x:Name="ShowEnhancedFolderIconsCheckBox" Content="Show Enhanced Folder Icons"/>
+                                <CheckBox Content="Always show icons, never thumbnails"/>
+                                <CheckBox Content="Display file icon on thumbnails"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Clutter reduction">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Content="Show hidden files, folders, and drives" IsEnabled="False"/>
+                                <CheckBox Content="Hide empty drives" IsEnabled="False"/>
+                                <CheckBox Content="Hide extensions for known file types" IsEnabled="False"/>
+                                <CheckBox Content="Hide folder merge conflicts" IsEnabled="False"/>
+                                <CheckBox Content="Hide protected operating system files" IsEnabled="False"/>
+                                <CheckBox Content="Show drive letters"/>
+                                <CheckBox Content="Display the full path in the Titlebar"/>
+                                <CheckBox Content="Display file size information in folder tooltips" IsEnabled="False"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <Expander Header="Advanced Settings">
+                            <StackPanel>
+                                <CheckBox Content="Show pop-up description for folder items" IsEnabled="False"/>
+                                <CheckBox Content="Show encrypted or compressed NTFS files in color" IsEnabled="False"/>
+                                <CheckBox Content="Show preview handlers in preview pane" IsEnabled="False"/>
+                                <CheckBox Content="Use Sharing Wizard"/>
+                            </StackPanel>
+                        </Expander>
+                        <Button Content="Restore Defaults"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Appearance" IsEnabled="False">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    
                 </ScrollViewer>
             </TabItem>
         </TabControl>

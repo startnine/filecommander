@@ -66,6 +66,16 @@ namespace RibbonFileManager
 
             //Titlebar text
             TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
+
+            //Open folders in new window
+            OpenFoldersInNewWindowCheckBox.IsChecked = Config.Instance.OpenFoldersInNewWindow;
+            /*if (Config.Instance.OpenFoldersInNewWindow)
+                OpenFoldersInNewWindowCheckBox.IsChecked = true;
+            else
+                OpenFoldersInNewWindowCheckBox.IsChecked = false;*/
+
+            //Item selection CheckBoxes
+            ShowItemSelectionCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
         }
 
         private void Start9SettingsButton_Click(Object sender, RoutedEventArgs e)
@@ -107,6 +117,16 @@ namespace RibbonFileManager
 
             //Titlebar text
             Config.Instance.ShowTitlebarText = TitlebarTextToggleSwitch.IsChecked.Value;
+
+            //Open folders in new window
+            Config.Instance.OpenFoldersInNewWindow = OpenFoldersInNewWindowCheckBox.IsChecked.Value;
+            /*if (OpenFoldersInNewWindowCheckBox.IsChecked.Value)
+                Config.Instance.OpenFoldersInNewWindow = true;
+            else
+                Config.Instance.OpenFoldersInNewWindow = false;*/
+
+            //Item selection CheckBoxes
+            Config.Instance.ShowItemSelectionCheckBoxes = ShowItemSelectionCheckBoxesCheckBox.IsChecked.Value;
 
             Config.InvokeConfigUpdated();
         }
