@@ -4721,7 +4721,7 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <Grid Background="Red">
+                                <Grid>
                                     <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}">
                                         <!--e:Interaction.Behaviors>
                                             <local:IconScaleBehavior/>
