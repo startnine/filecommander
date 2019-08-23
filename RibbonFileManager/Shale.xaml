@@ -4413,7 +4413,7 @@
         </Setter>
     </Style-->
 
-    <Control x:Key="DiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Center" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderTransformOrigin="0.5,0.5">
+    <Control x:Key="DiskItemIconDisplayControl" x:Shared="False" HorizontalAlignment="Stretch" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderTransformOrigin="0.5,0.5">
         <!--RenderOptions.EdgeMode="Aliased"-->
         <!--DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"-->
         <Control.Style>
@@ -4421,19 +4421,25 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Control}">
-                            <Grid Width="48" Height="48">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <e:Interaction.Behaviors>
+                                    <local:IconScaleBehavior ScaleTarget="{Binding Source={x:Reference ScaleableGrid}}"/>
+                                </e:Interaction.Behaviors>
+                                <!--Width="48" Height="48"-->
                                 <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" RenderOptions.BitmapScalingMode="Linear"/>
-                                <Grid x:Name="FolderIconGrid" Width="48" HorizontalAlignment="Center" Visibility="Collapsed">
-                                    <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
-                                    <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
-                                        <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                    </Border>
-                                    <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
-                                        <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                    </Border>
-                                    <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                <Grid x:Name="ScaleableGrid" Width="48" Height="48" RenderTransformOrigin="0.5,0.5">
+                                    <Grid x:Name="FolderIconGrid" Width="48" Height="48" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                        <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
+                                            <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                        </Border>
+                                        <Border x:Name="SecondChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="10,12,-10,-12" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
+                                            <Rectangle x:Name="SecondChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                        </Border>
+                                        <Path Data="M 0 0 L 15 11 L 15 32 L 14 33 L 14 48 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                    </Grid>
+                                    <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
                                 </Grid>
-                                <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" Content="{Binding SpecialIcon}"/>
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <MultiDataTrigger>
@@ -4715,11 +4721,12 @@
                             </ui:TouchableContextMenu>
                         </StackPanel.ContextMenu-->
                                 <!--{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}-->
-                                <Grid>
-                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="48">
-                                        <e:Interaction.Behaviors>
+                                <Grid Background="Red">
+                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}">
+                                        <!--e:Interaction.Behaviors>
                                             <local:IconScaleBehavior/>
-                                        </e:Interaction.Behaviors>
+                                            <!-TargetSize="{Binding Width, ElementName=IconContentPresenter, FallbackValue=-1.0}"->
+                                        </e:Interaction.Behaviors-->
                                     </ContentPresenter>
                                     <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="54" Height="54" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
                                         <Grid.ColumnDefinitions>
@@ -4881,7 +4888,7 @@
                                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
                                                 <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                                     <e:Interaction.Behaviors>
-                                                        <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                                        <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenaming}"/>
                                                     </e:Interaction.Behaviors>
                                                 </TextBox>
                                             </Grid>
@@ -4904,17 +4911,18 @@
                                     <local:ClickToOpenBehavior x:Name="ClickToOpen" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}"/>
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32">
+                                <!--ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
-                                </ContentPresenter>
+                                </ContentPresenter-->
+                                <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="32" Height="32"/>
                                 <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Center">
                                     <Grid>
                                         <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
                                         <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                             <e:Interaction.Behaviors>
-                                                <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                                <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenaming}"/>
                                             </e:Interaction.Behaviors>
                                         </TextBox>
                                     </Grid>
@@ -4971,16 +4979,17 @@
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <!--Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
+                                <!--ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
-                                </ContentPresenter>
+                                </ContentPresenter-->
+                                <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="16" Height="16"/>
                                 <Grid>
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
                                     <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                         <e:Interaction.Behaviors>
-                                            <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenaming}"/>
                                         </e:Interaction.Behaviors>
                                     </TextBox>
                                 </Grid>
@@ -5056,13 +5065,13 @@
                                     <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
                                     <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Left" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
                                         <e:Interaction.Behaviors>
-                                            <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenamingFiles, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"/>
+                                            <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenaming}"/>
                                         </e:Interaction.Behaviors>
                                     </TextBox>
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1">
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Type:</TextBlock>
-                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemType}"/>
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding ItemDisplayType}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="0">
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Date modified:</TextBlock>
@@ -5113,7 +5122,7 @@
                                 </Grid>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1">
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Type:</TextBlock>
-                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding FriendlyItemType}"/>
+                                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Text="{Binding ItemDisplayType}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2" Grid.Row="0">
                                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" Opacity="0.5" Margin="0,0,5,0">Date modified:</TextBlock>

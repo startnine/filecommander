@@ -88,6 +88,46 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(nameof(IconSize), typeof(Double), typeof(WindowContent), new PropertyMetadata((Double)48.0));
 
+        public int IconViewLevel
+        {
+            get => (int)GetValue(IconViewLevelProperty);
+            set => SetValue(IconViewLevelProperty, value);
+        }
+
+        public static readonly DependencyProperty IconViewLevelProperty = DependencyProperty.Register(nameof(IconViewLevel), typeof(int), typeof(WindowContent), new PropertyMetadata(208, OnIconViewLevelPropertyChanged), new ValidateValueCallback(IsValidIconViewLevel));
+
+        public static bool IsValidIconViewLevel(object value)
+        {
+            if (value is int val)
+                return (val > 0) && (val <= 244);
+            else
+                return false;
+        }
+
+        static void OnIconViewLevelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is WindowContent content)
+            {
+                int newIndex = (int)e.NewValue;
+                if (newIndex > 0)
+                {
+                    if (newIndex <= 240)
+                    {
+                        content.CurrentView = FileBrowserView.Icons;
+                        content.IconSize = 256 - newIndex;
+                    }
+                    else if (newIndex == 241)
+                        content.CurrentView = FileBrowserView.List;
+                    else if (newIndex == 242)
+                        content.CurrentView = FileBrowserView.Details;
+                    else if (newIndex == 243)
+                        content.CurrentView = FileBrowserView.Tiles;
+                    else if (newIndex == 244)
+                        content.CurrentView = FileBrowserView.Content;
+                }
+            }
+        }
+
         public Boolean ShowDetailsPane
         {
             get => (Boolean)GetValue(ShowDetailsPaneProperty);
@@ -703,6 +743,18 @@ namespace RibbonFileManager
             SortDescription sd = new SortDescription(sortBy, direction);
             currentDirectoryItemsSource.SortDescriptions.Add(sd);
             currentDirectoryItemsSource.Refresh();
+        }
+        
+
+        private void WindowContent_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                if (e.Delta > 0) //scroll up
+                    IconViewLevel--;
+                else if (e.Delta < 0) //scroll down
+                    IconViewLevel++;
+            }
         }
     }
 

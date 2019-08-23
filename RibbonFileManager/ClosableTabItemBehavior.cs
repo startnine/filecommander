@@ -41,8 +41,24 @@ namespace RibbonFileManager
 
             AssociatedObject.Click += (sneder, args) =>
             {
-                if ((_tabItem != null) && (OwnerWindow != null) && OwnerWindow.ContentTabControl.Items.Contains(_tabItem))
-                    OwnerWindow.ContentTabControl.Items.Remove(_tabItem);
+                /*if ((_tabItem != null) && (OwnerWindow != null) && OwnerWindow.ContentTabControl.Items.Contains(_tabItem))
+                    OwnerWindow.ContentTabControl.Items.Remove(_tabItem);*/
+                if (OwnerWindow.Tabs.Count > 0)
+                    OwnerWindow.Tabs.Remove(_tabItem.DataContext as FolderTabItem);
+                else
+                    OwnerWindow.Close();
+
+            };
+
+            _tabItem.PreviewMouseDown += (sneder, args) =>
+            {
+                if (args.MiddleButton == MouseButtonState.Pressed)
+                {
+                    if (OwnerWindow.Tabs.Count > 0)
+                        OwnerWindow.Tabs.Remove(_tabItem.DataContext as FolderTabItem);
+                    else
+                        OwnerWindow.Close();
+                }
             };
 
             _tabItem.PreviewMouseLeftButtonDown += (sneder, args) =>

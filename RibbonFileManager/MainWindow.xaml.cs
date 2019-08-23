@@ -585,25 +585,30 @@ namespace RibbonFileManager
             }
         }
 
+        bool _syncView = false;
+
         private void FolderViewsGallery_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            if (FolderViewsGallery.SelectedItem == ListViewGalleryItem)
-                CurrentTab.Content.CurrentView = FileBrowserView.List;
-            else if (FolderViewsGallery.SelectedItem == DetailsViewGalleryItem)
-                CurrentTab.Content.CurrentView = FileBrowserView.Details;
-            else if (FolderViewsGallery.SelectedItem == TilesViewGalleryItem)
-                CurrentTab.Content.CurrentView = FileBrowserView.Tiles;
-            else if (FolderViewsGallery.SelectedItem == ContentViewGalleryItem)
-                CurrentTab.Content.CurrentView = FileBrowserView.Content;
-            else
+            if (!_syncView)
             {
-                CurrentTab.Content.CurrentView = FileBrowserView.Icons;
+                if (FolderViewsGallery.SelectedItem == ListViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.List;
+                else if (FolderViewsGallery.SelectedItem == DetailsViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Details;
+                else if (FolderViewsGallery.SelectedItem == TilesViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Tiles;
+                else if (FolderViewsGallery.SelectedItem == ContentViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Content;
+                else
+                {
+                    CurrentTab.Content.CurrentView = FileBrowserView.Icons;
 
-                if (FolderViewsGallery.SelectedItem == ExtraLargeIconsViewGalleryItem)
-                    CurrentTab.Content.IconSize = 256;
-                else CurrentTab.Content.IconSize = FolderViewsGallery.SelectedItem == LargeIconsViewGalleryItem
-                    ? 96
-                    : FolderViewsGallery.SelectedItem == SmallIconsViewGalleryItem ? 16 : 48;
+                    if (FolderViewsGallery.SelectedItem == ExtraLargeIconsViewGalleryItem)
+                        CurrentTab.Content.IconSize = 256;
+                    else CurrentTab.Content.IconSize = FolderViewsGallery.SelectedItem == LargeIconsViewGalleryItem
+                        ? 96
+                        : FolderViewsGallery.SelectedItem == SmallIconsViewGalleryItem ? 16 : 48;
+                }
             }
         }
 
@@ -836,71 +841,76 @@ namespace RibbonFileManager
         {
             if (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)) //((Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down))
             {
-                if (e.Key == Key.T)
-                    AddTab(WindowManager.WindowDefaultLocation);
+                if (ContentTabControl != null)
+                {
+                    if (e.Key == Key.W)
+                        CloseCurrentLocation();
+                    else if (e.Key == Key.T)
+                        AddTab(WindowManager.WindowDefaultLocation);
+                    else if (e.Key == Key.PageUp)
+                    {
+                        if (ContentTabControl.SelectedIndex > 0)
+                            ContentTabControl.SelectedIndex--;
+                        else
+                            ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                    }
+                    else if (e.Key == Key.PageDown)
+                    {
+                        if (ContentTabControl.SelectedIndex < (ContentTabControl.Items.Count - 1))
+                            ContentTabControl.SelectedIndex++;
+                        else
+                            ContentTabControl.SelectedIndex = 0;
+                    }
+                    else if (e.Key == Key.R)
+                        CurrentTab.Content.RenameSelection();
+                    else if (e.Key == Key.D1 || e.Key == Key.NumPad1)
+                    {
+                        if (ContentTabControl.Items.Count > 0)
+                            ContentTabControl.SelectedIndex = 0;
+                    }
+                    else if (e.Key == Key.D2 || e.Key == Key.NumPad2)
+                    {
+                        if (ContentTabControl.Items.Count > 1)
+                            ContentTabControl.SelectedIndex = 1;
+                    }
+                    else if (e.Key == Key.D3 || e.Key == Key.NumPad3)
+                    {
+                        if (ContentTabControl.Items.Count > 2)
+                            ContentTabControl.SelectedIndex = 2;
+                    }
+                    else if (e.Key == Key.D4 || e.Key == Key.NumPad4)
+                    {
+                        if (ContentTabControl.Items.Count > 3)
+                            ContentTabControl.SelectedIndex = 3;
+                    }
+                    else if (e.Key == Key.D5 || e.Key == Key.NumPad5)
+                    {
+                        if (ContentTabControl.Items.Count > 4)
+                            ContentTabControl.SelectedIndex = 4;
+                    }
+                    else if (e.Key == Key.D6 || e.Key == Key.NumPad6)
+                    {
+                        if (ContentTabControl.Items.Count > 5)
+                            ContentTabControl.SelectedIndex = 5;
+                    }
+                    else if (e.Key == Key.D7 || e.Key == Key.NumPad7)
+                    {
+                        if (ContentTabControl.Items.Count > 6)
+                            ContentTabControl.SelectedIndex = 6;
+                    }
+                    else if (e.Key == Key.D8 || e.Key == Key.NumPad8)
+                    {
+                        if (ContentTabControl.Items.Count > 7)
+                            ContentTabControl.SelectedIndex = 7;
+                    }
+                    else if (e.Key == Key.D9 || e.Key == Key.NumPad9)
+                    {
+                        if (ContentTabControl.Items.Count > 0)
+                            ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                    }
+                }
                 else if (e.Key == Key.W)
-                    CloseCurrentLocation();
-                else if (e.Key == Key.PageUp)
-                {
-                    if (ContentTabControl.SelectedIndex > 0)
-                        ContentTabControl.SelectedIndex--;
-                    else
-                        ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
-                }
-                else if (e.Key == Key.PageDown)
-                {
-                    if (ContentTabControl.SelectedIndex < (ContentTabControl.Items.Count - 1))
-                        ContentTabControl.SelectedIndex++;
-                    else
-                        ContentTabControl.SelectedIndex = 0;
-                }
-                else if (e.Key == Key.R)
-                    CurrentTab.Content.RenameSelection();
-                else if (e.Key == Key.D1 || e.Key == Key.NumPad1)
-                {
-                    if (ContentTabControl.Items.Count > 0)
-                    ContentTabControl.SelectedIndex = 0;
-                }
-                else if (e.Key == Key.D2 || e.Key == Key.NumPad2)
-                {
-                    if (ContentTabControl.Items.Count > 1)
-                        ContentTabControl.SelectedIndex = 1;
-                }
-                else if (e.Key == Key.D3 || e.Key == Key.NumPad3)
-                {
-                    if (ContentTabControl.Items.Count > 2)
-                        ContentTabControl.SelectedIndex = 2;
-                }
-                else if (e.Key == Key.D4 || e.Key == Key.NumPad4)
-                {
-                    if (ContentTabControl.Items.Count > 3)
-                        ContentTabControl.SelectedIndex = 3;
-                }
-                else if (e.Key == Key.D5 || e.Key == Key.NumPad5)
-                {
-                    if (ContentTabControl.Items.Count > 4)
-                        ContentTabControl.SelectedIndex = 4;
-                }
-                else if (e.Key == Key.D6 || e.Key == Key.NumPad6)
-                {
-                    if (ContentTabControl.Items.Count > 5)
-                        ContentTabControl.SelectedIndex = 5;
-                }
-                else if (e.Key == Key.D7 || e.Key == Key.NumPad7)
-                {
-                    if (ContentTabControl.Items.Count > 6)
-                        ContentTabControl.SelectedIndex = 6;
-                }
-                else if (e.Key == Key.D8 || e.Key == Key.NumPad8)
-                {
-                    if (ContentTabControl.Items.Count > 7)
-                        ContentTabControl.SelectedIndex = 7;
-                }
-                else if (e.Key == Key.D9 || e.Key == Key.NumPad9)
-                {
-                    if (ContentTabControl.Items.Count > 0)
-                        ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
-                }
+                    Close();
             }
             
             if (e.KeyboardDevice.IsKeyDown(Key.LeftAlt) || e.KeyboardDevice.IsKeyDown(Key.RightAlt)) //((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))
@@ -928,6 +938,39 @@ namespace RibbonFileManager
 
             if (e.Key == Key.F2)
                 CurrentTab.Content.RenameSelection();
+        }
+
+        public void SelectTabAt(int index)
+        {
+            ContentTabControl.SelectedIndex = index;
+            UpdateViewToCurrentTab();
+        }
+
+        public void UpdateViewToCurrentTab()
+        {
+            _syncView = true;
+
+            if (CurrentTab.Content.CurrentView == FileBrowserView.List)
+                FolderViewsGallery.SelectedItem = ListViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Details)
+                FolderViewsGallery.SelectedItem = DetailsViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Tiles)
+                FolderViewsGallery.SelectedItem = TilesViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Content)
+                FolderViewsGallery.SelectedItem = ContentViewGalleryItem;
+            else
+            {
+                if (CurrentTab.Content.IconSize >= 256)
+                    FolderViewsGallery.SelectedItem = ExtraLargeIconsViewGalleryItem;
+                else if (CurrentTab.Content.IconSize >= 96)
+                    FolderViewsGallery.SelectedItem = LargeIconsViewGalleryItem;
+                else if (CurrentTab.Content.IconSize >= 48)
+                    FolderViewsGallery.SelectedItem = MediumIconsViewGalleryItem;
+                else
+                    FolderViewsGallery.SelectedItem = SmallIconsViewGalleryItem;
+            }
+
+            _syncView = false;
         }
 
         private void MainWindow_PreviewKeyUp(Object sender, KeyEventArgs e)
