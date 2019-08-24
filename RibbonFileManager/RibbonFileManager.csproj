@@ -18,6 +18,9 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Shale\Icons.xaml" />
+    <None Remove="Shale\RibbonStyles.xaml" />
+    <None Remove="Shale\SettingsStyles.xaml" />
     <None Remove="WindowContent.xaml" />
   </ItemGroup>
   <ItemGroup>
