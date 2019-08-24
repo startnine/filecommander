@@ -20,7 +20,7 @@
                 <Button x:Name="ApplyButton" Click="ApplyButton_Click">Apply</Button>
             </UniformGrid>
         </ContentControl>
-        <TabControl SelectedIndex="1">
+        <TabControl>
             <TabItem Header="Navigation">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Vertical">

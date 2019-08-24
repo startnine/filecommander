@@ -94,14 +94,11 @@ namespace RibbonFileManager
             set => SetValue(IconViewLevelProperty, value);
         }
 
-        public static readonly DependencyProperty IconViewLevelProperty = DependencyProperty.Register(nameof(IconViewLevel), typeof(int), typeof(WindowContent), new PropertyMetadata(208, OnIconViewLevelPropertyChanged), new ValidateValueCallback(IsValidIconViewLevel));
+        public static readonly DependencyProperty IconViewLevelProperty = DependencyProperty.Register(nameof(IconViewLevel), typeof(int), typeof(WindowContent), new PropertyMetadata(208, OnIconViewLevelPropertyChanged));
 
-        public static bool IsValidIconViewLevel(object value)
+        public static bool IsValidIconViewLevel(int val)
         {
-            if (value is int val)
-                return (val > 0) && (val <= 244);
-            else
-                return false;
+            return (val >= 0) && (val <= 244);
         }
 
         static void OnIconViewLevelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -764,13 +761,19 @@ namespace RibbonFileManager
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                int _oldIconViewLevel = IconViewLevel;
+                int oldIconViewLevel = IconViewLevel;
+                int newIconViewLevel = IconViewLevel;
                 if (e.Delta > 0) //scroll up
-                    IconViewLevel--;
+                    newIconViewLevel--;
                 else if (e.Delta < 0) //scroll down
-                    IconViewLevel++;
+                    newIconViewLevel++;
 
-                if (_oldIconViewLevel != IconViewLevel)
+                if (IsValidIconViewLevel(newIconViewLevel) && (oldIconViewLevel != newIconViewLevel))
+                {
+                    IconViewLevel = newIconViewLevel;
+                }
+
+                if (e.Delta != 0)
                     e.Handled = true;
             }
         }

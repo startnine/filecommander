@@ -189,6 +189,8 @@ namespace RibbonFileManager
                     };
                     BindingOperations.SetBinding(TabContentDisplayContentControl, ContentProperty, contentBinding);*/
                 }
+
+                ShowItemCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
             }
         }
 
@@ -832,7 +834,8 @@ namespace RibbonFileManager
 
         private void ShowItemCheckBoxesCheckBox_Click(Object sender, RoutedEventArgs e)
         {
-            CurrentTab.Content.ShowItemCheckboxes = ShowItemCheckBoxesCheckBox.IsChecked == true;
+            //CurrentTab.Content.ShowItemCheckboxes = ShowItemCheckBoxesCheckBox.IsChecked == true;
+            Config.Instance.ShowItemSelectionCheckBoxes = ShowItemCheckBoxesCheckBox.IsChecked.Value;
         }
 
         Boolean _altActionTaken = true;
