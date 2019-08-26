@@ -10,7 +10,7 @@
       Title="ShaleSettingsPage">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="Colours">
-            <ui:ToggleSwitch x:Name="LightsToggleSwitch" TrueText="On" FalseText="Off" Checked="LightsToggleSwitch_Checked" Unchecked="LightsToggleSwitch_Unchecked"/>
+            <ui:ToggleSwitch x:Name="LightsToggleSwitch" Content="Lights" TrueText="On" FalseText="Off" Checked="LightsToggleSwitch_Checked" Unchecked="LightsToggleSwitch_Unchecked" IsChecked="True"/>
         </GroupBox>
     </StackPanel>
 </Page>

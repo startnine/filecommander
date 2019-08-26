@@ -37,5 +37,10 @@ namespace RibbonFileManager.Shale
         }
 
         public bool UseLightTheme = true;
+
+        string ISkinInfo.SkinName
+        {
+            get => "Shale";
+        }
     }
 }

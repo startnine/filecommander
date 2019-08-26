@@ -33,5 +33,10 @@ namespace Classic
 
             return dictionary;
         }
+
+        string ISkinInfo.SkinName
+        {
+            get => "Classic";
+        }
     }
 }

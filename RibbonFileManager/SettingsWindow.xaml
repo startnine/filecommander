@@ -199,13 +199,19 @@
             </TabItem>
             <TabItem Header="Appearance">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                    <ListView x:Name="InstalledSkinsListView" ItemsSource="{Binding Path=SkinManager.Skins, Source={x:Static local:App.Current}}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate DataType="{x:Type skin:ISkinInfo}">
-                                <Rectangle Width="10" Height="10" Fill="Red"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                    <StackPanel Orientation="Vertical">
+                        <ListView x:Name="InstalledSkinsListView" ItemsSource="{Binding Path=SkinManager.Skins, Source={x:Static local:App.Current}}" SelectedIndex="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate DataType="{x:Type skin:ISkinInfo}">
+                                    <DockPanel Margin="5">
+                                        <Rectangle Width="16" Height="16" Fill="Red" DockPanel.Dock="Left"/>
+                                        <TextBlock Text="{Binding Path=(skin:ISkinInfo.SkinName)}" Margin="5,0"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Frame x:Name="SkinSettingsFrame" NavigationUIVisibility="Hidden"/>
+                    </StackPanel>
                 </ScrollViewer>
             </TabItem>
         </TabControl>

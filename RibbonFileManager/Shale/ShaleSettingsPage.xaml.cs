@@ -21,8 +21,8 @@ namespace RibbonFileManager.Shale
         ShaleSkin _shaleSkinInfo = null;
         public ShaleSettingsPage(ShaleSkin shaleSkinInfo)
         {
-            InitializeComponent();
             _shaleSkinInfo = shaleSkinInfo;
+            InitializeComponent();
         }
 
         private void LightsToggleSwitch_Checked(object sender, RoutedEventArgs e)
