@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
         xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
+        xmlns:skin="clr-namespace:Start9.UI.Wpf.Skinning;assembly=Start9.UI.Wpf"
         xmlns:local="clr-namespace:RibbonFileManager"
         mc:Ignorable="d"
         Title="File Commander Settings" Width="500" Height="500" ResizeMode="NoResize" IsVisibleChanged="SettingsWindow_IsVisibleChanged">
@@ -196,9 +197,15 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Appearance" IsEnabled="False">
+            <TabItem Header="Appearance">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                    
+                    <ListView x:Name="InstalledSkinsListView" ItemsSource="{Binding Path=SkinManager.Skins, Source={x:Static local:App.Current}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type skin:ISkinInfo}">
+                                <Rectangle Width="10" Height="10" Fill="Red"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </ScrollViewer>
             </TabItem>
         </TabControl>

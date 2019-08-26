@@ -15,8 +15,9 @@
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>
     <local:DriveFreeSpaceToUsedSpaceConverter x:Key="DriveFreeSpaceToUsedSpaceConverter"/>
     <local:DiskItemSubItemsTreeFilterConverter x:Key="DiskItemSubItemsTreeFilterConverter"/>
-    
-    
+    <local:ObjectToTypeConverter x:Key="ObjectToTypeConverter"/>
+
+
     <!--#region Main Window Styles-->
 
     <Style x:Key="{x:Type local:MainWindow}" TargetType="{x:Type local:MainWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">

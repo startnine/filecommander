@@ -11,8 +11,10 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.IO;
 using Start9.UI.Wpf.Windows;
+using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace RibbonFileManager
 {
@@ -76,6 +78,8 @@ namespace RibbonFileManager
 
             //Item selection CheckBoxes
             ShowItemSelectionCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
+
+            
         }
 
         private void Start9SettingsButton_Click(Object sender, RoutedEventArgs e)
@@ -127,6 +131,11 @@ namespace RibbonFileManager
 
             //Item selection CheckBoxes
             Config.Instance.ShowItemSelectionCheckBoxes = ShowItemSelectionCheckBoxesCheckBox.IsChecked.Value;
+
+            if (InstalledSkinsListView.SelectedIndex >= 0)
+            ((App)(App.Current)).SkinManager.ActiveSkin = ((App)(App.Current)).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);
+            else
+                ((App)(App.Current)).SkinManager.ActiveSkin = ((App)(App.Current)).SkinManager.DefaultSkin;
 
             Config.InvokeConfigUpdated();
         }
