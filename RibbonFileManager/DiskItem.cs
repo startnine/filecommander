@@ -195,34 +195,22 @@ namespace RibbonFileManager
 
         public Icon ItemSmallIcon
         {
-            get
-            {
-                return GetIcon(0x00000001 | 0x100, ItemPath);
-            }
+            get => GetIcon(0x00000001 | 0x100, ItemPath);
         }
 
         public Icon ItemLargeIcon
         {
-            get
-            {
-                return GetIcon(0x000000000 | 0x100, ItemPath);
-            }
+            get => GetIcon(0x000000000 | 0x100, ItemPath);
         }
 
         public Icon ItemExtraLargeIcon
         {
-            get
-            {
-                return GetIcon(0x000000000 | 0x100, 0x2, ItemPath);
-            }
+            get => GetIcon(0x000000000 | 0x100, 0x2, ItemPath);
         }
 
         public Icon ItemJumboIcon
         {
-            get
-            {
-                return GetIcon(0x000000000 | 0x100, 0x4, ItemPath);
-            }
+            get => GetIcon(0x000000000 | 0x100, 0x4, ItemPath);
         }
 
         /*public Icon FirstChildIcon

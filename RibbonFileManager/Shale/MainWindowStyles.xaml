@@ -110,21 +110,19 @@
         </Style.Triggers>
     </Style>
 
-
     <Path x:Key="NavigationBackButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 6 0 L 0 6 L 6 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
 
-    <Style x:Key="NavigationBackButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content" Value="{DynamicResource NavigationBackButtonIcon}"/>
-    </Style>
+    <Style x:Key="NavigationBackButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}"/>
 
     <Path x:Key="NavigationForwardButtonIcon" x:Shared="False"  HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 6 6 L 0 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
 
-    <Style x:Key="NavigationForwardButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content" Value="{DynamicResource NavigationForwardButtonIcon}"/>
-    </Style>
+    <Style x:Key="NavigationForwardButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}"/>
+
+    <Path x:Key="NavigationHistoryButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:DropDownButton}}}"/>
+    <!--M 0 0 L 6 6 L 12 0-->
 
     <Style x:Key="NavigationHistoryButtonStyle" TargetType="{x:Type Fluent:DropDownButton}">
-        <Setter Property="Icon" Value="{DynamicResource NavigationHistoryButtonIcon}"/>
+        <!--Setter Property="Icon" Value="{StaticResource NavigationHistoryButtonIcon}"/-->
         <Setter Property="Width" Value="16" />
         <Setter Property="Height" Value="Auto"/>
         <Setter Property="Margin" Value="0"/>
@@ -152,7 +150,8 @@
                                 <Label x:Name="Glyph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{TemplateBinding Content}"  FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" RenderOptions.EdgeMode="Aliased" IsTabStop="False" Margin="0" Padding="0" />
                             </Grid-->
                         <Grid x:Name="PART_ButtonBorder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#01000000">
-                            <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" Height="16" VerticalAlignment="Center" Content="{converters:ObjectToImageConverter {Binding Icon, RelativeSource={RelativeSource TemplatedParent}}, '16,16', {Binding RelativeSource={RelativeSource TemplatedParent}}}" Width="16" Margin="0" SnapsToDevicePixels="True" TextElement.Foreground="{TemplateBinding Foreground}"/>
+                            <ContentPresenter x:Name="iconImage" HorizontalAlignment="Center" Height="16" VerticalAlignment="Center" Content="{StaticResource NavigationHistoryButtonIcon}" Width="16" Margin="0" SnapsToDevicePixels="True" TextElement.Foreground="{TemplateBinding Foreground}"/>
+                            <!--Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ObjectToImageConverter}, ConverterParameter='16,16'-->
                             <Fluent:TwoLineLabel x:Name="controlLabel" Text="{TemplateBinding Header}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2 0 2 2" HasGlyph="{TemplateBinding HasTriangle}" Visibility="Collapsed"/>
                         </Grid>
                         <!--{converters:ObjectToImageConverter {Binding LargeIcon, RelativeSource={RelativeSource TemplatedParent}}, '32,32', {Binding RelativeSource={RelativeSource TemplatedParent}}}-->
@@ -226,14 +225,9 @@
         </Style.Triggers>
     </Style>
 
-    <Path x:Key="NavigationHistoryButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 3 3 L 6 0 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:DropDownButton}}}"/>
-    <!--M 0 0 L 6 6 L 12 0-->
-
     <Path x:Key="NavigationUpButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
 
-    <Style x:Key="NavigationUpButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}">
-        <Setter Property="Content" Value="{DynamicResource NavigationUpButtonIcon}"/>
-    </Style>
+    <Style x:Key="NavigationUpButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}"/>
 
     <Canvas x:Key="ActionBoxSearchIcon" x:Shared="False" Width="16" Height="16">
         <Path Data="M 0 7 L 7 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Top="9"/>
@@ -2102,7 +2096,7 @@
     </Grid>
 
     <Style x:Key="TabsSetAsideToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CaptionToggleButtonStyle}">
-        <Setter Property="Content" Value="{DynamicResource TabsSetAsideToggleButtonIcon}"/>
+        <Setter Property="Content" Value="{StaticResource TabsSetAsideToggleButtonIcon}"/>
     </Style>
 
     <Grid x:Key="SetTabsAsideButtonIcon" x:Shared="False" Width="10">
@@ -2112,7 +2106,7 @@
     </Grid>
 
     <Style x:Key="SetTabsAsideButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Content" Value="{DynamicResource SetTabsAsideButtonIcon}"/>
+        <Setter Property="Content" Value="{StaticResource SetTabsAsideButtonIcon}"/>
     </Style>
 
     <Path x:Key="NewTabButtonIcon" x:Shared="False" Data="M 0 4 L 8 4 M 4 0 L 4 8" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
