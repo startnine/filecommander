@@ -3,7 +3,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RibbonFileManager;assembly=RibbonFileManager"
-             xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf">
+             xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
+             xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
+             xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Classic">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Classic, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, ProcessorArchitecture=MSIL;component/themes/classic.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Start9.UI.Wpf;component/Themes/Generic.xaml" />
@@ -11,5 +13,110 @@
     <Style x:Key="{x:Type local:MainWindow}" TargetType="{x:Type local:MainWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
         <Setter Property="Padding" Value="{Binding BorderThickness, RelativeSource={RelativeSource Mode=Self}}"/>
     </Style>
+
+    <Style x:Key="NavigationBarBackgroundStyle" TargetType="{x:Type ContentControl}">
+        <Setter Property="Height" Value="38"/>
+        <Setter Property="MaxHeight" Value="38"/>
+        <!--Setter Property="Padding" Value="1,3,13,8"/-->
+        <Setter Property="Padding" Value="1,0,13,0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid Background="{x:Static SystemColors.ControlBrush}">
+                        <themes:ClassicBorderDecorator BorderStyle="Etched" BorderThickness="2" Margin="2,1">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
+                        </themes:ClassicBorderDecorator>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
+                <Setter Property="Panel.ZIndex" Value="999"/>
+                <Setter Property="Height" Value="50"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Canvas x:Key="ActionBoxSearchIcon" x:Shared="False" Width="16" Height="16">
+        <Path Data="m 8.0019531 0.25195312 c -2.6144693 0 -4.7539062 2.13164338 -4.7539062 4.74609378 0 1.0374641 0.3462507 1.9915252 0.9160156 2.7753906 L 0.97282811 10.972828 v 1.054344 H 2.0271719 L 5.2265625 8.8359375 c 0.783868 0.5697607 1.737934 0.9160156 2.7753906 0.9160156 2.6144689 0 4.7460939 -2.139418 4.7460939 -4.7539062 0 -2.6144504 -2.131625 -4.74609378 -4.7460939 -4.74609378 z m 0 1.49804688 C 9.8057622 1.75 11.25 3.1942295 11.25 4.9980469 c 0 1.8038173 -1.4442378 3.2558593 -3.2480469 3.2558593 -1.803809 0 -3.2558594 -1.452042 -3.2558593 -3.2558593 C 4.7460938 3.1942295 6.1981441 1.75 8.0019531 1.75 Z" Stroke="#C0000000" StrokeThickness="2" Canvas.Top="9">
+            <Path.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="#FFFBFBFB"/>
+                    <GradientStop Offset="1" Color="#FFDADADC"/>
+                </LinearGradientBrush>
+            </Path.Fill>
+            <Path.RenderTransform>
+                <TranslateTransform X="-0.2573941" Y="-293.62707"/>
+            </Path.RenderTransform>
+        </Path>
+    </Canvas>
+
+    <Path x:Key="CancelIconPath" x:Shared="False" Data="M 0 0 L 16 16 M 0 16 L 16 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Visibility="Collapsed"/>
+
+    <Style x:Key="NavigationSearchBoxStyle" TargetType="{x:Type ui:ActionBox}" BasedOn="{StaticResource {x:Type ui:ActionBox}}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ui:ActionBox}">
+                    <DockPanel>
+                        <ToggleButton x:Name="PART_GoStopToggleButton" Content="{TemplateBinding ButtonContent}" Width="21" Height="21" VerticalAlignment="Top" DockPanel.Dock="Right">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border CornerRadius="2" BorderThickness="1">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Offset="0" Color="#FFA7A6AA"/>
+                                                            <GradientStop Offset="1" Color="#FF706F70"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Offset="0" Color="#FFADB5F6"/>
+                                                            <GradientStop Offset="0.321" Color="#FF909FEC"/>
+                                                            <GradientStop Offset="0.333" Color="#FF264AD2"/>
+                                                            <GradientStop Offset="0.56" Color="#FF1042BC"/>
+                                                            <GradientStop Offset="0.75" Color="#FF3CAFE0"/>
+                                                            <GradientStop Offset="1" Color="#FF53D9FC"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                    <Border CornerRadius="1" BorderThickness="1" BorderBrush="#7FFFFFFF">
+                                                        <ContentPresenter/>
+                                                    </Border>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <Grid>
+                            <themes:ClassicBorderDecorator BorderStyle="Sunken" BorderThickness="2" Background="{x:Static SystemColors.ControlLightLightBrush}">
+                                <Grid Margin="0">
+                                    <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    <TextBlock x:Name="PART_WatermarkTextBlock" Text="{TemplateBinding WatermarkText}" Foreground="{TemplateBinding Foreground}" Margin="{TemplateBinding Padding}" Opacity="0.5" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Grid>
+                            </themes:ClassicBorderDecorator>
+                        </Grid>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ButtonContent" Value="{DynamicResource ActionBoxSearchIcon}"/>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="ButtonContent" Value="{DynamicResource CancelIconPath}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+
     <Style x:Key="{x:Type local:SettingsWindow}" TargetType="{x:Type local:SettingsWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}"/>
 </ResourceDictionary>

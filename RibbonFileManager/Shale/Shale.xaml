@@ -12,7 +12,5 @@
         <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;Component/Shale/Icons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/Accent.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/BaseLight.xaml"/>
-        <!--TEMP: Un-comment the line below and comment the line above for Dark Shale-->
-        <!--ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/BaseDark.xaml"/-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

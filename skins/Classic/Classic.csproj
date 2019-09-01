@@ -9,7 +9,7 @@
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
     <AssemblyName>Skin</AssemblyName>
-    <RootNamespace>Skin</RootNamespace>
+    <RootNamespace>Classic</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Classic.xaml" />

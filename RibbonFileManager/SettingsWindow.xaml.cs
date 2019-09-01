@@ -79,7 +79,7 @@ namespace RibbonFileManager
             //Item selection CheckBoxes
             ShowItemSelectionCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
 
-            SkinSettingsFrame.Navigate(((App)(App.Current)).SkinManager.DefaultSkin.GetSettingsPage());
+            SkinSettingsFrame.Navigate(((App)App.Current).SkinManager.ActiveSkin.GetSettingsPage());
         }
 
         private void Start9SettingsButton_Click(Object sender, RoutedEventArgs e)
@@ -133,9 +133,9 @@ namespace RibbonFileManager
             Config.Instance.ShowItemSelectionCheckBoxes = ShowItemSelectionCheckBoxesCheckBox.IsChecked.Value;
 
             if (InstalledSkinsListView.SelectedIndex >= 0)
-            ((App)(App.Current)).SkinManager.ActiveSkin = ((App)(App.Current)).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);
+                ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);
             else
-                ((App)(App.Current)).SkinManager.ActiveSkin = ((App)(App.Current)).SkinManager.DefaultSkin;
+                ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.DefaultSkin;
 
             SkinSettingsFrame.Navigate(((App)(App.Current)).SkinManager.ActiveSkin.GetSettingsPage());
 
