@@ -9,41 +9,6 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <DockPanel>
-        <TreeView x:Name="NavigationPaneTreeView" Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}" Width="175" DockPanel.Dock="Left" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
-                <TreeViewItem.Header>
-                    <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
-                </TreeViewItem.Header>
-            </TreeViewItem>
-            <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                <TreeViewItem.Header>
-                    <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
-                </TreeViewItem.Header>
-            </TreeViewItem>
-        </TreeView>
-        <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="{Binding DetailsPanePlacement, Source={x:Static local:Config.Instance}}">
-            <StackPanel Orientation="Vertical">
-                <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
-                    <Rectangle x:Name="DetailsFileIconRectangle"/>
-                </ContentControl>
-                <TextBlock x:Name="DetailsFileNameTextBlock"/>
-            </StackPanel>
-        </ContentControl>
-        <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="{Binding ShowPreviewPane, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Right">
-            <Grid x:Name="PreviewPaneGrid">
-                <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
-                <TextBlock Text="No preview available." Visibility="Collapsed"/>
-                <Rectangle Visibility="Collapsed"/>
-                <StackPanel Orientation="Vertical" Visibility="Collapsed">
-                    <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
-                    <UniformGrid/>
-                </StackPanel>   
-                <ScrollViewer Visibility="Collapsed">
-                    <TextBlock/>
-                </ScrollViewer>
-            </Grid>
-        </ContentControl>
         <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown">
             <!--DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}"-->
             <!--GridViewColumnHeader.Click="CurrentDirectoryListView_GridViewColumnHeader_Click"-->

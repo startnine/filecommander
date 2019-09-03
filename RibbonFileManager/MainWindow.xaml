@@ -306,6 +306,43 @@
                             </StackPanel>
                         </StatusBarItem>
                     </StatusBar>
+                    <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="Collapsed" DockPanel.Dock="Right">
+                        <!--Visibility="{Binding ShowDetailsPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                        <StackPanel Orientation="Vertical">
+                            <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
+                                <Rectangle x:Name="DetailsFileIconRectangle"/>
+                            </ContentControl>
+                            <TextBlock x:Name="DetailsFileNameTextBlock"/>
+                        </StackPanel>
+                    </ContentControl>
+                    <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="Collapsed" DockPanel.Dock="Right">
+                        <!--Visibility="{Binding ShowPreviewPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                        <Grid x:Name="PreviewPaneGrid">
+                            <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
+                            <TextBlock Text="No preview available." Visibility="Collapsed"/>
+                            <Rectangle Visibility="Collapsed"/>
+                            <StackPanel Orientation="Vertical" Visibility="Collapsed">
+                                <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
+                                <UniformGrid/>
+                            </StackPanel>
+                            <ScrollViewer Visibility="Collapsed">
+                                <TextBlock/>
+                            </ScrollViewer>
+                        </Grid>
+                    </ContentControl>
+                    <TreeView x:Name="NavigationPaneTreeView" Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}" MinWidth="175" DockPanel.Dock="Left" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                            <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
+                            <TreeViewItem.Header>
+                                <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                        <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                            <TreeViewItem.Header>
+                                <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                    </TreeView>
                     <ContentPresenter x:Name="TabContentDisplayContentControl" Content="{Binding ContentTabControl.SelectedContent.(local:FolderTabItem.Content)}"/>
                 </rerr:Rearranger>
                 <!--/ContentControl-->

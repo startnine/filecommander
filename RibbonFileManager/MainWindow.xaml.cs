@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Start9.UI.Wpf;
 using Start9.UI.Wpf.Windows;
 
@@ -1053,6 +1055,68 @@ namespace RibbonFileManager
         private void OpenControlPanelButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("control.exe");
+        }
+
+        private void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
+        {
+            if (e.NewValue is DiskItem val)
+                CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(val.ItemPath)); //await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)), true);
+            else
+            {
+                //Debug.WriteLine("Tree SelectedValuePath: " + NavigationPaneTreeView.SelectedValuePath);
+                /*if (NavigationPaneTreeView.SelectedValuePath == MyComputerTreeViewItem.Header)
+                    await NavigateAsync(new ShellLocation(ShellLocation.ThisPcGuid));*/
+            }
+        }
+
+        public void SetPanes(DiskItem item)
+        {
+            var size = DetailsFileIconRectangle.ActualHeight;
+            if (size <= 0)
+                size = 48;
+            DetailsFileIconRectangle.Fill = (ImageBrush)new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(item.ItemJumboIcon, null, size.ToString(), null);
+            DetailsFileNameTextBlock.Text =
+                (item.ItemCategory == DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
+                ? item.SubItems.Count.ToString() + " items"
+                : item.ItemDisplayName;
+
+
+            if (item.ItemCategory != DiskItemCategory.Directory)
+            {
+                if (item.ItemPath.ToLowerInvariant() == CurrentTab.Content.CurrentLocation.Name.ToLowerInvariant())
+                {
+                    SetPreviewPaneLayer(0);
+                }
+                else
+                {
+                    var ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
+                    if (ext == ".bmp" || ext == ".png" || ext == ".jpg" || ext == ".jpeg")
+                    {
+                        (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
+                        SetPreviewPaneLayer(2);
+                    }
+                    else
+                    {
+                        var content = File.ReadAllText(item.ItemPath);
+                        if (content.Contains("\0\0"))
+                            SetPreviewPaneLayer(1);
+                        else
+                        {
+                            ((PreviewPaneGrid.Children[4] as ScrollViewer).Content as TextBlock).Text = content;
+                            SetPreviewPaneLayer(4);
+                        }
+                    }
+                }
+            }
+        }
+
+        void SetPreviewPaneLayer(Int32 index)
+        {
+            for (var i = 0; i < PreviewPaneGrid.Children.Count; i++)
+            {
+                var control = PreviewPaneGrid.Children[i];
+                control.Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }
