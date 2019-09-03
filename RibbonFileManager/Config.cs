@@ -46,6 +46,15 @@ namespace RibbonFileManager
         public static readonly DependencyProperty InterfaceModeProperty =
             DependencyProperty.Register(nameof(InterfaceMode), typeof(InterfaceModeType), typeof(Config), new FrameworkPropertyMetadata(InterfaceModeType.Ribbon, FrameworkPropertyMetadataOptions.AffectsRender));
 
+        public Boolean LockPanes
+        {
+            get => (Boolean) GetValue(LockPanesProperty);
+            set => SetValue(LockPanesProperty, value);
+        }
+
+        public static readonly DependencyProperty LockPanesProperty =
+            DependencyProperty.Register(nameof(LockPanes), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+
         public Boolean ShowStatusBar
         {
             get => (Boolean) GetValue(ShowStatusBarProperty);

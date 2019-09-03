@@ -85,6 +85,11 @@
                                     </ComboBox>
                                 </DockPanel>
                                 <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder in Titlebar</ui:ToggleSwitch>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Panes">
+                            <StackPanel Orientation="Vertical">
+                                <ui:ToggleSwitch x:Name="LockPanesToggleSwitch" TrueText="Locked" FalseText="Unlocked" IsTabStop="False">Lock Content Panes</ui:ToggleSwitch>
                                 <ui:ToggleSwitch x:Name="StatusBarToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Status Bar</ui:ToggleSwitch>
                             </StackPanel>
                         </GroupBox>

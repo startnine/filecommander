@@ -63,6 +63,9 @@ namespace RibbonFileManager
             //Enhanced Folder Icons
             ShowEnhancedFolderIconsCheckBox.IsChecked = Config.Instance.ShowEnhancedFolderIcons;
 
+            //Lock Panes
+            LockPanesToggleSwitch.IsChecked = Config.Instance.LockPanes;
+
             //Status bar
             StatusBarToggleSwitch.IsChecked = Config.Instance.ShowStatusBar;
 
@@ -115,6 +118,9 @@ namespace RibbonFileManager
 
             //Enhanced Folder Icons
             Config.Instance.ShowEnhancedFolderIcons = ShowEnhancedFolderIconsCheckBox.IsChecked.Value;
+
+            //Lock Panes
+            Config.Instance.LockPanes = LockPanesToggleSwitch.IsChecked.Value;
 
             //Status bar
             Config.Instance.ShowStatusBar = StatusBarToggleSwitch.IsChecked.Value;
