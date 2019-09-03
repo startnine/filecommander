@@ -9,7 +9,7 @@
         xmlns:rerr="clr-namespace:Start9.UI.Wpf.Rearranger;assembly=Start9.UI.Wpf"
         xmlns:Fluent="urn:fluent-ribbon"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
+        Title="MainWindow" Width="1100" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
     <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
     <!--InterfaceMode="{Binding InterfaceMode, Source={x:Static local:Config.Instance}}"-->
     <!--win:DecoratableWindow.FullWindowContent-->
@@ -43,10 +43,11 @@
                     </StackPanel>
                 </Grid>
                 <!--ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top"-->
-                <rerr:Rearranger x:Name="Rearranger" IsLocked="{Binding LockPanes, Source={x:Static local:Config.Instance}, Mode=OneWay}">
+                <rerr:Rearranger x:Name="Rearranger" IsLocked="{Binding LockPanes, Source={x:Static local:Config.Instance}, Mode=OneWay}" Style="{DynamicResource RearrangerStyle}">
+                    <!---->
                     <!--DockPanel-->
                     <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
-                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}, FallbackValue={x:Null}}" AutomaticStateManagement="True" SelectedTabIndex="0" IsKeyTipHandlingEnabled="True" DockPanel.Dock="Top">
+                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}, FallbackValue={x:Null}}" AutomaticStateManagement="True" SelectedTabIndex="0" IsKeyTipHandlingEnabled="True" rerr:Rearranger.PaneTitle="Ribbon" DockPanel.Dock="Top">
                         <!--Source={x:Reference Name=RibbonTitleBar}-->
                         <!--x:Reference RibbonTitleBar-->
                         <Fluent:Ribbon.Menu>
@@ -157,11 +158,11 @@
                         </Fluent:RibbonTabItem>
                         <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide" KeyTip="V">
                             <Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
-                                <Fluent:DropDownButton Header="Navigation Pane" SizeDefinition="Large,Small">
+                                <Fluent:DropDownButton Header="Navigation Pane" LargeIcon="{DynamicResource ViewNavigationPaneButtonLargeIcon}" SizeDefinition="Large,Small">
                                     <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" Header="Navigation Pane" Click="NavigationPaneMenuItem_Click"/>
                                 </Fluent:DropDownButton>
-                                <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview Pane" Click="PreviewPaneToggleButton_Click" SizeDefinition="Middle,Small"/>
-                                <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details Pane" Click="DetailsPaneToggleButton_Click" SizeDefinition="Middle,Small"/>
+                                <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview pane" Icon="{DynamicResource ViewPreviewPaneButtonIcon}" SizeDefinition="Middle,Small" Click="PreviewPaneToggleButton_Click"/>
+                                <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details pane" Icon="{DynamicResource ViewDetailsPaneButtonIcon}" SizeDefinition="Middle,Small" Click="DetailsPaneToggleButton_Click"/>
                                 <!--Fluent:Button Header="Test"/-->
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
@@ -208,19 +209,19 @@
                                     </Fluent:InRibbonGallery-->
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="CurrentViewGroupBox" Header="Current view">
-                                <Fluent:DropDownButton Header="Sort by" SizeDefinition="Large,Small"/>
-                                <Fluent:DropDownButton Header="Group by" SizeDefinition="Middle,Small"/>
-                                <Fluent:DropDownButton Header="Add columns" SizeDefinition="Middle,Small"/>
-                                <Fluent:Button Header="Size all columns to fit" SizeDefinition="Middle,Small"/>
+                                <Fluent:DropDownButton Header="Sort by" LargeIcon="{DynamicResource ViewSortByButtonLargeIcon}" SizeDefinition="Large,Small"/>
+                                <Fluent:DropDownButton Header="Group by" Icon="{DynamicResource ViewGroupByButtonIcon}" SizeDefinition="Middle,Small"/>
+                                <Fluent:DropDownButton Header="Add columns" Icon="{DynamicResource ViewAddColumnsButtonIcon}" SizeDefinition="Middle,Small"/>
+                                <Fluent:Button Header="Size all columns to fit" Icon="{DynamicResource ViewSizeColumnsToFitButtonIcon}" SizeDefinition="Middle,Small"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="ShowHide" Header="Show/hide">
                                 <Fluent:CheckBox x:Name="ShowItemCheckBoxesCheckBox" Header="Item check boxes" SizeDefinition="Large,Small" Click="ShowItemCheckBoxesCheckBox_Click"/>
                                 <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small"/>
                                 <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small"/>
-                                <Fluent:Button Header="Hide selected items" SizeDefinition="Large,Small"/>
+                                <Fluent:Button Header="Hide selected items" LargeIcon="{DynamicResource ViewHideSelectedItemsButtonLargeIcon}" SizeDefinition="Large,Small"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Options" Header="Options">
-                                <Fluent:DropDownButton Header="Options" SizeDefinition="Large,Small">
+                                <Fluent:DropDownButton Header="Options" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small">
                                     <Fluent:MenuItem x:Name="FolderAndSearchOptionsMenuItem" Header="Change folder and search options" Click="FolderAndSearchOptionsMenuItem_Click"/>
                                 </Fluent:DropDownButton>
                             </Fluent:RibbonGroupBox>
@@ -234,7 +235,7 @@
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
                     </Fluent:Ribbon>
-                    <ContentControl x:Name="NavigationBarGrid" Style="{DynamicResource NavigationBarBackgroundStyle}" DockPanel.Dock="Top">
+                    <ContentControl x:Name="NavigationBarGrid" Style="{DynamicResource NavigationBarBackgroundStyle}" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Navigation bar">
                         <DockPanel>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                 <StackPanel Style="{DynamicResource NavButtonsContainerStyle}" Orientation="Horizontal">
@@ -254,7 +255,7 @@
                             </Grid>
                         </DockPanel>
                     </ContentControl>
-                    <ui:CommandBar x:Name="CommandBarControl" DockPanel.Dock="Top">
+                    <ui:CommandBar x:Name="CommandBarControl" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Command bar">
                             <ui:CommandBar.CommandBarLayers>
                                 <ui:CommandBarLayer Identifier="Global"/>
                                 <ui:CommandBarLayer Identifier="Libraries" IsVisible="False"/>
@@ -267,7 +268,7 @@
                             <Button ui:CommandBar.Layers="Folder,ItemSelected">Share with v</Button>
                             <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="NewFolderButton_Click">New Folder</Button>
                         </ui:CommandBar>
-                    <ToolBarTray x:Name="ToolBarTray" Background="Transparent" DockPanel.Dock="Top">
+                    <ToolBarTray x:Name="ToolBarTray" Background="Transparent" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Toolbars (TEMP)">
                             <ToolBar x:Name="MenuBarToolBar" Visibility="Collapsed">
                                 <Menu x:Name="MenuBar">
                                     <MenuItem Header="File">
@@ -296,7 +297,7 @@
                         </ToolBarTray>
                         <!--mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/-->
                     <!--/DockPanel-->
-                    <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Bottom">
+                    <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" DockPanel.Dock="Bottom" rerr:Rearranger.PaneTitle="Status bar">
                         <StatusBarItem x:Name="ItemCounter" HorizontalAlignment="Left"/>
                         <StatusBarItem x:Name="SelectedItemCounter" HorizontalAlignment="Left" Visibility="Hidden"/>
                         <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Stretch">
@@ -306,7 +307,7 @@
                             </StackPanel>
                         </StatusBarItem>
                     </StatusBar>
-                    <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="Collapsed" DockPanel.Dock="Right">
+                    <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="Collapsed" DockPanel.Dock="Right" rerr:Rearranger.PaneTitle="Details pane">
                         <!--Visibility="{Binding ShowDetailsPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
                         <StackPanel Orientation="Vertical">
                             <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
@@ -315,7 +316,7 @@
                             <TextBlock x:Name="DetailsFileNameTextBlock"/>
                         </StackPanel>
                     </ContentControl>
-                    <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="Collapsed" DockPanel.Dock="Right">
+                    <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="Collapsed" DockPanel.Dock="Right" rerr:Rearranger.PaneTitle="Preview pane">
                         <!--Visibility="{Binding ShowPreviewPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
                         <Grid x:Name="PreviewPaneGrid">
                             <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
@@ -330,19 +331,22 @@
                             </ScrollViewer>
                         </Grid>
                     </ContentControl>
-                    <TreeView x:Name="NavigationPaneTreeView" Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}" MinWidth="175" DockPanel.Dock="Left" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                            <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
-                            <TreeViewItem.Header>
-                                <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
-                            </TreeViewItem.Header>
-                        </TreeViewItem>
-                        <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                            <TreeViewItem.Header>
-                                <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
-                            </TreeViewItem.Header>
-                        </TreeViewItem>
-                    </TreeView>
+                    <ContentControl x:Name="NavigationPaneContentControl" rerr:Rearranger.PaneTitle="Navigation pane" Style="{DynamicResource NavigationPaneContentControlStyle}" DockPanel.Dock="Left">
+                        <TreeView x:Name="NavigationPaneTreeView" MinWidth="175" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <!--Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                            <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                                <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
+                                <TreeViewItem.Header>
+                                    <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
+                                </TreeViewItem.Header>
+                            </TreeViewItem>
+                            <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                                <TreeViewItem.Header>
+                                    <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
+                                </TreeViewItem.Header>
+                            </TreeViewItem>
+                        </TreeView>
+                    </ContentControl>
                     <ContentPresenter x:Name="TabContentDisplayContentControl" Content="{Binding ContentTabControl.SelectedContent.(local:FolderTabItem.Content)}"/>
                 </rerr:Rearranger>
                 <!--/ContentControl-->

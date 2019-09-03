@@ -6,6 +6,7 @@
                     xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
                     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
+                    xmlns:rerr="clr-namespace:Start9.UI.Wpf.Rearranger;assembly=Start9.UI.Wpf"
                     xmlns:e="http://schemas.microsoft.com/xaml/behaviors">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Shale.xaml"/>
@@ -42,20 +43,26 @@
         <!--Setter Property="Margin" Value="0,24,0,0"/--> <!--{Binding BorderThickness, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}}/-->
     </Style>
 
+    <Style x:Key="RearrangerStyle" TargetType="{x:Type rerr:Rearranger}" BasedOn="{StaticResource {x:Type rerr:Rearranger}}">
+        <Setter Property="rerr:Rearranger.HideFrameWhenLocked" Value="True"/>
+        <Setter Property="rerr:Rearranger.HideTitlebarWhenLocked" Value="True"/>
+    </Style>
+
     <!--#endregion Main Window Styles-->
 
 
     <!--#region Navigation Bar Styles-->
 
     <Style x:Key="NavigationBarBackgroundStyle" TargetType="{x:Type ContentControl}">
-        <Setter Property="Height" Value="45"/>
+        <Setter Property="rerr:Rearranger.HideFrameWhenLocked" Value="False"/>
+        <Setter Property="Height" Value="40"/>
         <Setter Property="Padding" Value="6"/>
-        <Setter Property="Margin" Value="0,0,0,-5"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <Grid>
-                        <Rectangle x:Name="ShadowRectangle" VerticalAlignment="Top" Height="18" IsHitTestVisible="False" Grid.Column="0">
+                        <!--Rectangle x:Name="ShadowRectangle" VerticalAlignment="Top" Height="18" IsHitTestVisible="False" Grid.Column="0">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource ShadowGradientStops}"/>
                             </Rectangle.Fill>
@@ -64,17 +71,17 @@
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource ButtonIdleBackgroundGradientStops}"/>
                             </Border.Background>
-                        </Border>
-                        <Grid x:Name="ContainerGrid" Margin="5">
+                        </Border-->
+                        <!--Grid x:Name="ContainerGrid" Margin="5"-->
                             <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
-                        </Grid>
+                        <!--/Grid-->
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="CommandBar">
+                        <!--DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="CommandBar">
                             <Setter TargetName="ShadowRectangle" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="BackgroundBorder" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="ContainerGrid" Property="Margin" Value="0,0,0,5"/>
-                        </DataTrigger>
+                        </DataTrigger-->
                         <!--DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
                             <Setter TargetName="ShadowRectangle" Property="Visibility" Value="Collapsed"/>
                         </DataTrigger-->
@@ -85,7 +92,7 @@
         <Style.Triggers>
             <DataTrigger Binding="{Binding InterfaceMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Value="Ribbon">
                 <Setter Property="Panel.ZIndex" Value="999"/>
-                <Setter Property="Height" Value="50"/>
+                <!--Setter Property="Height" Value="50"/-->
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -1554,7 +1561,14 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <Style x:Key="NavigationPaneContentControlStyle" TargetType="{x:Type ContentControl}">
+        <Setter Property="rerr:Rearranger.HideFrameWhenLocked" Value="False"/>
+    </Style>
+
     <Style x:Key="FavoritesTreeViewStyle" TargetType="{x:Type TreeView}" BasedOn="{StaticResource {x:Type TreeView}}">
+        <!--Setter Property="BorderThickness" Value="0"/-->
+    </Style>
+    <Style x:Key="zFavoritesTreeViewStyle" TargetType="{x:Type TreeView}" BasedOn="{StaticResource {x:Type TreeView}}">
         <Setter Property="Panel.ZIndex" Value="9999"/>
         <Setter Property="Template">
             <Setter.Value>

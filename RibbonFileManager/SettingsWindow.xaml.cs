@@ -138,12 +138,15 @@ namespace RibbonFileManager
             //Item selection CheckBoxes
             Config.Instance.ShowItemSelectionCheckBoxes = ShowItemSelectionCheckBoxesCheckBox.IsChecked.Value;
 
-            if (InstalledSkinsListView.SelectedIndex >= 0)
-                ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);
-            else
-                ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.DefaultSkin;
+            if (InstalledSkinsListView.SelectedIndex != ((App)App.Current).SkinManager.Skins.IndexOf(((App)App.Current).SkinManager.ActiveSkin))
+            {
+                if (InstalledSkinsListView.SelectedIndex >= 0)
+                    ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);
+                else
+                    ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.DefaultSkin;
 
-            SkinSettingsFrame.Navigate(((App)(App.Current)).SkinManager.ActiveSkin.GetSettingsPage());
+                SkinSettingsFrame.Navigate(((App)(App.Current)).SkinManager.ActiveSkin.GetSettingsPage());
+            }
 
             Config.InvokeConfigUpdated();
         }
