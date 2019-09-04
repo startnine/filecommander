@@ -125,30 +125,6 @@ namespace RibbonFileManager
             }
         }
 
-        public Boolean ShowDetailsPane
-        {
-            get => (Boolean)GetValue(ShowDetailsPaneProperty);
-            set => SetValue(ShowDetailsPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowDetailsPaneProperty = DependencyProperty.Register("ShowDetailsPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
-
-        public Boolean ShowPreviewPane
-        {
-            get => (Boolean)GetValue(ShowPreviewPaneProperty);
-            set => SetValue(ShowPreviewPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowPreviewPaneProperty = DependencyProperty.Register("ShowPreviewPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(false));
-
-        public Boolean ShowNavigationPane
-        {
-            get => (Boolean)GetValue(ShowNavigationPaneProperty);
-            set => SetValue(ShowNavigationPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowNavigationPaneProperty = DependencyProperty.Register("ShowNavigationPane", typeof(Boolean), typeof(WindowContent), new PropertyMetadata(true));
-
         public FileBrowserView CurrentView
         {
             get => (FileBrowserView)GetValue(CurrentViewProperty);
@@ -245,7 +221,7 @@ namespace RibbonFileManager
             CurrentDisplayName = location.Name;
 
             if (location is DirectoryQuery query)
-                OwnerWindow.SetPanes(query.Item);
+                OwnerWindow.SetPanes(query);
 
             OwnerWindow.ValidateNavButtonStates();
         }
@@ -371,11 +347,11 @@ namespace RibbonFileManager
             if (CurrentDirectoryListView.SelectedItem != null)
             {
                 item = CurrentDirectoryListView.SelectedItem as DiskItem;
-                OwnerWindow.SetPanes(item);
+                OwnerWindow.SetPanes(CurrentLocation);
             }
 
             OwnerWindow.ValidateCommandStates(CurrentDirectoryListView.SelectedItems.Count, item);
-            OwnerWindow.UpdateStatusBar();
+            OwnerWindow.SetPanes(CurrentLocation);
         }
 
         public async Task OpenPath(String path)

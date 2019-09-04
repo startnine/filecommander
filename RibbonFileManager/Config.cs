@@ -55,6 +55,44 @@ namespace RibbonFileManager
         public static readonly DependencyProperty LockPanesProperty =
             DependencyProperty.Register(nameof(LockPanes), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
+        #region Pane toggles
+
+        public Boolean ShowNavigationBarPane
+        {
+            get => (Boolean)GetValue(ShowNavigationBarPaneProperty);
+            set => SetValue(ShowNavigationBarPaneProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowNavigationBarPaneProperty =
+            DependencyProperty.Register(nameof(ShowNavigationBarPane), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+
+        public Boolean ShowNavigationTreePane
+        {
+            get => (Boolean)GetValue(ShowNavigationTreePaneProperty);
+            set => SetValue(ShowNavigationTreePaneProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowNavigationTreePaneProperty =
+            DependencyProperty.Register(nameof(ShowNavigationTreePane), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+
+        public Boolean ShowDetailsPane
+        {
+            get => (Boolean)GetValue(ShowDetailsPaneProperty);
+            set => SetValue(ShowDetailsPaneProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowDetailsPaneProperty =
+            DependencyProperty.Register(nameof(ShowDetailsPane), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
+        public Boolean ShowPreviewPane
+        {
+            get => (Boolean)GetValue(ShowPreviewPaneProperty);
+            set => SetValue(ShowPreviewPaneProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowPreviewPaneProperty =
+            DependencyProperty.Register(nameof(ShowPreviewPane), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
         public Boolean ShowStatusBar
         {
             get => (Boolean) GetValue(ShowStatusBarProperty);
@@ -63,6 +101,8 @@ namespace RibbonFileManager
 
         public static readonly DependencyProperty ShowStatusBarProperty =
             DependencyProperty.Register(nameof(ShowStatusBar), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
+
+        #endregion Pane toggles
 
         public Boolean ShowEnhancedFolderIcons
         {

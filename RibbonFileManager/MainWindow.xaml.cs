@@ -85,9 +85,9 @@ namespace RibbonFileManager
                 if ((win.CurrentTab != null) && win.CurrentTab.Content.IsLoaded)
                 {
                     win.Navigate(win.CurrentTab.Content.CurrentLocation);
-                    win.NavigationPaneMenuItem.IsChecked = win.CurrentTab.Content.ShowNavigationPane;
-                    win.DetailsPaneToggleButton.IsChecked = win.CurrentTab.Content.ShowDetailsPane;
-                    win.PreviewPaneToggleButton.IsChecked = win.CurrentTab.Content.ShowPreviewPane;
+                    //win.NavigationPaneMenuItem.IsChecked = Config.Instance.ShowNavigationTreePane;
+                    //win.DetailsPaneMenuItem.IsChecked = Config.Instance.ShowDetailsPane;
+                    //win.PreviewPaneMenuItem.IsChecked = Config.Instance.ShowPreviewPane;
                     if (win.CurrentTab.Content.CurrentLocation is DirectoryQuery query)
                         win.ValidateCommandStates(query.Item.SubItems.Count, query.Item);
                 }
@@ -684,22 +684,37 @@ namespace RibbonFileManager
                 ComputerRibbonTabItem.Visibility = Visibility.Collapsed;
             }
 
-            UpdateStatusBar();
             ValidateNavButtonStates();
+            SetPanes(location);
         }
 
-        public void UpdateStatusBar()
+        public void UpdateStatusBar(Location loc)
         {
-            ItemCounter.Content = CurrentTab.Content.CurrentDirectoryListView.Items.Count.ToString() + " items";
+            string count = string.Empty;
+            if (loc is DirectoryQuery query)
+                count = query.Item.SubItems.Count.ToString();
+            else
+                count = CurrentTab.Content.CurrentDirectoryListView.Items.Count.ToString();
 
+            ItemCounter.Content = count + " items";
+        }
+
+        public void UpdateSearchBar(Location loc)
+        {
             _resettingAddress = true;
             AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
             if (CurrentTab.Content.CurrentLocation is DirectoryQuery q)
                 SearchTextBox.WatermarkText = "Search " + Path.GetFileName(q.Name);
             _resettingAddress = false;
+        }
 
+        public void UpdateAddressBar(Location loc)
+        {
+            _resettingAddress = true;
+            AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
+            _resettingAddress = false;
+            
             NavHistoryButton.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
-
         }
 
         Boolean _resettingAddress = false;
@@ -819,26 +834,26 @@ namespace RibbonFileManager
             }
         }*/
 
-        private void NavigationPaneMenuItem_Click(Object sender, RoutedEventArgs e)
+        /*private void NavigationPaneMenuItem_Click(Object sender, RoutedEventArgs e)
         {
-            CurrentTab.Content.ShowNavigationPane = NavigationPaneMenuItem.IsChecked == true;
+            Config.Instance.ShowNavigationPane = NavigationPaneMenuItem.IsChecked == true;
         }
 
-        private void PreviewPaneToggleButton_Click(Object sender, RoutedEventArgs e)
+        private void PreviewPaneMenuItem_Click(Object sender, RoutedEventArgs e)
         {
-            CurrentTab.Content.ShowPreviewPane = PreviewPaneToggleButton.IsChecked == true;
+            Config.Instance.ShowPreviewPane = PreviewPaneMenuItem.IsChecked == true;
         }
 
-        private void DetailsPaneToggleButton_Click(Object sender, RoutedEventArgs e)
+        private void DetailsPaneMenuItem_Click(Object sender, RoutedEventArgs e)
         {
-            CurrentTab.Content.ShowDetailsPane = DetailsPaneToggleButton.IsChecked == true;
-        }
+            Config.Instance.ShowDetailsPane = DetailsPaneMenuItem.IsChecked == true;
+        }*/
 
-        private void ShowItemCheckBoxesCheckBox_Click(Object sender, RoutedEventArgs e)
+        /*private void ShowItemCheckBoxesCheckBox_Click(Object sender, RoutedEventArgs e)
         {
             //CurrentTab.Content.ShowItemCheckboxes = ShowItemCheckBoxesCheckBox.IsChecked == true;
             Config.Instance.ShowItemSelectionCheckBoxes = ShowItemCheckBoxesCheckBox.IsChecked.Value;
-        }
+        }*/
 
         Boolean _altActionTaken = true;
 
@@ -1069,18 +1084,74 @@ namespace RibbonFileManager
             }
         }
 
-        public void SetPanes(DiskItem item)
+        public void SetPanes(Location loc)
         {
+            UpdateDetailsPane(loc);
+            if (loc is DirectoryQuery query)
+                UpdatePreviewPane(query.Item);
+            UpdateStatusBar(loc);
+            UpdateSearchBar(loc);
+            UpdateAddressBar(loc);
+        }
+
+        void UpdateDetailsPane(Location loc)
+        {
+            System.Drawing.Icon icon = null;
+
             var size = DetailsFileIconRectangle.ActualHeight;
             if (size <= 0)
                 size = 48;
-            DetailsFileIconRectangle.Fill = (ImageBrush)new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(item.ItemJumboIcon, null, size.ToString(), null);
-            DetailsFileNameTextBlock.Text =
-                (item.ItemCategory == DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
-                ? item.SubItems.Count.ToString() + " items"
-                : item.ItemDisplayName;
 
+            if ((CurrentTab.Content.CurrentDirectoryListView.SelectedItem != null) && (CurrentTab.Content.CurrentDirectoryListView.SelectedItem is DiskItem sItem))
+            {
+                icon = sItem.ItemJumboIcon;
+                DetailsFileNameTextBlock.Text =
+                        (sItem.ItemCategory == DiskItemCategory.Directory) && (sItem.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
+                        ? sItem.SubItems.Count.ToString() + " items"
+                        : sItem.ItemDisplayName;
+            }
+            else
+            {
+                icon = loc.Icon;
+                string name = string.Empty;
+                string count = string.Empty;
+                if (loc is DirectoryQuery q)
+                {
+                    var item = q.Item;
 
+                    /*DetailsFileNameTextBlock.Text =
+                        (item.ItemCategory == DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
+                        ? item.SubItems.Count.ToString() + " items"
+                        : item.ItemDisplayName;*/
+                    name = item.ItemDisplayName;
+                    count = item.SubItems.Count.ToString();
+                }
+                else
+                {
+                    name = loc.Name;
+                    count = CurrentTab.Content.CurrentDirectoryListView.Items.Count.ToString();
+                }
+
+                DetailsFileNameTextBlock.Text = name + " (" + count + " items)";
+
+                if (loc is DirectoryQuery query) //TODO: if (doesn't have Special icon)
+                {
+                    icon = query.Item.ItemJumboIcon;
+                }
+                else
+                {
+                    //TODO: Special icons
+                }
+            }
+
+            if (icon != null)
+                DetailsFileIconRectangle.Fill = (ImageBrush)new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(icon, null, size.ToString(), null);
+            else
+                DetailsFileIconRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+        }
+
+        void UpdatePreviewPane(DiskItem item)
+        {
             if (item.ItemCategory != DiskItemCategory.Directory)
             {
                 if (item.ItemPath.ToLowerInvariant() == CurrentTab.Content.CurrentLocation.Name.ToLowerInvariant())
@@ -1117,6 +1188,20 @@ namespace RibbonFileManager
                 var control = PreviewPaneGrid.Children[i];
                 control.Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+
+        private void DetailsPane_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("DetailsPane_IsVisibleChanged");
+            if ((sender is UIElement el) && el.IsVisible)
+                UpdateDetailsPane(CurrentTab.Content.CurrentLocation);
+        }
+
+        private void PreviewPane_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("PreviewPane_IsVisibleChanged");
+            if ((sender is UIElement el) && el.IsVisible && (CurrentTab.Content.CurrentLocation is DirectoryQuery query))
+                UpdatePreviewPane(query.Item);
         }
     }
 }

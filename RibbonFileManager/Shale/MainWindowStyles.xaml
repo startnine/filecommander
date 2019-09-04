@@ -1567,7 +1567,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style x:Key="NavigationPaneContentControlStyle" TargetType="{x:Type ContentControl}">
+    <Style x:Key="NavigationTreePaneContentControlStyle" TargetType="{x:Type ContentControl}">
         <Setter Property="rerr:Rearranger.HideFrameWhenLocked" Value="False"/>
     </Style>
 
