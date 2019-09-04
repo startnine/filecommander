@@ -551,18 +551,20 @@
 
     <Grid x:Key="ViewSortByButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <Grid Width="24" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,8,0">
-            <Border Background="{DynamicResource IconTertiaryFillBrush}" CornerRadius="1">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="1">
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
-                </StackPanel>
+            <Border Background="{DynamicResource IconPrimaryFillBrush}">
+                <DockPanel>
+                    <UniformGrid Rows="1" Height="4" DockPanel.Dock="Top">
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0,0,1,0"/>
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0"/>
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="1,0,0,0"/>
+                    </UniformGrid>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="1,2">
+                        <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
+                        <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
+                        <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
+                        <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
+                    </StackPanel>
+                </DockPanel>
             </Border>
         </Grid>
         <Path Data="M 0 6 L 3 0 L 6 6 Z
@@ -571,38 +573,71 @@
     </Grid>
 
     <Grid x:Key="ViewGroupByButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
-        <Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1,1,0,1" CornerRadius="3,0,0,3" Width="4" HorizontalAlignment="Left"/>
+        <!--Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1,1,0,1" CornerRadius="3,0,0,3" Width="4" HorizontalAlignment="Left"/>
         <Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="0,1,1,1" CornerRadius="0,3,3,0" Width="4" HorizontalAlignment="Right"/>
-        <Border CornerRadius="3" Background="{DynamicResource IconTertiaryFillBrush}" Width="8" Height="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Border CornerRadius="3" Background="{DynamicResource IconTertiaryFillBrush}" Width="8" Height="8" HorizontalAlignment="Center" VerticalAlignment="Center"/-->
+        <UniformGrid Columns="1">
+            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="0,1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0">
+                    <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="2" Height="2" Margin="0,0,2,0"/>
+                    <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="2" Height="2" Margin="0,0,2,0"/>
+                    <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="2" Height="2" Margin="0,0,2,0"/>
+                </StackPanel>
+            </Border>
+            <Border Background="{DynamicResource IconPrimaryFillBrush}" Margin="0,1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0">
+                    <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="2" Height="2" Margin="0,0,2,0"/>
+                    <Rectangle Fill="{DynamicResource IconForegroundBrush}" Width="2" Height="2" Margin="0,0,2,0"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
     </Grid>
 
-    <Grid x:Key="ViewAddColumnsButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
-        <Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1" CornerRadius="3"/>
+    <Grid x:Key="ViewAddColumnsButtonIcon" x:Shared="False" Width="15" Height="16" Margin="0,0,1,0" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <!--Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1" CornerRadius="3"/>
         <Border Background="{DynamicResource IconTertiaryFillBrush}" Width="8" HorizontalAlignment="Center" VerticalAlignment="Stretch">
             <Path Data="M 0 1.5 L 4 1.5
-                  M 1.5 0 L 1.5 4" Stroke="{DynamicResource IconForegroundBrush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  M 1.5 0 L 1.5 4" Stroke="{DynamicResource IconForegroundBrush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"/-->
             <!--M 0 2 L 4 2 L 4 3 L 4 3 Z
                   M 2 0 L 2 4 L 3 4 L 3 4 Z-->
             <!--M 0 1 L 4 1
                   M 0 2 L 4 2
                   M 1 0 L 1 4
                   M 2 0 L 2 4-->
+        <!--/Border-->
+        <Border Background="{DynamicResource IconPrimaryFillBrush}">
+            <UniformGrid Rows="1">
+                <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0,0,1,0" Height="4" VerticalAlignment="Top"/>
+                <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0" Height="4" VerticalAlignment="Top"/>
+                <Grid>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                        <Path Data="M 3 0 L 0 3 L 6 3 Z
+              M 2 3 L 2 10 L 4 10 L 4 3 Z" Fill="{DynamicResource IconForegroundBrush}"/>
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="1,0,0,0" Height="4"/>
+                    </StackPanel>
+                </Grid>
+            </UniformGrid>
         </Border>
     </Grid>
 
-    <Grid x:Key="ViewSizeColumnsToFitButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
-        <Path HorizontalAlignment="Center" VerticalAlignment="Top" Data="M 0 2 L 2 0 L 2 4 Z
-              M 2 1 L 14 1 L 14 2 L 2 2 Z
-              M 16 2 L 14 0 L 14 4 Z" Fill="{DynamicResource IconSecondaryFillBrush}"/>
-        <Grid VerticalAlignment="Bottom" Height="8">
-            <Border BorderBrush="{DynamicResource IconPrimaryFillBrush}" BorderThickness="1" CornerRadius="3"/>
-            <Border Background="{DynamicResource IconTertiaryFillBrush}" Width="8" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
-        </Grid>
+    <Grid x:Key="ViewSizeColumnsToFitButtonIcon" x:Shared="False" Width="15" Height="16" Margin="0,0,1,0" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <Border Background="{DynamicResource IconPrimaryFillBrush}">
+            <Grid>
+                <UniformGrid Rows="1" Height="4" VerticalAlignment="Top">
+                    <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0,0,1,0"/>
+                    <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0"/>
+                    <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="1,0,0,0"/>
+                </UniformGrid>
+                <Path HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="M 0 3 L 3 0 L 3 6 Z
+              M 3 2 L 13 2 L 13 4 L 3 4 Z
+              M 16 3 L 13 0 L 13 6 Z" Fill="{DynamicResource IconForegroundBrush}"/>
+            </Grid>
+        </Border>
     </Grid>
 
     <Grid x:Key="ViewHideSelectedItemsButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="20" Effect="{DynamicResource IconOuterShadow}">
-            <Path Data="M 20 5 L 20 24 L 0 24 L 0 0" StrokeThickness="1" Stroke="{DynamicResource IconPrimaryFillBrush}" StrokeDashArray="2,2"/>
+            <Path Data="M 1 21 L 1 24 L 18 24 L 18 5" StrokeThickness="1" Stroke="{DynamicResource IconPrimaryFillBrush}" StrokeDashArray="3,5"/>
             <Path Data="M 0 0 L 15 0 L 20 5 L 0 20 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
             <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
         </Grid>
