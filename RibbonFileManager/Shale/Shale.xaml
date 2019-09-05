@@ -10,7 +10,7 @@
         <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;Component/Shale/RibbonStyles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;Component/Shale/SettingsStyles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RibbonFileManager;Component/Shale/Icons.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/Accent.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/BaseLight.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Shale.xaml"/>
+        <!--ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Shale;component/Themes/Colors/BaseLight.xaml"/-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

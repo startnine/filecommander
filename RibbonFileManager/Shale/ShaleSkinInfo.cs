@@ -7,9 +7,9 @@ using System.Windows.Controls;
 
 namespace RibbonFileManager.Shale
 {
-    public class ShaleSkin : ISkinInfo
+    public class ShaleSkinInfo : Start9.Wpf.Styles.Shale.ShaleSkinInfo //ISkinInfo
     {
-        ShaleSettingsPage _page = null;
+        /*ShaleSettingsPage _page = null;
 
         public Page GetSettingsPage()
         {
@@ -41,6 +41,17 @@ namespace RibbonFileManager.Shale
         string ISkinInfo.SkinName
         {
             get => "Shale";
+        }*/
+
+        public override ResourceDictionary OnApplySkinSettings()
+        {
+            ResourceDictionary dictionary = new ResourceDictionary()
+            {
+                Source = new Uri("/RibbonFileManager;component/Shale/Shale.xaml", UriKind.Relative)
+            };
+            dictionary.MergedDictionaries[4] = base.OnApplySkinSettings();
+
+            return dictionary;
         }
     }
 }

@@ -42,7 +42,7 @@ namespace RibbonFileManager
             //PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
             //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
             base.OnStartup(e);
-            SkinManager = new SkinManager(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"Start9\File Commander\Skins"), new Shale.ShaleSkin());
+            SkinManager = new SkinManager(new Shale.ShaleSkinInfo());
             var win = new MainWindow();
             win.Show();
             win.Focus();

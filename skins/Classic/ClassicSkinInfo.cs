@@ -10,6 +10,11 @@ namespace Classic
 {
     public class ClassicSkinInfo : ISkinInfo
     {
+        public bool GetHaveSettingsChanged()
+        {
+            return false;
+        }
+
         public Page GetSettingsPage()
         {
             return new Page();

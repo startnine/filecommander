@@ -15,6 +15,7 @@ using System.IO;
 using Start9.UI.Wpf.Windows;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using MessageBox = Start9.UI.Wpf.Windows.MessageBox;
 
 namespace RibbonFileManager
 {
@@ -26,6 +27,18 @@ namespace RibbonFileManager
         public SettingsWindow()
         {
             InitializeComponent();
+
+            foreach (string s in Directory.EnumerateDirectories(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"Start9\File Commander\Skins")))
+            {
+                try
+                {
+                    ((App)App.Current).SkinManager.LoadSkinFromFolder(s);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, ex.GetType().Name.ToString());
+                }
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -138,7 +151,7 @@ namespace RibbonFileManager
             //Item selection CheckBoxes
             Config.Instance.ShowItemSelectionCheckBoxes = ShowItemSelectionCheckBoxesCheckBox.IsChecked.Value;
 
-            if (InstalledSkinsListView.SelectedIndex != ((App)App.Current).SkinManager.Skins.IndexOf(((App)App.Current).SkinManager.ActiveSkin))
+            if (true) //InstalledSkinsListView.SelectedIndex != ((App)App.Current).SkinManager.Skins.IndexOf(((App)App.Current).SkinManager.ActiveSkin))
             {
                 if (InstalledSkinsListView.SelectedIndex >= 0)
                     ((App)App.Current).SkinManager.ActiveSkin = ((App)App.Current).SkinManager.Skins.ElementAt(InstalledSkinsListView.SelectedIndex);

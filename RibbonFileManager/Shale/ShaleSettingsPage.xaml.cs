@@ -18,8 +18,8 @@ namespace RibbonFileManager.Shale
     /// </summary>
     public partial class ShaleSettingsPage : Page
     {
-        ShaleSkin _shaleSkinInfo = null;
-        public ShaleSettingsPage(ShaleSkin shaleSkinInfo)
+        ShaleSkinInfo _shaleSkinInfo = null;
+        public ShaleSettingsPage(ShaleSkinInfo shaleSkinInfo)
         {
             _shaleSkinInfo = shaleSkinInfo;
             InitializeComponent();
