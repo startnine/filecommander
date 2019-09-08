@@ -24,7 +24,7 @@ namespace Classic
         {
             ResourceDictionary dictionary = new ResourceDictionary()
             {
-                Source = new Uri("/Skin;component/Classic.xaml", UriKind.Relative)
+                Source = new Uri("/Classic;component/Classic.xaml", UriKind.Relative)
             };
 
             /*dictionary.MergedDictionaries.Add(new ResourceDictionary()

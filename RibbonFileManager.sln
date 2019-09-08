@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RibbonFileManager", "Ribbon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Classic", "skins\Classic\Classic.csproj", "{9EE33CBB-2FCF-41E9-B251-92F48091FE6E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plex", "skins\Plex\Plex.csproj", "{A949EE02-776C-4E72-BB8E-4C82645A9232}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9EE33CBB-2FCF-41E9-B251-92F48091FE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EE33CBB-2FCF-41E9-B251-92F48091FE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EE33CBB-2FCF-41E9-B251-92F48091FE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A949EE02-776C-4E72-BB8E-4C82645A9232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A949EE02-776C-4E72-BB8E-4C82645A9232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A949EE02-776C-4E72-BB8E-4C82645A9232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A949EE02-776C-4E72-BB8E-4C82645A9232}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

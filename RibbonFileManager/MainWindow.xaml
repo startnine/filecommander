@@ -7,6 +7,7 @@
         xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
         xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
         xmlns:rerr="clr-namespace:Start9.UI.Wpf.Rearranger;assembly=Start9.UI.Wpf"
+        xmlns:bread="clr-namespace:Start9.UI.Wpf.Breadcrumbs;assembly=Start9.UI.Wpf"
         xmlns:Fluent="urn:fluent-ribbon"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="MainWindow" Width="1100" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
@@ -257,6 +258,7 @@
                             <Grid>
                                 <!--TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/-->
                                 <ui:BreadcrumbsBar x:Name="AddressBox" PathUpdated="AddressBox_PathUpdated"/>
+                                <bread:BreadcrumbsBar x:Name="BreadcrumbsBar" Style="{DynamicResource BreadcrumbsBarStyle}" PathUpdated="BreadcrumbsBar_PathUpdated" PathItemAdded="BreadcrumbsBar_PathItemAdded"/>
                             </Grid>
                         </DockPanel>
                     </ContentControl>

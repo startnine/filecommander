@@ -6,6 +6,7 @@
                     xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
                     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
+                    xmlns:bread="clr-namespace:Start9.UI.Wpf.Breadcrumbs;assembly=Start9.UI.Wpf"
                     xmlns:rerr="clr-namespace:Start9.UI.Wpf.Rearranger;assembly=Start9.UI.Wpf"
                     xmlns:e="http://schemas.microsoft.com/xaml/behaviors">
     <ResourceDictionary.MergedDictionaries>
@@ -241,6 +242,25 @@
     <Path x:Key="NavigationUpButtonIcon" x:Shared="False" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}}}" StrokeThickness="2"/>
 
     <Style x:Key="NavigationUpButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource NavigationButtonStyle}"/>
+
+    <Style x:Key="BreadcrumbsBarStyle" TargetType="{x:Type bread:BreadcrumbsBar}" BasedOn="{StaticResource {x:Type bread:BreadcrumbsBar}}">
+        <Style.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type local:Location}">
+                <TextBlock Text="{Binding Name}"/>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type local:DirectoryQuery}" ItemsSource="{Binding Item.SubItems}">
+                <TextBlock Text="{Binding Name}"/>
+                <HierarchicalDataTemplate.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:DiskItem}">
+                        <DockPanel>
+                            <Rectangle Width="16" Height="16" Margin="0,0,4,0" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                            <TextBlock Text="{Binding ItemDisplayName}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </HierarchicalDataTemplate.ItemTemplate>
+            </HierarchicalDataTemplate>
+        </Style.Resources>
+    </Style>
 
     <Canvas x:Key="ActionBoxSearchIcon" x:Shared="False" Width="16" Height="16">
         <Path Data="M 0 7 L 7 0" Stroke="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" StrokeThickness="2" Canvas.Top="9"/>

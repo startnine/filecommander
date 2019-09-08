@@ -711,7 +711,31 @@ namespace RibbonFileManager
         public void UpdateAddressBar(Location loc)
         {
             _resettingAddress = true;
-            AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
+            //AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
+            if (loc is DirectoryQuery query)
+            {
+                if (query.Item.HasSpecialIcon)
+                {
+                    BreadcrumbsBar.ItemsSource = new ObservableCollection<Location>
+                    {
+                        new ShellLocation(ShellLocation.ThisPcGuid),
+                        loc
+                    };
+                }
+                else
+                {
+                    var collection = new ObservableCollection<Location> { };
+                    var qur = new DirectoryInfo(query.Item.ItemPath);
+                    while (qur != null)
+                    {
+                        collection.Insert(0, new DirectoryQuery(qur.ToString()));
+                        qur = qur.Parent;
+                    }
+                    BreadcrumbsBar.ItemsSource = collection;
+                }
+            }
+            else
+                BreadcrumbsBar.ItemsSource = new ObservableCollection<Location> { loc };
             _resettingAddress = false;
             
             NavHistoryButton.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
@@ -1202,6 +1226,21 @@ namespace RibbonFileManager
             Debug.WriteLine("PreviewPane_IsVisibleChanged");
             if ((sender is UIElement el) && el.IsVisible && (CurrentTab.Content.CurrentLocation is DirectoryQuery query))
                 UpdatePreviewPane(query.Item);
+        }
+
+        private void BreadcrumbsBar_PathUpdated(object sender, Start9.UI.Wpf.Breadcrumbs.PathChangedEventArgs e)
+        {
+            if (!_resettingAddress)
+                CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(e.NewPath));
+        }
+
+        private void BreadcrumbsBar_PathItemAdded(object sender, Start9.UI.Wpf.Breadcrumbs.PathItemAddedEventArgs e)
+        {
+            UpdateAddressBar(e.NewValue as Location);
+            /*var source = BreadcrumbsBar.ItemsSource as ObservableCollection<Location>;
+            source.Insert(e.Index, e.NewValue as Location);
+            for (int i = source.IndexOf(e.NewValue as Location); i < source.Count; i++)
+                source.RemoveAt(source.IndexOf(e.NewValue as Location) + 1);*/
         }
     }
 }
