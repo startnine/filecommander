@@ -172,6 +172,7 @@
                                     <!--Icon="{DynamicResource ViewDetailsPaneButtonIcon}"-->
                                     <Fluent:MenuItem x:Name="StatusBarMenuItem" IsCheckable="True" Header="Status bar" IsChecked="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
                                 </Fluent:DropDownButton>
+                                <Fluent:CheckBox x:Name="LockPanesCheckBox" Header="Lock panes" SizeDefinition="Large,Small" IsChecked="{Binding LockPanes, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
                                 <!--ItemWidth="110" ItemHeight="20" MinItemsInRow="1" MaxItemsInRow="5" ResizeMode="Both"-->
                                 <Fluent:InRibbonGallery x:Name="FolderViewsGallery" Header="Folder Views" SizeDefinition="Large,Large" SelectionChanged="FolderViewsGallery_SelectionChanged">
                                     <!--MinItemsInRow="2" MaxItemsInRow="3"-->
@@ -342,13 +343,13 @@
                     <ContentControl x:Name="NavigationPaneContentControl" Visibility="{Binding ShowNavigationTreePane, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}" rerr:Rearranger.PaneTitle="Navigation tree pane" Style="{DynamicResource NavigationTreePaneContentControlStyle}" DockPanel.Dock="Left">
                         <TreeView x:Name="NavigationPaneTreeView" MinWidth="175" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <!--Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
-                            <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                            <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{Binding Favorites, Source={x:Static local:Config.Instance}}">
                                 <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
                                 <TreeViewItem.Header>
                                     <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
                                 </TreeViewItem.Header>
                             </TreeViewItem>
-                            <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
+                            <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{Binding ComputerSubFolders, Source={x:Static local:Config.Instance}}">
                                 <TreeViewItem.Header>
                                     <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
                                 </TreeViewItem.Header>

@@ -1107,7 +1107,9 @@ namespace RibbonFileManager
 
         private void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
         {
-            if (e.NewValue is DiskItem val)
+            if (e.NewValue is Location loc)
+                CurrentTab.Content.NavManager.MoveTo(loc);
+            else if (e.NewValue is DiskItem val)
                 CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(val.ItemPath)); //await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)), true);
             else
             {

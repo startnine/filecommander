@@ -34,6 +34,21 @@ namespace RibbonFileManager
         public Boolean Equals(Location other) => Name == other?.Name;
         public override Int32 GetHashCode() => Name.GetHashCode();
         public abstract IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive);
+
+        public override string ToString()
+        {
+            return LocationPath;
+        }
+
+        public static Location GetLocation(string value)
+        {
+            if (Guid.TryParse(value, out Guid resultGuid))
+                return new ShellLocation(resultGuid);
+            else// if (Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
+                return new DirectoryQuery(value);
+            /*else
+                throw new ArgumentException("value");*/
+        }
     }
 
     [DebuggerDisplay("Path = {Item.ItemPath}")]
@@ -65,7 +80,7 @@ namespace RibbonFileManager
             }
         }
 
-        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents([System.Runtime.CompilerServices.EnumeratorCancellation]CancellationToken token, Boolean recursive)
         {
             var entries = Directory.EnumerateFileSystemEntries(LocationPath, "*", new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
             var enumer = entries.GetEnumerator();
@@ -104,7 +119,7 @@ namespace RibbonFileManager
         public override bool HasSpecialIcon => false;
         public override UIElement SpecialIcon => null;
 
-        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents([System.Runtime.CompilerServices.EnumeratorCancellation]CancellationToken token, Boolean recursive)
         {
             var entries = Directory.EnumerateFileSystemEntries(Path, Query, new EnumerationOptions { RecurseSubdirectories = recursive, IgnoreInaccessible = true });
             var enumer = entries.GetEnumerator();
@@ -169,7 +184,7 @@ namespace RibbonFileManager
             }
         }
 
-        public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
+        public override async IAsyncEnumerable<DiskItem> GetLocationContents([System.Runtime.CompilerServices.EnumeratorCancellation]CancellationToken token, Boolean recursive)
         {
             if (LocationGuid == ThisPcGuid)
             {
@@ -233,6 +248,11 @@ namespace RibbonFileManager
             {
                 throw new Exception("Unrecognized Shell Location GUID");
             }
+        }
+
+        public override string ToString()
+        {
+            return LocationGuid.ToString();
         }
     }
 }

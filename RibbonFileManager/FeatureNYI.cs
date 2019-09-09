@@ -12,7 +12,8 @@ namespace RibbonFileManager
 {
     public class FeatureNYI
     {
-        public static bool EnableNYIIndication = true;
+        //True = rotate controls for all NYI actions to be upside down ("we need to see where progress is at"), False = leave controls for NYI actions as-is ("we're taking a screenshot for PR purposes or something")
+        public static bool EnableNYIIndication = false;
 
         static RotateTransform _upsideDownTransform = new RotateTransform(180);
 

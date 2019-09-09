@@ -204,7 +204,7 @@ namespace RibbonFileManager
                 case ShellLocation l: await Navigate(l, source); break;
             }
         }
-        
+
         private void/*async Task */NavigateToLocationAsync(Location location, bool replaceFuture, CancellationToken token = default)
         {
             //Debug.WriteLine("NavigateToLocationAsync(");
@@ -242,48 +242,53 @@ namespace RibbonFileManager
 
             /*try
             {*/
-                var results = new ObservableCollection<DiskItem>();
-                //CurrentDirectoryListView.ItemsSource = results;
-                var nextDirectoryIndex = 0;
-                //Debug.WriteLine("l type: " + l.GetType().ToString());
-                await foreach (var path in l.GetLocationContents(source.Token, false))
+            var results = new ObservableCollection<DiskItem>();
+            CurrentDirectoryListView.ItemsSource = results;
+
+            var nextDirectoryIndex = 0;
+            //Debug.WriteLine("l type: " + l.GetType().ToString());
+
+            await foreach (var path in l.GetLocationContents(source.Token, false))
+            {
+                if (path.ItemCategory == DiskItemCategory.Directory)
                 {
-                    if (path.ItemCategory == DiskItemCategory.Directory)
-                    {
-                        results.Insert(nextDirectoryIndex, path);
-                        nextDirectoryIndex++;
-                    }
-                    else
-                        results.Add(path);
-                    source.Token.ThrowIfCancellationRequested();
-                }
-
-                CurrentDirectoryListView.ItemsSource = results;
-                //Debug.WriteLine("CurrentDirectoryListView.ItemsSource = results");
-
-                CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
-
-                if (l is ShellLocation shell)
-                {
-                    foreach (PropertyGroupDescription desc in shell.PropertyGroupDescriptions)
-                    {
-                        //Debug.WriteLine("Adding " + desc.PropertyName);
-                        collectionView.GroupDescriptions.Add(desc);
-                    }
+                    results.Insert(nextDirectoryIndex, path);
+                    nextDirectoryIndex++;
                 }
                 else
-                    collectionView.GroupDescriptions.Clear();
-                /*}
-                catch (OperationCanceledException) when (!String.IsNullOrEmpty(query)) // if the user canceled a search, then preserve what's been searched
-                {
-                }
-                catch (Exception ex) // else, fall back to the previous results
-                {
-                    Debug.WriteLine("NAVIGATION ERROR:\nException: " + ex.ToString() + "\nStack Trace: \n" + ex.StackTrace + "\nEND ERROR INFO");
-                    //CurrentDirectoryListView.ItemsSource = old;
-                    MessageBox<OkActionSet>.Show(ex.ToString(), "Navigation error");
-                }*/
+                    results.Add(path);
+                if (source.Token.IsCancellationRequested)
+                    break;
+                //source.Token.ThrowIfCancellationRequested();
             }
+
+
+            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(CurrentDirectoryListView.ItemsSource);
+            /*Debug.WriteLine("DESCRIPTIONS COUNT: " + collectionView.GroupDescriptions.Count);
+            foreach (PropertyGroupDescription desc in collectionView.GroupDescriptions)
+                Debug.WriteLine("DESCRIPTION: " + desc.PropertyName);*/
+            collectionView.GroupDescriptions.Clear();
+            if (l is ShellLocation shell)
+            {
+                foreach (PropertyGroupDescription desc in shell.PropertyGroupDescriptions)
+                {
+                    //Debug.WriteLine("Adding " + desc.PropertyName);
+                    collectionView.GroupDescriptions.Add(desc);
+                }
+            }
+            //CurrentDirectoryListView.ItemsSource = results;
+            //Debug.WriteLine("CurrentDirectoryListView.ItemsSource = results");
+            /*}
+            catch (OperationCanceledException) when (!String.IsNullOrEmpty(query)) // if the user canceled a search, then preserve what's been searched
+            {
+            }
+            catch (Exception ex) // else, fall back to the previous results
+            {
+                Debug.WriteLine("NAVIGATION ERROR:\nException: " + ex.ToString() + "\nStack Trace: \n" + ex.StackTrace + "\nEND ERROR INFO");
+                //CurrentDirectoryListView.ItemsSource = old;
+                MessageBox<OkActionSet>.Show(ex.ToString(), "Navigation error");
+            }*/
+        }
 
         private async void AddressBox_KeyDown(Object sender, KeyEventArgs e)
         {
@@ -677,10 +682,25 @@ namespace RibbonFileManager
             {
                 int oldIconViewLevel = IconViewLevel;
                 int newIconViewLevel = IconViewLevel;
-                if (e.Delta > 0) //scroll up
-                    newIconViewLevel--;
-                else if (e.Delta < 0) //scroll down
-                    newIconViewLevel++;
+                bool isStillIconsView = oldIconViewLevel < 240;
+
+                if (isStillIconsView)
+                {
+                    if (e.Delta > 0) //scroll up
+                        newIconViewLevel -= 6;
+                    else if (e.Delta < 0) //scroll down
+                        newIconViewLevel += 6;
+
+                    if (newIconViewLevel >= 240)
+                        newIconViewLevel = 241;
+                }
+                else
+                {
+                    if (e.Delta > 0) //scroll up
+                        newIconViewLevel--;
+                    else if (e.Delta < 0) //scroll down
+                        newIconViewLevel++;
+                }
 
                 if (IsValidIconViewLevel(newIconViewLevel) && (oldIconViewLevel != newIconViewLevel))
                 {

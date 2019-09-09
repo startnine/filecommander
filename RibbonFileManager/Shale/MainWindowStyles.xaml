@@ -629,7 +629,7 @@
                                 <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" RenderOptions.BitmapScalingMode="Linear"/>
                                 <Grid x:Name="ScaleableGrid" Width="48" Height="48" RenderTransformOrigin="0.5,0.5">
                                     <Grid x:Name="FolderIconGrid" Width="48" Height="48" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
-                                        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+                                        <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                         <Border x:Name="FirstChildIconBorder" CornerRadius="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" Height="32" Margin="16,2,-16,2" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Effect="{DynamicResource IconInnerShadow}" RenderTransformOrigin="0,0" Visibility="Collapsed">
                                             <Rectangle x:Name="FirstChildIconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                         </Border>
@@ -793,7 +793,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <WrapPanel IsItemsHost="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ScrollContentPresenter}}}"/>
                     <!--Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" KeyboardNavigation.DirectionalNavigation="Local" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"-->
                 </ItemsPanelTemplate>
             </Setter.Value>
@@ -897,8 +897,12 @@
                                         <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                     </e:Interaction.Behaviors>
                                     <Grid>
-                                        <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}"/>
-                                        <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" Margin="-3" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
+                                        <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True">
+                                            <e:Interaction.Behaviors>
+                                                <local:RenderTargetBaitAndSwitchBehavior/>
+                                            </e:Interaction.Behaviors>
+                                        </ContentPresenter>
+                                        <Grid x:Name="ChildIconsGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" Margin="-3" UseLayoutRounding="True" Effect="{DynamicResource IconOuterShadow}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition/>
                                                 <ColumnDefinition/>
@@ -971,6 +975,13 @@
                                     <Setter TargetName="NameGrid" Property="Width" Value="Auto"/>
                                     <Setter TargetName="InnerNameGrid" Property="Margin" Value="3,0,0,0"/>
                                 </DataTrigger-->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ShowEnhancedFolderIcons, Source={x:Static local:Config.Instance}}" Value="True"/>
+                                        <Condition Binding="{Binding IsVisible, ElementName=ChildIconsGrid}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="ChildIconsGrid" Property="Width" Value="{Binding Path=IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay, FallbackValue=48}"/>
+                                </MultiDataTrigger>
                                 <Trigger SourceName="RenameTextBox" Property="IsVisible" Value="True">
                                     <Setter TargetName="NameTextBlock" Property="Visibility" Value="Collapsed"/>
                                 </Trigger>
@@ -1109,7 +1120,11 @@
                                     <local:DiskItemDragBehavior TargetItem="{Binding}"/>
                                 </e:Interaction.Behaviors>
                                 <Grid DockPanel.Dock="Left">
-                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="32" Height="32"/>
+                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="32" Height="32" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True">
+                                        <e:Interaction.Behaviors>
+                                            <local:RenderTargetBaitAndSwitchBehavior/>
+                                        </e:Interaction.Behaviors>
+                                    </ContentPresenter>
                                     <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                                 </Grid>
                                 <StackPanel Margin="5,0,0,0" Orientation="Vertical" VerticalAlignment="Center">
@@ -1187,7 +1202,11 @@
                                     </e:Interaction.Behaviors>
                                 </ContentPresenter-->
                                 <Grid DockPanel.Dock="Left">
-                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="16" Height="16"/>
+                                    <ContentPresenter x:Name="IconContentPresenter" Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Center" Width="16" Height="16" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True">
+                                        <e:Interaction.Behaviors>
+                                            <local:RenderTargetBaitAndSwitchBehavior/>
+                                        </e:Interaction.Behaviors>
+                                    </ContentPresenter>
                                     <CheckBox x:Name="SelectionCheckBox" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Visibility="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0" Padding="0" MaxWidth="16" MaxHeight="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
                                 <Grid>
@@ -1278,7 +1297,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <!--Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/-->
-                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32" Grid.Column="0" Grid.Row="0">
+                                <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="32" Grid.Column="0" Grid.Row="0" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True">
                                     <e:Interaction.Behaviors>
                                         <local:IconScaleBehavior/>
                                     </e:Interaction.Behaviors>
@@ -1592,6 +1611,58 @@
     </Style>
 
     <Style x:Key="FavoritesTreeViewStyle" TargetType="{x:Type TreeView}" BasedOn="{StaticResource {x:Type TreeView}}">
+        <Style.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type local:Location}">
+                <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
+                <StackPanel Orientation="Horizontal" Height="16">
+                    <!--Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/-->
+                    <Grid VerticalAlignment="Stretch" Width="16">
+                        <ContentPresenter x:Name="SpecialIconPresenter" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter.LayoutTransform>
+                                <ScaleTransform ScaleX="0.333333333333333" ScaleY="0.333333333333333"/>
+                            </ContentPresenter.LayoutTransform>
+                            <e:Interaction.Behaviors>
+                                <local:IconScaleBehavior/>
+                            </e:Interaction.Behaviors>
+                        </ContentPresenter>
+                        <Rectangle x:Name="IconRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" RenderOptions.BitmapScalingMode="Linear"/>
+                    </Grid>
+                    <ContentPresenter Content="{Binding Name}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
+                        <ContentPresenter.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                            </Style>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
+                </StackPanel>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
+                        <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="SpecialIconPresenter" Property="Content" Value="{Binding SpecialIcon}"/>
+                        <Setter TargetName="IconRectangle" Property="Fill" Value="{x:Null}"/>
+                        <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type local:DirectoryQuery}" ItemsSource="{Binding Item.SubItems}">
+                <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
+                <StackPanel Orientation="Horizontal" Height="16">
+                    <!--Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/-->
+                    <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True">
+                        <e:Interaction.Behaviors>
+                            <local:IconScaleBehavior/>
+                        </e:Interaction.Behaviors>
+                    </ContentPresenter>
+                    <ContentPresenter Content="{Binding Name}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
+                        <ContentPresenter.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                            </Style>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </Style.Resources>
         <!--Setter Property="BorderThickness" Value="0"/-->
     </Style>
     <Style x:Key="zFavoritesTreeViewStyle" TargetType="{x:Type TreeView}" BasedOn="{StaticResource {x:Type TreeView}}">
@@ -1665,25 +1736,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type local:DiskItem}" ItemsSource="{Binding SubItems}">
-        <!--, Converter={StaticResource DiskItemSubItemsTreeFilterConverter}-->
-        <StackPanel Orientation="Horizontal" Height="16">
-            <!--Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/-->
-            <ContentPresenter Content="{DynamicResource DiskItemIconDisplayControl}" VerticalAlignment="Stretch" Width="16">
-                <e:Interaction.Behaviors>
-                    <local:IconScaleBehavior/>
-                </e:Interaction.Behaviors>
-            </ContentPresenter>
-            <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
-                <ContentPresenter.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
-                    </Style>
-                </ContentPresenter.Resources>
-            </ContentPresenter>
-        </StackPanel>
-    </HierarchicalDataTemplate>
 
     <Style x:Key="DetailsPaneStyle" TargetType="{x:Type ContentControl}">
         <Setter Property="MaxWidth" Value="250"/>
