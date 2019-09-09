@@ -10,7 +10,7 @@
         xmlns:bread="clr-namespace:Start9.UI.Wpf.Breadcrumbs;assembly=Start9.UI.Wpf"
         xmlns:Fluent="urn:fluent-ribbon"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="1100" Height="550" MinWidth="225" ShowTitlebarText="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
+        Title="MainWindow" Width="1100" Height="550" MinWidth="225" ShowTitlebarText="False" ShowTitlebarIcon="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
     <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
     <!--InterfaceMode="{Binding InterfaceMode, Source={x:Static local:Config.Instance}}"-->
     <!--win:DecoratableWindow.FullWindowContent-->
@@ -85,20 +85,20 @@
                         <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" Fluent:KeyTip.Keys="C">
                             <!-- KeyTip="C"-->
                             <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
-                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" Fluent:KeyTip.Keys="PR"/>
+                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" Icon="{DynamicResource ComputerPropertiesButtonIcon}" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" Fluent:KeyTip.Keys="PR"/>
                                 <!--KeyTip="PR"-->
-                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O" Click="OpenButton_Click"/>
-                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" Icon="{DynamicResource ComputerOpenButtonIcon}" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O" Click="OpenButton_Click"/>
+                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" Icon="{DynamicResource ComputerRenameButtonIcon}" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Network" Header="Network">
-                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" LargeIcon="{DynamicResource ComputerAccessMediaButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="M" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" LargeIcon="{DynamicResource ComputerMapNetworkDriveButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="N" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" LargeIcon="{DynamicResource ComputerAddNetworkLocationButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="L" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" Icon="{DynamicResource ComputerAccessMediaButtonIcon}" LargeIcon="{DynamicResource ComputerAccessMediaButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="M" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" Icon="{DynamicResource ComputerMapNetworkDriveButtonIcon}" LargeIcon="{DynamicResource ComputerMapNetworkDriveButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="N" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" Icon="{DynamicResource ComputerAddNetworkLocationButtonIcon}" LargeIcon="{DynamicResource ComputerAddNetworkLocationButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="L" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="SystemBox" Header="System">
-                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C" Click="OpenControlPanelButton_Click"/>
-                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" LargeIcon="{DynamicResource ComputerOpenSettingsButtonLargeIcon}" SizeDefinition="Large" KeyTip="S" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" Icon="{DynamicResource UninstallOrChangeProgramIcon}" SizeDefinition="Middle,Small" KeyTip="U" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" Icon="{DynamicResource ComputerOpenControlPanelButtonIcon}" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C" Click="OpenControlPanelButton_Click"/>
+                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" Icon="{DynamicResource ComputerOpenSettingsButtonIcon}" LargeIcon="{DynamicResource ComputerOpenSettingsButtonLargeIcon}" SizeDefinition="Large" KeyTip="S" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" Icon="{DynamicResource UninstallOrChangeProgramButtonIcon}" SizeDefinition="Middle,Small" KeyTip="U" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" Icon="{DynamicResource ComputerSystemPropertiesButtonIcon}" SizeDefinition="Middle,Small" KeyTip="S" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:Button x:Name="ManageSystemButton" Header="Manage" Icon="{DynamicResource ComputerManageSystemButtonIcon}" SizeDefinition="Middle,Small" KeyTip="G"/>
                             </Fluent:RibbonGroupBox>
@@ -112,21 +112,21 @@
                                 <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="PS" Click="PasteShortcutButton_Click" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
-                                <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
+                                <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" Icon="{DynamicResource MoveToButtonIcon}" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" Icon="{DynamicResource CopyToButtonIcon}" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" Icon="{DynamicResource DeleteButtonIcon}" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
                                     <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle" Click="DeleteButton_Click"/>
                                     <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete" local:FeatureNYI.IsNYI="True"/>
                                 </Fluent:SplitButton>
-                                <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
+                                <Fluent:Button x:Name="RenameButton" Header="Rename" Icon="{DynamicResource RenameButtonIcon}" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="New" Header="New">
-                                <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
+                                <Fluent:Button x:Name="NewFolderButton" Header="New folder" Icon="{DynamicResource NewFolderButtonIcon}" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
                                 <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" Icon="{DynamicResource NewItemButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" Icon="{DynamicResource EasyAccessButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
-                                <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" LargeIcon="{DynamicResource PropertiesButtonLargeIcon}" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
+                                <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" Icon="{DynamicResource PropertiesButtonIcon}" LargeIcon="{DynamicResource PropertiesButtonLargeIcon}" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
                                 <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
                                 <Fluent:Button x:Name="EditButton" Header="Edit" Icon="{DynamicResource EditButtonIcon}" SizeDefinition="Middle,Small" Click="EditButton_Click" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:Button x:Name="HistoryButton" Header="History" Icon="{DynamicResource HistoryButtonIcon}" SizeDefinition="Middle,Small" Click="HistoryButton_Click" local:FeatureNYI.IsNYI="True"/>
@@ -157,13 +157,13 @@
                                 <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
-                        <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide" KeyTip="V">
+                        <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide,Options" KeyTip="V">
                             <!--Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
                                 <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview pane" Icon="{DynamicResource ViewPreviewPaneButtonIcon}" SizeDefinition="Middle,Small" Click="PreviewPaneToggleButton_Click"/>
                                 <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details pane" Icon="{DynamicResource ViewDetailsPaneButtonIcon}" SizeDefinition="Middle,Small" Click="DetailsPaneToggleButton_Click"/>
                             </Fluent:RibbonGroupBox-->
                             <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
-                                <Fluent:DropDownButton Header="Toggle panes" LargeIcon="{DynamicResource ViewNavigationPaneButtonLargeIcon}" SizeDefinition="Large,Small">
+                                <Fluent:DropDownButton Header="Toggle panes" Icon="{DynamicResource TogglePanesButtonIcon}" LargeIcon="{DynamicResource TogglePanesButtonLargeIcon}" SizeDefinition="Large,Small">
                                     <Fluent:MenuItem x:Name="NavigationBarMenuItem" IsCheckable="True" Header="Navigation bar pane" IsChecked="{Binding ShowNavigationBarPane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
                                     <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" Header="Navigation tree pane" IsChecked="{Binding ShowNavigationTreePane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
                                     <Fluent:MenuItem x:Name="PreviewPaneMenuItem" IsCheckable="True" Header="Preview pane" IsChecked="{Binding ShowPreviewPane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
@@ -189,7 +189,7 @@
                                             Header="Split"
                                             KeyTip="S"
                                             GroupBy="Tag"
-         a                                   ResizeMode="Both"
+                                            ResizeMode="Both"
                                             MaxItemsInRow="6"
                                             MinItemsInRow="2"
                                             ItemWidth="40"
@@ -215,7 +215,7 @@
                                     </Fluent:InRibbonGallery-->
                             </Fluent:RibbonGroupBox>
                             <Fluent:RibbonGroupBox x:Name="CurrentViewGroupBox" Header="Current view">
-                                <Fluent:DropDownButton Header="Sort by" LargeIcon="{DynamicResource ViewSortByButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton Header="Sort by" Icon="{DynamicResource ViewSortByButtonIcon}" LargeIcon="{DynamicResource ViewSortByButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:DropDownButton Header="Group by" Icon="{DynamicResource ViewGroupByButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:DropDownButton Header="Add columns" Icon="{DynamicResource ViewAddColumnsButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:Button Header="Size all columns to fit" Icon="{DynamicResource ViewSizeColumnsToFitButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
@@ -224,12 +224,13 @@
                                 <Fluent:CheckBox x:Name="ShowItemCheckBoxesCheckBox" Header="Item check boxes" SizeDefinition="Large,Small" IsChecked="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
                                 <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
                                 <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
-                                <Fluent:Button Header="Hide selected items" LargeIcon="{DynamicResource ViewHideSelectedItemsButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button Header="Hide selected items" Icon="{DynamicResource ViewHideSelectedItemsButtonIcon}" LargeIcon="{DynamicResource ViewHideSelectedItemsButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
                             </Fluent:RibbonGroupBox>
-                            <Fluent:RibbonGroupBox x:Name="Options" Header="Options">
-                                <Fluent:DropDownButton Header="Options" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small">
+                            <Fluent:RibbonGroupBox x:Name="Options" Header="Configure">
+                                <Fluent:Button Header="Options" Icon="{DynamicResource ViewOptionsButtonIcon}" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small" Click="FolderAndSearchOptionsMenuItem_Click"/>
+                                <!--Fluent:DropDownButton Header="Options" Icon="{DynamicResource ViewOptionsButtonIcon}" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small">
                                     <Fluent:MenuItem x:Name="FolderAndSearchOptionsMenuItem" Header="Change folder and search options" Click="FolderAndSearchOptionsMenuItem_Click"/>
-                                </Fluent:DropDownButton>
+                                </Fluent:DropDownButton-->
                             </Fluent:RibbonGroupBox>
                         </Fluent:RibbonTabItem>
                         <Fluent:RibbonTabItem Header="Extract" ReduceOrder="ExtractTo,ExtractAll" KeyTip="JZ" Group="{Binding Source={x:Reference ArchiveToolsGroup}}">

@@ -149,6 +149,15 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ShowTitlebarTextProperty =
             DependencyProperty.Register(nameof(ShowTitlebarText), typeof(Boolean), typeof(Config), new PropertyMetadata(true));
 
+        public Boolean ShowTitlebarIcon
+        {
+            get => (Boolean)GetValue(ShowTitlebarIconProperty);
+            set => SetValue(ShowTitlebarIconProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowTitlebarIconProperty =
+            DependencyProperty.Register(nameof(ShowTitlebarIcon), typeof(Boolean), typeof(Config), new PropertyMetadata(false));
+
         public System.Windows.Controls.Dock DetailsPanePlacement
         {
             get => (System.Windows.Controls.Dock)GetValue(DetailsPanePlacementProperty);

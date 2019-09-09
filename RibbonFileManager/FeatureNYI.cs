@@ -12,6 +12,8 @@ namespace RibbonFileManager
 {
     public class FeatureNYI
     {
+        public static bool EnableNYIIndication = true;
+
         static RotateTransform _upsideDownTransform = new RotateTransform(180);
 
         public static DependencyProperty IsNYIProperty =
@@ -21,20 +23,13 @@ namespace RibbonFileManager
         {
             if ((sender != null) && (sender is FrameworkElement el))
             {
-                //el.Loaded += FrameworkElement_Loaded;
-                el.RenderTransformOrigin = new Point(0.5, 0.5);
-                el.RenderTransform = _upsideDownTransform;
+                if (EnableNYIIndication)
+                {
+                    el.RenderTransformOrigin = new Point(0.5, 0.5);
+                    el.RenderTransform = _upsideDownTransform;
+                }
             }
-        }/*
-
-        private static void FrameworkElement_Loaded(object sender, RoutedEventArgs e)
-        {
-            if ((sender != null) && (sender is FrameworkElement el))
-            {
-                el.RenderTransformOrigin = new Point(0.5, 0.5);
-                el.RenderTransform = _upsideDownTransform;
-            }
-        }*/
+        }
 
         public static bool GetIsNYI(DependencyObject el)
         {

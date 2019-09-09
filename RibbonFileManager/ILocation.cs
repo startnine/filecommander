@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -26,6 +27,8 @@ namespace RibbonFileManager
         public abstract BreadcrumbItem[] BreadcrumbsSegments { get; }
 
         public abstract Icon Icon { get; }
+        public abstract bool HasSpecialIcon { get; }
+        public abstract UIElement SpecialIcon { get; }
 
         public override Boolean Equals(Object obj) => Equals(obj as Location);
         public Boolean Equals(Location other) => Name == other?.Name;
@@ -50,6 +53,17 @@ namespace RibbonFileManager
         public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Item.ItemPath);
 
         public override Icon Icon => Item.ItemJumboIcon;
+        public override bool HasSpecialIcon => Item.HasSpecialIcon;
+        public override UIElement SpecialIcon
+        {
+            get
+            {
+                if (Item.HasSpecialIcon)
+                    return Item.SpecialIcon;
+                else
+                    return null;
+            }
+        }
 
         public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
         {
@@ -87,6 +101,8 @@ namespace RibbonFileManager
         public override BreadcrumbItem[] BreadcrumbsSegments => MainWindow.Converter.Invoke?.Invoke(Name);
             
         public override Icon Icon { get; }
+        public override bool HasSpecialIcon => false;
+        public override UIElement SpecialIcon => null;
 
         public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
         {
@@ -140,6 +156,18 @@ namespace RibbonFileManager
         public override BreadcrumbItem[] BreadcrumbsSegments => new BreadcrumbItem[] { new BreadcrumbItem(Name, Name) };
 
         public override Icon Icon => null;
+        public override bool HasSpecialIcon => true;
+
+        public override UIElement SpecialIcon
+        {
+            get
+            {
+                if (LocationGuid == ThisPcGuid)
+                    return (UIElement)Application.Current.Resources["ComputerIcon"];
+                else
+                    return null;
+            }
+        }
 
         public override async IAsyncEnumerable<DiskItem> GetLocationContents(CancellationToken token, Boolean recursive)
         {

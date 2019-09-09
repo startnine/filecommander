@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows;
+using System.Windows.Data;
 
 namespace RibbonFileManager
 {
@@ -71,18 +72,24 @@ namespace RibbonFileManager
             Content = new WindowContent(defaultlocation);
             Content.NavManager.Navigated += (sneder, args) =>
             {
-                Name = Content.CurrentLocation.Name;
-                Icon = Content.CurrentLocation.Icon;
-                if (Content.CurrentLocation is DirectoryQuery query)
-                    HasSpecialIcon = query.Item.HasSpecialIcon;
-                else
-                    HasSpecialIcon = false;
-
-                if (HasSpecialIcon)
-                    SpecialIcon = (Content.CurrentLocation as DirectoryQuery).Item.SpecialIcon;
-                else
-                    SpecialIcon = null;
+                UpdateLocationInfo();
             };
+        }
+
+        void UpdateLocationInfo()
+        {
+            Name = Content.CurrentLocation.Name;
+            Icon = Content.CurrentLocation.Icon;
+            /*if (Content.CurrentLocation is DirectoryQuery query)
+                HasSpecialIcon = query.Item.HasSpecialIcon;
+            else
+                HasSpecialIcon = false;*/
+            HasSpecialIcon = Content.CurrentLocation.HasSpecialIcon;
+
+            if (HasSpecialIcon)
+                SpecialIcon = /*(Content.CurrentLocation as DirectoryQuery).Item*/Content.CurrentLocation.SpecialIcon;
+            else
+                SpecialIcon = null;
         }
     }
 }

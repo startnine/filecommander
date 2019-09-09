@@ -85,6 +85,9 @@ namespace RibbonFileManager
             //Titlebar text
             TitlebarTextToggleSwitch.IsChecked = Config.Instance.ShowTitlebarText;
 
+            //Titlebar icon
+            TitlebarIconToggleSwitch.IsChecked = Config.Instance.ShowTitlebarIcon;
+
             //Open folders in new window
             OpenFoldersInNewWindowCheckBox.IsChecked = Config.Instance.OpenFoldersInNewWindow;
             /*if (Config.Instance.OpenFoldersInNewWindow)
@@ -140,6 +143,9 @@ namespace RibbonFileManager
 
             //Titlebar text
             Config.Instance.ShowTitlebarText = TitlebarTextToggleSwitch.IsChecked.Value;
+
+            //Titlebar icon
+            Config.Instance.ShowTitlebarIcon = TitlebarIconToggleSwitch.IsChecked.Value;
 
             //Open folders in new window
             Config.Instance.OpenFoldersInNewWindow = OpenFoldersInNewWindowCheckBox.IsChecked.Value;

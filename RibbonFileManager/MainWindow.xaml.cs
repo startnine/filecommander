@@ -193,6 +193,17 @@ namespace RibbonFileManager
                 }
 
                 ShowItemCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
+
+                if (Instance.TabsMode != Config.TabDisplayMode.Titlebar)
+                {
+                    ShowTitlebarText = Instance.ShowTitlebarText;
+                    ShowTitlebarIcon = Instance.ShowTitlebarIcon;
+                }
+                else
+                {
+                    ShowTitlebarText = false;
+                    ShowTitlebarIcon = false;
+                }
             }
         }
 
@@ -668,9 +679,7 @@ namespace RibbonFileManager
 
         public void Navigate(Location location)
         {
-            Title = location.Name;
             //(ContentTabControl.SelectedItem as TabItem).GetBindingExpression(HeaderedContentControl.HeaderProperty).UpdateTarget(); //activec
-
             if ((location is ShellLocation loc) && (loc.LocationGuid == ShellLocation.ThisPcGuid))
             {
                 ComputerRibbonTabItem.Visibility = Visibility.Visible;
@@ -1115,7 +1124,88 @@ namespace RibbonFileManager
                 UpdatePreviewPane(query.Item);
             UpdateStatusBar(loc);
             UpdateSearchBar(loc);
+            UpdateWindow(loc);
             UpdateAddressBar(loc);
+        }
+
+        void UpdateWindow(Location loc)
+        {
+            if (IsLoaded)
+            {
+                Title = loc.Name;
+                if (loc.HasSpecialIcon)
+                {
+                    if (false)
+                    {
+                        //Icon = (conv.Convert(query.Item.ItemSmallIcon, typeof(Brush), 16, System.Globalization.CultureInfo.CurrentCulture) as ImageBrush).ImageSource;
+                        RenderTargetBitmap render = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(48/*query.Item.SpecialIcon.DesiredSize.Width*/), (int)SystemScaling.WpfUnitsToRealPixels(48/*query.Item.SpecialIcon.DesiredSize.Height*/), 96, 96, PixelFormats.Pbgra32);
+
+                        var drawVis = new DrawingVisual();
+                        using (var context = drawVis.RenderOpen())
+                        {
+                            var visB = new VisualBrush(loc.SpecialIcon);
+                            //context.DrawRectangle(new SolidColorBrush(Colors.Transparent), null, new Rect(new Point(0, 0), new Size(47, 47)));
+                            context.DrawRectangle(visB, null, new Rect(new Point(-100, -100), new Size(147, 147)));
+                        }
+                        render.Render(drawVis/*query.Item.SpecialIcon*/);
+                        Icon = render; //new ImageSourceConverter().ConvertFrom(loc.SpecialIcon) as ImageSource;
+                    }
+                    AttachedProperties.SetIcon(BreadcrumbsBar, new ContentPresenter()
+                    {
+                        Content = loc.SpecialIcon,
+                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        LayoutTransform = new ScaleTransform(0.333333333333333, 0.333333333333333)
+                    });
+
+                    var presenter = new ContentPresenter()
+                    {
+                        Content = loc.SpecialIcon/*,
+                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        LayoutTransform = new ScaleTransform(0.666666666666667, 0.666666666666667)*/
+                    };
+                    BreadcrumbsBar.UpdateLayout();
+
+                    BitmapImage bmp = new BitmapImage();
+                    using (var fileStream = new MemoryStream())
+                    {
+                        RenderTargetBitmap bitmap = new RenderTargetBitmap((Int32)SystemScaling.WpfUnitsToRealPixels(32), (Int32)SystemScaling.WpfUnitsToRealPixels(32), 96 * 2, 96 * 2, PixelFormats.Pbgra32);
+                        bitmap.Render(AttachedProperties.GetIcon(BreadcrumbsBar) as Visual);
+
+                        BitmapEncoder encoder = new PngBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                        encoder.Save(fileStream);
+
+                        bmp.BeginInit();
+                        bmp.CacheOption = BitmapCacheOption.OnLoad;
+                        bmp.StreamSource = fileStream;
+                        bmp.EndInit();
+                    }
+                    Icon = bmp;
+                }
+                else// if (loc.Icon is Visual vis)
+                {
+                    Icon = (new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(loc.Icon, typeof(Brush), 16.ToString(), System.Globalization.CultureInfo.CurrentCulture) as ImageBrush).ImageSource;
+
+                    AttachedProperties.SetIcon(BreadcrumbsBar, new System.Windows.Shapes.Rectangle()
+                    {
+                        Width = 16,
+                        Height = 16,
+                        Fill = new ImageBrush(Icon) //new SolidColorBrush(Colors.Red)
+                    });
+                }
+                /*Icon = new System.Windows.Shapes.Rectangle()
+                {
+                    Width = 16,
+                    Height = 16,
+                    loc.Icon
+                };*/
+                /*AttachedProperties.SetIcon(BreadcrumbsBar, new System.Windows.Shapes.Rectangle()
+                {
+                    Width = 16,
+                    Height = 16,
+                    Fill = new ImageBrush(Icon) //new SolidColorBrush(Colors.Red)
+                });*/
+            }
         }
 
         void UpdateDetailsPane(Location loc)

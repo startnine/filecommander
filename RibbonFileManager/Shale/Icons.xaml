@@ -2,7 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RibbonFileManager">
     <!--#region Special Folder Icons-->
-    
+
+    <Grid x:Key="ComputerIcon" x:Shared="False" Width="48" Height="48" Effect="{DynamicResource IconOuterShadow}">
+        <!--Grid.Effect>
+            <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
+        </Grid.Effect-->
+        <Rectangle Width="12" Height="42" VerticalAlignment="Center" Fill="{DynamicResource IconPrimaryFillBrush}" UseLayoutRounding="True"/>
+        <!--Rectangle Width="12" Height="42" VerticalAlignment="Center" Fill="#36000000" StrokeThickness="0" UseLayoutRounding="True"/-->
+        <Rectangle Height="39" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="3" UseLayoutRounding="True"/>
+        <!--Rectangle.Effect>
+                                    <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.125" />
+                                </Rectangle.Effect>
+                            </Rectangle-->
+        <Rectangle Height="6" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="3" UseLayoutRounding="True"/>
+        <!--Rectangle Height="6" VerticalAlignment="Bottom" Fill="#26000000" StrokeThickness="0" UseLayoutRounding="True"/-->
+    </Grid>
+
     <Grid x:Key="DesktopFolderIcon" x:Shared="False" Width="48" Height="48" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Path Data="M 0 0 L 36 0 L 36 24 L 38 26 L 38 38 L 0 38 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
         <Border CornerRadius="1" Background="{DynamicResource IconTertiaryFillBrush}" Width="30" Height="22" Effect="{DynamicResource IconInnerShadow}" UseLayoutRounding="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-5,10,5,-10">
@@ -191,7 +206,41 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="MoveToButtonIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path Data="M 0 0 L 20 0 L 20 14 L 22 16 L 22 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+            <Path Data="M 0 8 L 8 0 L 8 5 L 16 5 L 16 11 L 8 11 L 8 16 Z" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Effect="{DynamicResource IconInnerShadow}" Margin="-3,0"/>
+            <Path Data="M 0 0 L 12 8 L 12 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="CopyToButtonLargeIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path Data="M 0 0 L 20 0 L 20 14 L 22 16 L 22 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+            <Grid Width="30" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" Effect="{DynamicResource IconInnerShadow}" Margin="-3,0">
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                </Grid.RenderTransform>
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+                    <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Effect="{DynamicResource IconStrongOuterShadow}"/>
+                </Grid>
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Effect="{DynamicResource IconInnerShadow}">
+                    <Path Data="M 0 0 L 13 0 L 18 5 L 18 22 L 0 22 Z" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+                    <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconTertiaryFillBrush}" Effect="{DynamicResource IconStrongOuterShadow}"/>
+                </Grid>
+            </Grid>
+            <Path Data="M 0 0 L 12 8 L 12 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="CopyToButtonIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Path Data="M 0 0 L 20 0 L 20 14 L 22 16 L 22 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Grid Width="30" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="1,0.5" Effect="{DynamicResource IconInnerShadow}" Margin="-3,0">
@@ -215,8 +264,30 @@
     <Grid x:Key="DeleteButtonLargeIcon" x:Shared="False" Width="32" Height="32">
         <Path Data="M 0 0 L 24 24 M 0 24 L 24 0" UseLayoutRounding="True" StrokeThickness="4" Stroke="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
+    
+    <Grid x:Key="DeleteButtonIcon" x:Shared="False" Width="16" Height="16">
+        <Path Data="M 0 0 L 12 12 M 0 12 L 12 0" UseLayoutRounding="True" StrokeThickness="4" Stroke="{DynamicResource IconRedForegroundBrush}" Effect="{DynamicResource IconOuterShadow}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
 
     <Grid x:Key="RenameButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Height="12" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconForegroundBrush}" BorderThickness="3,3,13,3" CornerRadius="0" Effect="{DynamicResource IconOuterShadow}"/>
+        <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="3,0" Effect="{DynamicResource IconInnerShadow}">
+            <Canvas.OpacityMask>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Border Width="12" Height="24" Background="Transparent" BorderBrush="Black" BorderThickness="0,2">
+                            <Canvas Width="2" Background="Black"/>
+                        </Border>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Canvas.OpacityMask>
+        </Canvas>
+    </Grid>
+
+    <Grid x:Key="RenameButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Border Height="12" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconForegroundBrush}" BorderThickness="3,3,13,3" CornerRadius="0" Effect="{DynamicResource IconOuterShadow}"/>
         <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="3,0" Effect="{DynamicResource IconInnerShadow}">
             <Canvas.OpacityMask>
@@ -246,7 +317,36 @@
         </Canvas>
     </Grid>
 
+    <Grid x:Key="ComputerRenameButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Border Height="12" BorderBrush="{DynamicResource IconPrimaryFillBrush}" Background="{DynamicResource IconForegroundBrush}" BorderThickness="3,3,13,3" CornerRadius="0" Effect="{DynamicResource IconOuterShadow}"/>
+        <Canvas Width="12" Height="24" Background="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" Margin="3,0" Effect="{DynamicResource IconInnerShadow}">
+            <Canvas.OpacityMask>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Border Width="12" Height="24" Background="Transparent" BorderBrush="Black" BorderThickness="0,2">
+                            <Canvas Width="2" Background="Black"/>
+                        </Border>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Canvas.OpacityMask>
+        </Canvas>
+    </Grid>
+
     <Grid x:Key="NewFolderButtonLargeIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path Data="M 0 0 L 20 0 L 20 14 L 22 16 L 22 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+            <Path Data="M 0 4 L 4 4 L 4 0 L 6 0 L 6 4 L 10 4 L 10 6 L 6 6 L 6 10 L 4 10 L 4 6 L 0 6 Z" Fill="{DynamicResource IconGreenForegroundBrush}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Effect="{DynamicResource IconInnerShadow}" Margin="-3,0"/>
+            <Path Data="M 0 0 L 12 8 L 12 32 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="NewFolderButtonIcon" x:Shared="False" Width="30" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Path Data="M 0 0 L 20 0 L 20 14 L 22 16 L 22 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconPrimaryFillBrush}" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}"/>
             <Path Data="M 0 4 L 4 4 L 4 0 L 6 0 L 6 4 L 10 4 L 10 6 L 6 6 L 6 10 L 4 10 L 4 6 L 0 6 Z" Fill="{DynamicResource IconGreenForegroundBrush}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Effect="{DynamicResource IconInnerShadow}" Margin="-3,0"/>
@@ -280,7 +380,33 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="PropertiesButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
+                <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+                <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Path Data="M 0 11 L 2 9 L 7 13 L 15 0 L 17 2 L 8 18 Z" Fill="{DynamicResource SelectedHighlightBrush}" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True" Margin="4,8,-4,-8"/>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="ComputerPropertiesButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
+                <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+                <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Path Data="M 0 11 L 2 9 L 7 13 L 15 0 L 17 2 L 8 18 Z" Fill="{DynamicResource SelectedHighlightBrush}" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True" Margin="4,8,-4,-8"/>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerPropertiesButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
                 <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
@@ -348,7 +474,43 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="ComputerOpenButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid Width="30" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#01000000">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource IconOuterShadow}">
+                <Path Data="M 0 0 L 15 0 L 20 5 L 20 24 L 0 24 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+                <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Path Data="M 8 0 L 0 8 L 5 8 L 5 16 L 11 16 L 11 8 L 16 8 Z" Fill="{DynamicResource SelectedHighlightBrush}" Effect="{DynamicResource IconOuterShadow}" UseLayoutRounding="True" Margin="4,8,-4,-8"/>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="ComputerAccessMediaButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid Width="6" Height="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,1.5" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+            <Ellipse Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+        </Grid>
+        <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" StrokeThickness="0" Effect="{DynamicResource IconOuterShadow}"/>
+        <Grid Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Effect="{DynamicResource IconOuterShadow}" Margin="0,0,2,0">
+            <Rectangle Width="2" HorizontalAlignment="Right" VerticalAlignment="Stretch" Fill="{DynamicResource IconPrimaryFillBrush}" Margin="0,0,4,8"/>
+            <Grid Height="8" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="{DynamicResource IconSecondaryFillBrush}">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Height="2" Margin="4,0" Orientation="Horizontal">
+                    <Ellipse Width="2" Fill="{DynamicResource SelectedHighlightBrush}" Margin="0,0,3,0"/>
+                    <Ellipse Width="2" Fill="{DynamicResource SelectedHighlightBrush}" Margin="0,0,3,0"/>
+                </StackPanel>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Center" Height="2" Margin="4,0" Width="6" CornerRadius="1" Background="{DynamicResource IconForegroundBrush}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerAccessMediaButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Grid Width="6" Height="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Effect="{DynamicResource IconOuterShadow}">
             <Rectangle Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,1.5" Fill="{DynamicResource IconTertiaryFillBrush}"/>
             <Ellipse Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconTertiaryFillBrush}"/>
@@ -381,7 +543,48 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="ComputerMapNetworkDriveButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid Width="26" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="{DynamicResource IconPrimaryFillBrush}" Effect="{DynamicResource IconOuterShadow}">
+            <Grid Height="26" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Ellipse Fill="{DynamicResource IconSecondaryFillBrush}" Margin="2"/>
+                <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconForegroundBrush}" StrokeThickness="0"/>
+                <Path Data="M 0 12 L 15 0 L 3 15 Z" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="{DynamicResource IconForegroundBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+            </Grid>
+            <Rectangle Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="2" Fill="{DynamicResource IconTertiaryFillBrush}"/>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="ComputerAddNetworkLocationButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Width="22" HorizontalAlignment="Right" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleX="0.875" ScaleY="0.875"/>
+                </Grid.RenderTransform>
+                <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,18,0,2" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+                <Rectangle Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+                <Rectangle Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{DynamicResource IconTertiaryFillBrush}" StrokeThickness="2" Stroke="{DynamicResource IconSecondaryFillBrush}"/>
+            </Grid>
+        </Border>
+        <Grid Width="22" HorizontalAlignment="Left" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
+            <Rectangle VerticalAlignment="Stretch" Width="4" Margin="0,18,0,2" Fill="{DynamicResource IconPrimaryFillBrush}"/>
+            <Rectangle Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+            <Border Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource IconTertiaryFillBrush}" BorderThickness="2" BorderBrush="{DynamicResource IconSecondaryFillBrush}">
+                <Path Data="M 1.414 4.338 A 8,8 90 0 1 12.73,4.338 L 14.145 2.922 A 10,10 90 0 0 0,2.924 Z
+                      M 4.242 7.166 A 4,4 90 0 1 9.9,7.166 L 11.316 5.752 A 6,6 90 0 0 2.828,5.752 Z
+                      M 7.072 9.996 L 8.486 8.582 A 2,2 90 0 0 5.658,8.582 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconForegroundBrush}" StrokeThickness="0" Effect="{DynamicResource IconInnerShadow}"/>
+            </Border>
+        </Grid>
+    </Grid>
+
+    <Grid x:Key="ComputerAddNetworkLocationButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Border Width="22" HorizontalAlignment="Right" VerticalAlignment="Stretch" Effect="{DynamicResource IconOuterShadow}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
@@ -422,11 +625,40 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="ComputerOpenControlPanelButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Rectangle Width="16" Height="6" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource IconPrimaryFillBrush}" StrokeThickness="0"/>
+            <Border Height="26" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{DynamicResource IconTertiaryFillBrush}" BorderThickness="2" BorderBrush="{DynamicResource IconSecondaryFillBrush}">
+                <DockPanel Margin="4" Effect="{DynamicResource IconInnerShadow}">
+                    <Ellipse Width="10" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" VerticalAlignment="Center" Stroke="{DynamicResource IconForegroundBrush}" Fill="{DynamicResource SelectedHighlightBrush}" StrokeThickness="2" Margin="0,0,2,0" DockPanel.Dock="Left"/>
+                    <UniformGrid Columns="1" Margin="0,2">
+                        <Border BorderBrush="{DynamicResource IconForegroundBrush}" BorderThickness="1" Height="4">
+                            <Rectangle Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{DynamicResource SelectedHighlightBrush}"/>
+                        </Border>
+                        <Border BorderBrush="{DynamicResource IconForegroundBrush}" BorderThickness="1" Height="4">
+                            <Rectangle Width="2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{DynamicResource SelectedHighlightBrush}"/>
+                        </Border>
+                    </UniformGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="ComputerOpenSettingsButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 11.96875 -0.001953125 L 7.390625 1.9980469 L 9.109375 5.9394531 C 7.8460921 6.7902446 6.7532639 7.8746698 5.8847656 9.125 L 1.8320312 7.5332031 L 0.009765625 12.191406 L 3.9394531 13.730469 C 3.795908 14.474032 3.7148438 15.23954 3.7148438 16.023438 C 3.7148438 16.80601 3.7963812 17.570113 3.9394531 18.3125 L 0.001953125 20.03125 L 2.0019531 24.607422 L 5.8808594 22.916016 C 6.7529657 24.173039 7.8523621 25.261833 9.1230469 26.115234 L 7.5390625 30.166016 L 12.189453 31.990234 L 13.759766 27.976562 C 14.445199 28.097761 15.14636 28.173828 15.865234 28.173828 C 16.682401 28.173828 17.480884 28.089266 18.253906 27.933594 L 20.029297 31.998047 L 24.613281 29.998047 L 22.839844 25.947266 C 24.049179 25.093279 25.103108 24.031367 25.933594 22.804688 L 30.164062 24.460938 L 31.988281 19.810547 L 27.8125 18.173828 C 27.938876 17.474431 28.015625 16.757858 28.015625 16.023438 C 28.015625 15.263896 27.935745 14.522656 27.800781 13.800781 L 32.001953 11.970703 L 30.001953 7.3867188 L 25.890625 9.1835938 C 25.057524 7.9686527 24.007145 6.9150154 22.800781 6.0703125 L 24.464844 1.8359375 L 19.806641 0.01171875 L 18.203125 4.1054688 C 17.445689 3.9562805 16.664771 3.8730469 15.865234 3.8730469 C 15.140959 3.8730469 14.434431 3.9492798 13.744141 4.0722656 L 11.96875 -0.001953125 z M 15.865234 8.4277344 C 20.086589 8.4277344 23.460938 11.80197 23.460938 16.023438 C 23.460938 20.244905 20.086589 23.619141 15.865234 23.619141 C 11.64388 23.619141 8.2695312 20.244905 8.2695312 16.023438 C 8.2695312 11.80197 11.64388 8.4277344 15.865234 8.4277344 z" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
     </Grid>
 
-    <Grid x:Key="UninstallOrChangeProgramIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid x:Key="ComputerOpenSettingsButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 11.96875 -0.001953125 L 7.390625 1.9980469 L 9.109375 5.9394531 C 7.8460921 6.7902446 6.7532639 7.8746698 5.8847656 9.125 L 1.8320312 7.5332031 L 0.009765625 12.191406 L 3.9394531 13.730469 C 3.795908 14.474032 3.7148438 15.23954 3.7148438 16.023438 C 3.7148438 16.80601 3.7963812 17.570113 3.9394531 18.3125 L 0.001953125 20.03125 L 2.0019531 24.607422 L 5.8808594 22.916016 C 6.7529657 24.173039 7.8523621 25.261833 9.1230469 26.115234 L 7.5390625 30.166016 L 12.189453 31.990234 L 13.759766 27.976562 C 14.445199 28.097761 15.14636 28.173828 15.865234 28.173828 C 16.682401 28.173828 17.480884 28.089266 18.253906 27.933594 L 20.029297 31.998047 L 24.613281 29.998047 L 22.839844 25.947266 C 24.049179 25.093279 25.103108 24.031367 25.933594 22.804688 L 30.164062 24.460938 L 31.988281 19.810547 L 27.8125 18.173828 C 27.938876 17.474431 28.015625 16.757858 28.015625 16.023438 C 28.015625 15.263896 27.935745 14.522656 27.800781 13.800781 L 32.001953 11.970703 L 30.001953 7.3867188 L 25.890625 9.1835938 C 25.057524 7.9686527 24.007145 6.9150154 22.800781 6.0703125 L 24.464844 1.8359375 L 19.806641 0.01171875 L 18.203125 4.1054688 C 17.445689 3.9562805 16.664771 3.8730469 15.865234 3.8730469 C 15.140959 3.8730469 14.434431 3.9492798 13.744141 4.0722656 L 11.96875 -0.001953125 z M 15.865234 8.4277344 C 20.086589 8.4277344 23.460938 11.80197 23.460938 16.023438 C 23.460938 20.244905 20.086589 23.619141 15.865234 23.619141 C 11.64388 23.619141 8.2695312 20.244905 8.2695312 16.023438 C 8.2695312 11.80197 11.64388 8.4277344 15.865234 8.4277344 z" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+    </Grid>
+
+    <Grid x:Key="UninstallOrChangeProgramButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid Width="12" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
             <Rectangle Height="12" HorizontalAlignment="Stretch" VerticalAlignment="Center" Fill="{DynamicResource IconPrimaryFillBrush}"/>
             <Ellipse Width="8" Height="8" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource IconTertiaryFillBrush}"/>
@@ -462,7 +694,7 @@
         </Grid>
     </Grid>
 
-    <Grid x:Key="ViewNavigationPaneButtonLargeIcon" x:Shared="False" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
+    <Grid x:Key="TogglePanesButtonLargeIcon" x:Shared="False" Width="30" Height="25" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" Margin="1,3,1,4">
         <Border BorderBrush="{DynamicResource WindowBorderBrush}" BorderThickness="1" CornerRadius="2">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource WindowBackgroundGradientStops}"/>
@@ -489,13 +721,13 @@
         </Border>
     </Grid>
 
-    <Grid x:Key="ViewPreviewPaneButtonIcon" x:Shared="False" Width="16" Height="13" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+    <Grid x:Key="TogglePanesButtonIcon" x:Shared="False" Width="15" Height="12" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
         <Border BorderBrush="{DynamicResource WindowBorderBrush}" BorderThickness="1" CornerRadius="2">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource WindowBackgroundGradientStops}"/>
             </Border.Background>
             <DockPanel>
-                <Border BorderBrush="{DynamicResource TitlebarBorderBrush}" BorderThickness="1" CornerRadius="1,1,0,0" Height="4" DockPanel.Dock="Top">
+                <Border BorderBrush="{DynamicResource TitlebarBorderBrush}" BorderThickness="1" CornerRadius="1,1,0,0" Height="6" DockPanel.Dock="Top">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" GradientStops="{DynamicResource TitlebarActiveGradientStops}"/>
                     </Border.Background>
@@ -506,8 +738,7 @@
                     </StackPanel>
                 </Border>
                 <Grid>
-                    <Rectangle Margin="2,0" Fill="{DynamicResource HorizontalPanelBorderBrush}" Width="1" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-                    <Border CornerRadius="0,0,2,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="4" BorderBrush="{DynamicResource SelectedHighlightBrush}" BorderThickness="1">
+                    <Border CornerRadius="0,0,0,2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" BorderBrush="{DynamicResource SelectedHighlightBrush}" BorderThickness="1">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.75" GradientStops="{DynamicResource CardListViewSelectedBackgroundGradientStops}"/>
                         </Border.Background>
@@ -563,6 +794,29 @@
                         <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
                         <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
                         <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,4"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+        <Path Data="M 0 6 L 3 0 L 6 6 Z
+              M 0 22 L 3 28 L 6 22 Z
+              M 2 6 L 4 6 L 4 22 L 2 22 Z" Fill="{DynamicResource IconSecondaryFillBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+    </Grid>
+
+    <Grid x:Key="ViewSortByButtonIcon" x:Shared="False" Width="16" Height="16" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <Grid Width="12" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,8,0">
+            <Border Background="{DynamicResource IconPrimaryFillBrush}">
+                <DockPanel>
+                    <UniformGrid Rows="1" Height="4" DockPanel.Dock="Top">
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0,0,1,0"/>
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="0"/>
+                        <Border Background="{DynamicResource IconTertiaryFillBrush}" Margin="1,0,0,0"/>
+                    </UniformGrid>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="1,2">
+                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
+                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
+                        <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/>
+                        <!--Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{DynamicResource IconForegroundBrush}" Margin="0,0,0,2"/-->
                     </StackPanel>
                 </DockPanel>
             </Border>
@@ -643,7 +897,25 @@
         </Grid>
     </Grid>
 
+    <Grid x:Key="ViewHideSelectedItemsButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="20" Effect="{DynamicResource IconOuterShadow}">
+            <Path Data="M 1 21 L 1 24 L 18 24 L 18 5" StrokeThickness="1" Stroke="{DynamicResource IconPrimaryFillBrush}" StrokeDashArray="3,5"/>
+            <Path Data="M 0 0 L 15 0 L 20 5 L 0 20 Z" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}"/>
+            <Path Data="M 0 0 L 0 6 L 6 6 Z" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Fill="{DynamicResource IconSecondaryFillBrush}" Effect="{DynamicResource IconInnerShadow}"/>
+        </Grid>
+    </Grid>
+
     <Grid x:Key="ViewOptionsButtonLargeIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}">
+        <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 11.96875 -0.001953125 L 7.390625 1.9980469 L 9.109375 5.9394531 C 7.8460921 6.7902446 6.7532639 7.8746698 5.8847656 9.125 L 1.8320312 7.5332031 L 0.009765625 12.191406 L 3.9394531 13.730469 C 3.795908 14.474032 3.7148438 15.23954 3.7148438 16.023438 C 3.7148438 16.80601 3.7963812 17.570113 3.9394531 18.3125 L 0.001953125 20.03125 L 2.0019531 24.607422 L 5.8808594 22.916016 C 6.7529657 24.173039 7.8523621 25.261833 9.1230469 26.115234 L 7.5390625 30.166016 L 12.189453 31.990234 L 13.759766 27.976562 C 14.445199 28.097761 15.14636 28.173828 15.865234 28.173828 C 16.682401 28.173828 17.480884 28.089266 18.253906 27.933594 L 20.029297 31.998047 L 24.613281 29.998047 L 22.839844 25.947266 C 24.049179 25.093279 25.103108 24.031367 25.933594 22.804688 L 30.164062 24.460938 L 31.988281 19.810547 L 27.8125 18.173828 C 27.938876 17.474431 28.015625 16.757858 28.015625 16.023438 C 28.015625 15.263896 27.935745 14.522656 27.800781 13.800781 L 32.001953 11.970703 L 30.001953 7.3867188 L 25.890625 9.1835938 C 25.057524 7.9686527 24.007145 6.9150154 22.800781 6.0703125 L 24.464844 1.8359375 L 19.806641 0.01171875 L 18.203125 4.1054688 C 17.445689 3.9562805 16.664771 3.8730469 15.865234 3.8730469 C 15.140959 3.8730469 14.434431 3.9492798 13.744141 4.0722656 L 11.96875 -0.001953125 z M 15.865234 8.4277344 C 20.086589 8.4277344 23.460938 11.80197 23.460938 16.023438 C 23.460938 20.244905 20.086589 23.619141 15.865234 23.619141 C 11.64388 23.619141 8.2695312 20.244905 8.2695312 16.023438 C 8.2695312 11.80197 11.64388 8.4277344 15.865234 8.4277344 z" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
+    </Grid>
+
+    <Grid x:Key="ViewOptionsButtonIcon" x:Shared="False" Width="32" Height="32" UseLayoutRounding="True" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{DynamicResource IconOuterShadow}" RenderTransformOrigin="0.5,0.5">
+        <Grid.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Grid.LayoutTransform>
         <Path HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 11.96875 -0.001953125 L 7.390625 1.9980469 L 9.109375 5.9394531 C 7.8460921 6.7902446 6.7532639 7.8746698 5.8847656 9.125 L 1.8320312 7.5332031 L 0.009765625 12.191406 L 3.9394531 13.730469 C 3.795908 14.474032 3.7148438 15.23954 3.7148438 16.023438 C 3.7148438 16.80601 3.7963812 17.570113 3.9394531 18.3125 L 0.001953125 20.03125 L 2.0019531 24.607422 L 5.8808594 22.916016 C 6.7529657 24.173039 7.8523621 25.261833 9.1230469 26.115234 L 7.5390625 30.166016 L 12.189453 31.990234 L 13.759766 27.976562 C 14.445199 28.097761 15.14636 28.173828 15.865234 28.173828 C 16.682401 28.173828 17.480884 28.089266 18.253906 27.933594 L 20.029297 31.998047 L 24.613281 29.998047 L 22.839844 25.947266 C 24.049179 25.093279 25.103108 24.031367 25.933594 22.804688 L 30.164062 24.460938 L 31.988281 19.810547 L 27.8125 18.173828 C 27.938876 17.474431 28.015625 16.757858 28.015625 16.023438 C 28.015625 15.263896 27.935745 14.522656 27.800781 13.800781 L 32.001953 11.970703 L 30.001953 7.3867188 L 25.890625 9.1835938 C 25.057524 7.9686527 24.007145 6.9150154 22.800781 6.0703125 L 24.464844 1.8359375 L 19.806641 0.01171875 L 18.203125 4.1054688 C 17.445689 3.9562805 16.664771 3.8730469 15.865234 3.8730469 C 15.140959 3.8730469 14.434431 3.9492798 13.744141 4.0722656 L 11.96875 -0.001953125 z M 15.865234 8.4277344 C 20.086589 8.4277344 23.460938 11.80197 23.460938 16.023438 C 23.460938 20.244905 20.086589 23.619141 15.865234 23.619141 C 11.64388 23.619141 8.2695312 20.244905 8.2695312 16.023438 C 8.2695312 11.80197 11.64388 8.4277344 15.865234 8.4277344 z" Fill="{DynamicResource IconSecondaryFillBrush}" StrokeThickness="0"/>
     </Grid>
 

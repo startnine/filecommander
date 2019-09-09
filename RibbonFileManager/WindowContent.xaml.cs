@@ -220,8 +220,8 @@ namespace RibbonFileManager
             RefreshAsync(location, token);
             CurrentDisplayName = location.Name;
 
-            if (location is DirectoryQuery query)
-                OwnerWindow.SetPanes(query);
+            //if (location is DirectoryQuery query)
+            OwnerWindow.SetPanes(location);
 
             OwnerWindow.ValidateNavButtonStates();
         }

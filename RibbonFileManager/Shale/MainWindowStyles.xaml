@@ -1395,7 +1395,7 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Expander x:Name="ContentExpander" Header="{Binding Name}" IsExpanded="True">
-                        <Expander.Template>
+                        <!--Expander.Template>
                             <ControlTemplate TargetType="{x:Type Expander}">
                                 <Border CornerRadius="3,4,4,3" UseLayoutRounding="True" Margin="5" Effect="{DynamicResource TertiaryDropShadow}" Grid.RowSpan="2">
                                     <Border.Background>
@@ -1499,7 +1499,7 @@
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
-                        </Expander.Template>
+                        </Expander.Template-->
                         <ItemsPresenter/>
                     </Expander>
                     <ControlTemplate.Triggers>
@@ -1653,22 +1653,13 @@
                                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
                             </Path.Effect>
                         </Path-->
-                        <Grid Width="16" Height="16">
-                            <Grid.Effect>
-                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
-                            </Grid.Effect>
-                            <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="{DynamicResource EmblemPathFillBrush}" UseLayoutRounding="True"/>
-                            <Rectangle Width="4" Height="14" VerticalAlignment="Center" Fill="#36000000" StrokeThickness="0" UseLayoutRounding="True"/>
-                            <Rectangle Height="13" VerticalAlignment="Top" Fill="{DynamicResource IconTertiaryFillBrush}" Stroke="{DynamicResource EmblemPathFillBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
-                            <!--Rectangle.Effect>
-                                    <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.125" />
-                                </Rectangle.Effect>
-                            </Rectangle-->
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{DynamicResource EmblemPathFillBrush}" StrokeThickness="1" UseLayoutRounding="True"/>
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="#26000000" StrokeThickness="0" UseLayoutRounding="True"/>
-                        </Grid>
+                        <ContentPresenter Content="{DynamicResource ComputerIcon}" Width="48" Height="48" RenderTransformOrigin="0.5,0.5" ClipToBounds="False">
+                            <ContentPresenter.LayoutTransform>
+                                <ScaleTransform ScaleX="0.333333333333333" ScaleY="0.333333333333333"/>
+                            </ContentPresenter.LayoutTransform>
+                        </ContentPresenter>
                         <!--ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10,0,0,0"/-->
-                        <TextBlock Margin="5,0,0,0">This PC</TextBlock>
+                        <TextBlock Margin="5,0,0,0" Text="This PC"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -1925,9 +1916,18 @@
         <Style.Resources>
             <DataTemplate DataType="{x:Type local:Location}">
                 <StackPanel Orientation="Horizontal" Margin="0,0,45,0">
-                    <Rectangle Width="16" Height="16" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" Margin="0,0,5,0"/>
+                    <Grid Width="16" Height="16" Margin="0,0,5,0">
+                        <Rectangle x:Name="IconRectangle" Fill="{Binding Icon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}"/>
+                        <ContentPresenter x:Name="SpecialIconPresenter" Content="{Binding SpecialIcon}"/>
+                    </Grid>
                     <TextBlock Text="{Binding Name}"/>
                 </StackPanel>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding HasSpecialIcon}" Value="True">
+                        <Setter TargetName="IconRectangle" Property="Visibility" Value="Collapsed"/>
+                        <Setter TargetName="SpecialIconPresenter" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
             </DataTemplate>
         </Style.Resources>
         <Setter Property="Height" Value="31"/>
@@ -1963,7 +1963,8 @@
                                         <e:Interaction.Behaviors>
                                             <local:ClosableTabItemBehavior OwnerWindow="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" OwnerControl="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}}"/>
                                         </e:Interaction.Behaviors>
-                                        <Path Data="M 0 -1 L 2 -1 L 4.5 2 L 7 -1 L 9 -1 L 9 1 L 6 3.5 L 9 6 L 9 8 L 7 8 L 4.5 5 L 2 8 L 0 8 L 0 6 L 3 3.5 L 0 1 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                        <Path Data="M 0 -1 L 2 -1 L 4.5 2 L 7 -1 L 9 -1 L 9 1 L 6 3.5 L 9 6 L 9 8 L 7 8 L 4.5 5 L 2 8 L 0 8 L 0 6 L 3 3.5 L 0 1 Z" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Stroke="Transparent" StrokeThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True"/>
+                                        <!--RenderOptions.EdgeMode="Aliased"-->
                                     </Button>
                                 </Grid>
                                 <ControlTemplate.Triggers>

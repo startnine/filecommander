@@ -273,9 +273,9 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="{x:Type Fluent:ToggleButton}">
-                                                        <Grid Background="{TemplateBinding Background}">
+                                                        <Grid Background="{TemplateBinding Background}" Effect="{DynamicResource DropShadow}">
                                                             <!--ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,1,0" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5"-->
-                                                            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{TemplateBinding Foreground}" StrokeThickness="2" Effect="{DynamicResource DropShadow}" RenderTransformOrigin="0.5,0.5">
+                                                            <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 6 L 6 0 L 12 6" Stroke="{TemplateBinding Foreground}" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
                                                                 <!--, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ToggleButton}}-->
                                                                 <Path.RenderTransform>
                                                                     <RotateTransform Angle="0"/>
@@ -600,6 +600,37 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="Foreground" Value="{Binding Group.TabItemSelectedMouseOverForeground, RelativeSource={RelativeSource Self}}" />
                         </MultiTrigger-->
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsMinimized" Value="True" />
+                                <Condition Property="Group" Value="{x:Null}" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.125">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0" Duration="0:0:0.125">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource TitlebarHoverForegroundBrush}" />
+                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsMouseOver" Value="True" />
@@ -712,6 +743,13 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" TargetName="grid" Value="Transparent" />
                         </MultiTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="False"/>
+                                <Condition Binding="{Binding IsMinimized, RelativeSource={RelativeSource Mode=Self}}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Foreground" Value="{DynamicResource TitlebarInactiveIdleForegroundBrush}" />
+                        </MultiDataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -962,7 +1000,7 @@
     <Style x:Key="{x:Type Fluent:QuickAccessToolBar}" TargetType="{x:Type Fluent:QuickAccessToolBar}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Height" Value="31"/>
-        <Setter Property="Margin" Value="21,0"/>
+        <!--Setter Property="Margin" Value="45,0"/-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:QuickAccessToolBar}">
@@ -1142,7 +1180,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Fluent:RibbonTitleBar}">
                     <Grid>
-                        <ContentPresenter x:Name="PART_QuickAccessToolbarHolder" Content="{TemplateBinding QuickAccessToolBar}" HorizontalAlignment="Left" />
+                        <ContentPresenter x:Name="PART_QuickAccessToolbarHolder" Margin="45,0,0,0" Content="{TemplateBinding QuickAccessToolBar}" HorizontalAlignment="Left" />
                         <ContentPresenter x:Name="PART_HeaderHolder" ContentSource="Header" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" IsHitTestVisible="False" />
                         <Fluent:RibbonContextualGroupsContainer x:Name="PART_ItemsContainer" IsItemsHost="True" />
                     </Grid>
@@ -1292,7 +1330,7 @@
 
     <Style x:Key="{x:Type Fluent:Button}" TargetType="{x:Type Fluent:Button}">
         <!--Setter Property="Height" Value="68" /-->
-        <Setter Property="MinWidth" Value="50" />
+        <!--Setter Property="MinWidth" Value="50" /-->
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}" />
         <Setter Property="Background" Value="Transparent" />
@@ -1336,6 +1374,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="Size" Value="Small">
                             <Setter TargetName="ControlLabel" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="iconImage" Property="Margin" Value="0,1,0,-1" />
+                            <Setter Property="MinWidth" Value="32" />
                         </Trigger>
                         <Trigger Property="Size" Value="Middle">
                             <Setter TargetName="ControlLabel" Property="HasTwoLines" Value="False"/>
@@ -1531,9 +1571,11 @@
                             <Setter Property="Text" TargetName="controlLabel" Value="" />
                             <Setter Property="Width" TargetName="iconImage" Value="16" />
                             <Setter Property="Height" TargetName="iconImage" Value="16" />
-                            <Setter Property="Margin" TargetName="iconImage" Value="2,0,0,0" />
-                            <Setter Property="Margin" TargetName="controlLabel" Value="-2,0,2,1" />
-                            <Setter Property="Width" TargetName="controlLabel" Value="10" />
+                            <Setter Property="Margin" TargetName="iconImage" Value="0" />
+                            <Setter Property="Margin" TargetName="controlLabel" Value="0" />
+                            <Setter Property="Width" TargetName="controlLabel" Value="14" />
+                            <!--Setter Property="Padding" Value="3,0"/-->
+                            <Setter Property="MinWidth" Value="36" />
                             <Setter Property="VerticalAlignment" TargetName="controlLabel" Value="Center" />
                         </Trigger>
                         <Trigger Property="Size" Value="Middle">

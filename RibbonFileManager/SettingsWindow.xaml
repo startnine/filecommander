@@ -84,7 +84,8 @@
                                         <ComboBoxItem>Don't auto-hide</ComboBoxItem>
                                     </ComboBox>
                                 </DockPanel>
-                                <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder in Titlebar</ui:ToggleSwitch>
+                                <ui:ToggleSwitch x:Name="TitlebarTextToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder name in Titlebar</ui:ToggleSwitch>
+                                <ui:ToggleSwitch x:Name="TitlebarIconToggleSwitch" TrueText="Show" FalseText="Hide" IsTabStop="False">Show Current Folder icon in Titlebar</ui:ToggleSwitch>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="Panes">
