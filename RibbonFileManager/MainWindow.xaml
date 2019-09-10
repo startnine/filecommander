@@ -247,12 +247,12 @@
                         <DockPanel>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                 <StackPanel Style="{DynamicResource NavButtonsContainerStyle}" Orientation="Horizontal">
-                                    <Button x:Name="NavBackButton" Style="{DynamicResource NavigationBackButtonStyle}" Content="{DynamicResource NavigationBackButtonIcon}" IsEnabled="False" Click="NavBackButton_Click"/>
+                                    <Button x:Name="NavBackButton" Style="{DynamicResource NavigationBackButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationBackButtonIcon}" IsEnabled="False" Click="NavBackButton_Click"/>
                                     <!--IsEnabled="{TemplateBinding IsBackButtonEnabled}"-->
-                                    <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" Content="{DynamicResource NavigationForwardButtonIcon}" IsEnabled="False" Click="NavForwardButton_Click"/>
+                                    <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationForwardButtonIcon}" IsEnabled="False" Click="NavForwardButton_Click"/>
                                     <!--IsEnabled="{TemplateBinding IsForwardButtonEnabled}"-->
                                     <Fluent:DropDownButton x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Size="Small" SizeDefinition="Small" ItemsSource="{Binding CurrentTab.Content.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
-                                    <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Content="{DynamicResource NavigationUpButtonIcon}" Click="NavUpButton_Click"/>
+                                    <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationUpButtonIcon}" Click="NavUpButton_Click"/>
                                 </StackPanel>
                             </StackPanel>
                             <!--local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" SearchSubmitted="SearchTextBox_SearchSubmitted" SearchType="Instant" /-->

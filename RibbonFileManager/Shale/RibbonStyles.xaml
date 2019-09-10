@@ -1332,7 +1332,7 @@
         <!--Setter Property="Height" Value="68" /-->
         <!--Setter Property="MinWidth" Value="50" /-->
         <Setter Property="Width" Value="Auto" />
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />

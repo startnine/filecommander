@@ -2189,7 +2189,7 @@
     </Grid>
 
     <Style x:Key="TabsSetAsideToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CaptionToggleButtonStyle}">
-        <Setter Property="Content" Value="{StaticResource TabsSetAsideToggleButtonIcon}"/>
+        <Setter Property="ui:AttachedProperties.Icon" Value="{StaticResource TabsSetAsideToggleButtonIcon}"/>
     </Style>
 
     <Grid x:Key="SetTabsAsideButtonIcon" x:Shared="False" Width="10">
@@ -2199,14 +2199,14 @@
     </Grid>
 
     <Style x:Key="SetTabsAsideButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Content" Value="{StaticResource SetTabsAsideButtonIcon}"/>
+        <Setter Property="ui:AttachedProperties.Icon" Value="{StaticResource SetTabsAsideButtonIcon}"/>
     </Style>
 
     <Path x:Key="NewTabButtonIcon" x:Shared="False" Data="M 0 4 L 8 4 M 4 0 L 4 8" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
 
     <Style x:Key="NewTabButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
         <Setter Property="Margin" Value="0,0,150,0"/>
-        <Setter Property="Content" Value="{DynamicResource NewTabButtonIcon}"/>
+        <Setter Property="ui:AttachedProperties.Icon" Value="{DynamicResource NewTabButtonIcon}"/>
     </Style>
 
     <Style x:Key="TabsOverviewContentControlStyle" TargetType="{x:Type ContentControl}">

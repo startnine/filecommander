@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
 //using WindowsSharp.DiskItems;
@@ -27,7 +28,18 @@ namespace RibbonFileManager
             if (AssociatedObject != null)
             {
                 (AssociatedObject as Panel).MouseMove += TargetPanel_MouseMove;
+                (AssociatedObject as Panel).DragEnter += DiskItemDragBehavior_DragEnter;
             }
+        }
+
+        private void DiskItemDragBehavior_DragEnter(object sender, DragEventArgs e)
+        {
+            var data = new DataObject(DataFormats.FileDrop, new string[] { TargetItem.ItemPath });
+            /*data.SetData(DataFormats.FileDrop, new System.Collections.Specialized.StringCollection()
+            {
+                TargetItem.ItemPath
+            });*/
+            DragDrop.DoDragDrop(sender as Panel, data, DragDropEffects.Copy | DragDropEffects.Move);
         }
 
         Point _prevPoint = new Point(0, 0);
