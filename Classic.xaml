@@ -4,8 +4,6 @@
                     xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
                     xmlns:converters="clr-namespace:Fluent.Converters;assembly=Fluent"
                     xmlns:conv="clr-namespace:Start9.UI.Wpf.Converters;assembly=Start9.UI.Wpf"
-                    xmlns:disk="clr-namespace:WindowsSharp.DiskItems;assembly=WindowsSharp"
-                    xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
                     xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
                     xmlns:themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Classic"
                     xmlns:FluentHelpers="clr-namespace:Fluent.Helpers;assembly=Fluent">
@@ -16,7 +14,7 @@
         <ResourceDictionary Source="/PresentationFramework.Classic;V3.0.0.0;31bf3856ad364e35;component\themes/classic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:ObjectToImageConverter x:Key="ObjectToImageConverter"/>
     <converters:ApplicationMenuRightScrollViewerExtractorConverter x:Key="ApplicationMenuRightScrollViewerExtractorConverter" />
     <conv:IconToImageBrushConverter x:Key="IconToImageBrushConverter"/>
@@ -496,7 +494,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}}" Value="Icons">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Top">
                                 <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Height="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <Grid Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}">
@@ -530,7 +528,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}}" Value="Tiles">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <DockPanel Width="240" Height="42">
                                 <Rectangle HorizontalAlignment="Center" Width="32" Height="32" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='32'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" DockPanel.Dock="Left"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" TextWrapping="Wrap" Margin="5,0,0,0"/>
@@ -551,7 +549,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}}" Value="List">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <StackPanel Orientation="Horizontal" Height="16">
                                 <Rectangle HorizontalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
                                 <TextBlock Text="{Binding ItemDisplayName}" HorizontalAlignment="Left" TextAlignment="Center" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}" Margin="5,0,0,0"/>
@@ -572,7 +570,7 @@
             <DataTrigger Binding="{Binding CurrentView, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type win:DecoratableWindow}}}" Value="Content">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
-                        <DataTemplate DataType="{x:Type disk:DiskItem}">
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
                             <Grid Height="32">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32"/>
@@ -761,7 +759,7 @@
         </Setter>
     </Style>
 
-    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type disk:DiskItem}">
+    <HierarchicalDataTemplate x:Key="NavigationPaneDataTemplate" DataType="{x:Type local:DiskItem}">
         <StackPanel Orientation="Horizontal" Height="16">
             <Rectangle VerticalAlignment="Center" Width="16" Height="16" Fill="{Binding ItemSmallIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='16'}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased"/>
             <ContentPresenter Content="{Binding ItemDisplayName}" RecognizesAccessKey="True" TextBlock.Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeViewItem}}}" Margin="5,0,0,0">
@@ -1168,7 +1166,7 @@
                             <StackPanel HorizontalAlignment="Right" Grid.Column="3" Orientation="Horizontal" Margin="0,0,0,0">
                                 <Grid>
                                     <Image x:Name="image" Width="22" Height="22" Stretch="None" Visibility="Collapsed" />
-                                    <Fluent:ToggleButton x:Name="PART_MinimizeButton" Margin="0" Width="22" VerticalAlignment="Stretch" Size="Small" IsChecked="{Binding Path=IsMinimized, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding CanMinimize, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Fluent:ToggleButton x:Name="PART_MinimizeButton" Margin="0" Width="22" VerticalAlignment="Stretch" Size="Small" IsChecked="{Binding Path=IsMinimized, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding CanMinimize, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Fluent:ToggleButton.Icon>
                                             <Grid Width="22" Height="22" Background="#01000000" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Fluent:ToggleButton}}}" Stroke="{DynamicResource CaptionButtonActiveIdleBrush}" StrokeThickness="0" Data="M 0 5 L 4 0 L 8 5 Z" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" RenderTransformOrigin="0.5,0.5">
@@ -1289,7 +1287,7 @@
                                         </Fluent:ToggleButton.Style-->
                                     </Fluent:ToggleButton>
                                 </Grid>
-                                <StackPanel x:Name="PART_ToolbarPanel" Visibility="{Binding IsQuickAccessToolBarVisible, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}, Converter={StaticResource BoolToVisibilityConverter}}" Orientation="Horizontal" />
+                                <StackPanel x:Name="PART_ToolbarPanel" Visibility="{Binding IsQuickAccessToolBarVisible, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Fluent:Ribbon}}, Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal" />
                             </StackPanel>
                         </Grid>
                         <Grid Margin="35,0,0,0" ClipToBounds="True" VerticalAlignment="Bottom" Grid.Row="0">

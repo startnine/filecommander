@@ -1,0 +1,212 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:RibbonFileManager;assembly=RibbonFileManager"
+                    xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
+                    xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Plex;component/Themes/Plex.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Start9.Wpf.Styles.Plex;component/Themes/Colors/LightBlue.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="{x:Type local:MainWindow}" TargetType="{x:Type local:MainWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="TitlebarHeight" Value="48"/>
+    </Style>
+
+    <Style x:Key="NavigationBarBackgroundStyle" TargetType="{x:Type ContentControl}">
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="10,0,18,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Path Data="M 19 34
+                              A 19,17 180 1 1 19,0
+                              Q 36,6 46,6
+                              A 11,11 180 1 1 46,28
+                              Q 36,28 19,34
+                              Z" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <!--Data="M 17 34
+                              A 17,17 180 1 1 17,0
+                              Q 38,6 46,6
+                              A 11,11 180 1 1 46,28
+                              Q 38,28 17,34
+                              Z"-->
+                            <!--Width="50"-->
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <!--TranslateTransform X="-280" Y="-12"/>
+                                    <ScaleTransform ScaleX="0.9625" ScaleY="1"/-->
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                            <!--HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="56"-->
+                            <!--Path.Data>
+                                <PathGeometry Figures="m 12.327807 289.81714 c -5.4680527 0 -4.8553965 -1.76066 -7.9846772 -1.77066 -2.1058022 -0.0505 -4.30972111 1.76754 -4.3097212 4.45553 -8e-8 2.68799 2.2039189 4.50606 4.3097212 4.45553 3.1292805 -0.01 2.5166243 -1.77066 7.9846772 -1.77066 1.899459 0.0335 3.240643 -1.12201 3.240643 -2.68487 0 -1.56286 -1.341184 -2.71837 -3.240643 -2.68487 z" FillRule="NonZero"/>
+                            </Path.Data-->
+                            <Path.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="#20000000" />
+                                    <GradientStop Offset="1" Color="#60FFFFFF" />
+                                </LinearGradientBrush>
+                            </Path.Fill>
+                        </Path>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationBackButtonStyle" TargetType="{x:Type Button}"  BasedOn="{StaticResource RoundButtonStyle}">
+        <Setter Property="Width" Value="28"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="Padding" Value="-1,0,2,0"/>
+        <!--Setter Property="Content" Value="{DynamicResource SmallBackArrowPathIcon}"/-->
+        <Setter Property="Content">
+            <Setter.Value>
+                <Path Data="{DynamicResource SmallBackArrowPathIconGeometry}" Style="{DynamicResource IconPathStyle}" Width="10" Height="14"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NavigationForwardButtonStyle" TargetType="{x:Type Button}"  BasedOn="{StaticResource RoundButtonStyle}">
+        <Setter Property="Width" Value="17"/>
+        <Setter Property="Height" Value="17"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="Padding" Value="0,0,-1,0"/>
+        <!--Setter Property="Content">
+            <Setter.Value>
+                <ContentControl Content="{DynamicResource SmallForwardArrowPathIcon}">
+                    <ContentControl.RenderTransform>
+                        <ScaleTransform CenterX="7" CenterY="7" ScaleX="0.625" ScaleY="0.625"/>
+                    </ContentControl.RenderTransform>
+                </ContentControl>
+            </Setter.Value>
+        </Setter-->
+        <Setter Property="Content">
+            <Setter.Value>
+                <!--Canvas Background="{DynamicResource SmallForwardArrowPathIconBrush}" Width="10" Height="14" RenderTransformOrigin="0.5,0.5">
+                    <Canvas.RenderTransform>
+                        <ScaleTransform ScaleX="0.625" ScaleY="0.625"/>
+                    </Canvas.RenderTransform>
+                </Canvas-->
+                <Path Data="{DynamicResource SmallForwardArrowPathIconGeometry}" Style="{DynamicResource IconPathStyle}" Width="10" Height="14" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <ScaleTransform ScaleX="0.625" ScaleY="0.625"/>
+                    </Path.RenderTransform>
+                </Path>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="zNavigationHistoryButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Foreground" Value="{DynamicResource CaptionButtonActiveIdleBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="#01000000">
+                        <!--Grid x:Name="HoverBackground" Opacity="0" ClipToBounds="False" IsHitTestVisible="False">
+                                    <Border Margin="0" Background="{DynamicResource PlexGlowToggleButtonHoverBackground}" BorderBrush="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderThickness="2" RenderTransformOrigin="0.5,0.5" CornerRadius="0,8,0,0" ClipToBounds="False" IsHitTestVisible="False">
+                                        <Border.ToolTip>
+                                            <Fluent:ScreenTip x:Name="screenTip" Title="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeButtonScreenTipTitle, Mode=OneWay}" Text="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.MinimizeButtonScreenTipText, Mode=OneWay}" />
+                                        </Border.ToolTip>
+                                    </Border>
+                                    <Border Background="Transparent" BorderBrush="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderThickness="0,1,1,0" CornerRadius="0,8,0,0" Height="8" VerticalAlignment="Top" Margin="-100,-1,0,1" IsHitTestVisible="False">
+                                        <Border.OpacityMask>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStop Offset="0" Color="Transparent"/>
+                                                    <GradientStop Offset="1" Color="White"/>
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Border.OpacityMask>
+                                    </Border>
+                                    <Border Background="{DynamicResource PlexGlowToggleButtonHoverBorderBrush}" BorderBrush="Transparent" BorderThickness="0" Height="1" VerticalAlignment="Bottom" Margin="-100,0,0,0" IsHitTestVisible="False">
+                                        <Border.OpacityMask>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStop Offset="0" Color="Transparent"/>
+                                                    <GradientStop Offset="1" Color="White"/>
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Border.OpacityMask>
+                                    </Border>
+                                </Grid-->
+                        <Grid UseLayoutRounding="True">
+                            <Grid.Effect>
+                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3"
+                                              BlurRadius="10" Opacity="0.5" />
+                            </Grid.Effect>
+                            <Path x:Name="iconImage" Fill="{TemplateBinding Foreground}" Data="M 0 0 L 4 5 L 8 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True"/>
+                            <!--Path x:Name="iconImageChecked" Fill="{DynamicResource CaptionButtonActiveIdleBrush}" Stroke="{DynamicResource CaptionButtonActiveIdleBrush}" StrokeThickness="1" Data="M 0 0 L 4 5 L 8 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True" Visibility="Collapsed"/-->
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!--Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Visibility" TargetName="iconImage" Value="Collapsed" />
+                                    <Setter Property="Visibility" TargetName="iconImageChecked" Value="Visible" />
+                                    <Setter Property="Title" TargetName="screenTip" Value="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandButtonScreenTipTitle , Mode=OneWay}" />
+                                    <Setter Property="Text" TargetName="screenTip" Value="{Binding Source={x:Static Fluent:RibbonLocalization.Current}, Path=Localization.ExpandButtonScreenTipText , Mode=OneWay}" />
+                                </Trigger-->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <!--Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.125" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="HoverBackground" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions-->
+                            <Setter Property="Foreground" Value="{DynamicResource CaptionButtonActiveHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationUpButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Foreground" Value="{DynamicResource CaptionButtonActiveIdleBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="#01000000">
+                        <Grid UseLayoutRounding="True">
+                            <Grid.Effect>
+                                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="10" Opacity="0.5" />
+                            </Grid.Effect>
+                            <Path x:Name="iconImage" Fill="{TemplateBinding Foreground}" Data="M 0 6 L 6 0 L 12 6 L 8 6 L 8 16 L 4 16 L 4 6 Z" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource CaptionButtonActiveHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="{x:Type local:SettingsWindow}" TargetType="{x:Type local:SettingsWindow}" BasedOn="{StaticResource {x:Type win:DecoratableWindow}}"/>
+</ResourceDictionary>

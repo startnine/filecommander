@@ -6,189 +6,191 @@
         xmlns:local="clr-namespace:RibbonFileManager"
         xmlns:ui="clr-namespace:Start9.UI.Wpf;assembly=Start9.UI.Wpf"
         xmlns:win="clr-namespace:Start9.UI.Wpf.Windows;assembly=Start9.UI.Wpf"
+        xmlns:rerr="clr-namespace:Start9.UI.Wpf.Rearranger;assembly=Start9.UI.Wpf"
+        xmlns:bread="clr-namespace:Start9.UI.Wpf.Breadcrumbs;assembly=Start9.UI.Wpf"
         xmlns:Fluent="urn:fluent-ribbon"
-        mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Width="925" Height="550" MinWidth="225" ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}" Loaded="MainWindow_Loaded">
+        Title="MainWindow" Width="1100" Height="550" MinWidth="225" ShowTitlebarText="False" ShowTitlebarIcon="False" Loaded="MainWindow_Loaded" PreviewKeyDown="MainWindow_PreviewKeyDown" PreviewKeyUp="MainWindow_PreviewKeyUp" Deactivated="DecoratableWindow_Deactivated">
+    <!--ShowTitlebarText="{Binding ShowTitlebarText, Source={x:Static local:Config.Instance}}"-->
     <!--InterfaceMode="{Binding InterfaceMode, Source={x:Static local:Config.Instance}}"-->
-    <win:DecoratableWindow.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </win:DecoratableWindow.Resources>
-    <win:DecoratableWindow.TitleBarContent>
-        <Fluent:RibbonTitleBar x:Name="RibbonTitleBar"/>
-    </win:DecoratableWindow.TitleBarContent>
     <!--win:DecoratableWindow.FullWindowContent-->
-    <win:DecoratableWindow.CommandBindings>
+    <!--win:DecoratableWindow.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.CloseWindowCommand}" Executed="CloseWindowCommandBinding_Executed"/>
         <CommandBinding Command="{x:Static local:MainWindow.MenuBarCommand}" Executed="MenuBarCommandBinding_Executed"/>
         
         <CommandBinding Command="{x:Static local:MainWindow.BackCommand}" Executed="BackCommandBinding_Executed"/>
         <CommandBinding Command="{x:Static local:MainWindow.ForwardCommand}" Executed="ForwardCommandBinding_Executed"/>
         <CommandBinding Command="{x:Static local:MainWindow.UpLevelCommand}" Executed="UpLevelCommandBinding_Executed"/>
-
         <CommandBinding Command="{x:Static local:MainWindow.RenameCommand}" Executed="RenameCommandBinding_Executed"/>
-    </win:DecoratableWindow.CommandBindings>
-    <win:DecoratableWindow.FullWindowContent>
+    </win:DecoratableWindow.CommandBindings-->
+    <AdornerDecorator x:Name="Adorner">
         <Grid Style="{DynamicResource RootGridStyle}">
             <DockPanel>
-                <ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top">
-                    <DockPanel>
-                        <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
-                        <ui:CommandBar x:Name="CommandBarControl" DockPanel.Dock="Bottom">
-                            <ui:CommandBar.CommandBarLayers>
-                                <ui:CommandBarLayer Identifier="Global"/>
-                                <ui:CommandBarLayer Identifier="Libraries" IsVisible="False"/>
-                                <ui:CommandBarLayer Identifier="ItemSelected" IsVisible="False"/>
-                                <ui:CommandBarLayer Identifier="Folder" IsVisible="False"/>
-                            </ui:CommandBar.CommandBarLayers>
-                            <Button ui:CommandBar.Layers="Global">Organize v</Button>
-                            <Button ui:CommandBar.Layers="Libraries">New library</Button>
-                            <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="OpenButton_Click">Open</Button>
-                            <Button ui:CommandBar.Layers="Folder,ItemSelected">Share with v</Button>
-                            <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="NewFolderButton_Click">New Folder</Button>
-                        </ui:CommandBar>
-                        <Menu x:Name="MenuBar" Visibility="Collapsed" DockPanel.Dock="Bottom">
-                            <MenuItem Header="File">
-                                <MenuItem IsEnabled="False"/>
-                            </MenuItem>
-                            <MenuItem Header="Edit">
-                                <MenuItem IsEnabled="False"/>
-                            </MenuItem>
-                            <MenuItem Header="View">
-                                <MenuItem IsEnabled="False"/>
-                            </MenuItem>
-                            <MenuItem Header="Tools">
-                                <MenuItem Header="Folder options..." Click="FolderAndSearchOptionsMenuItem_Click"/>
-                            </MenuItem>
-                        </Menu>
-                        <!--mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/-->
-                        <ContentControl x:Name="NavigationBarGrid" Style="{DynamicResource NavigationBarBackgroundStyle}" DockPanel.Dock="Bottom">
-                            <DockPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                    <StackPanel Style="{DynamicResource NavButtonsContainerStyle}" Orientation="Horizontal">
-                                        <Button x:Name="NavBackButton" Style="{DynamicResource NavigationBackButtonStyle}" IsEnabled="False" Click="NavBackButton_Click"/>
-                                        <!--IsEnabled="{TemplateBinding IsBackButtonEnabled}"-->
-                                        <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" IsEnabled="False" Click="NavForwardButton_Click"/>
-                                        <!--IsEnabled="{TemplateBinding IsForwardButtonEnabled}"-->
-                                        <Button x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Click="NavHistoryButton_Click"/>
-                                        <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" Click="NavUpButton_Click"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right"/>
-                                <Grid>
-                                    <TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/>
-                                </Grid>
-                            </DockPanel>
-                        </ContentControl>
-                        <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference Name=RibbonTitleBar}}" AutomaticStateManagement="True" SelectedTabIndex="0">
-                            <!--x:Reference RibbonTitleBar-->
-                            <Fluent:Ribbon.Menu>
-                                <!--Fluent:Backstage x:Name="RibbonBackstage" IsOpen="False"/-->
-                                <!--IsOpenChanged="RibbonBackstage_IsOpenChanged"-->
-                                <Fluent:ApplicationMenu Header="File">
-                                    <Fluent:MenuItem x:Name="NewWindowMenuItem" Header="Open New Window" Icon="{DynamicResource NewWindowMenuItemIcon}" IsSplited="True" Click="NewWindowButton_Click">
-                                        <Fluent:MenuItem x:Name="NewWindowSubmenuItem" Header="Open New Window" Click="NewWindowButton_Click"/>
-                                        <Fluent:MenuItem Header="Open New Window in default location" Click="NewWindowDefaultLocationButton_Click"/>
-                                        <!--Fluent:MenuItem Header="Open New Window in new Process"/-->
-                                    </Fluent:MenuItem>
-                                    <Fluent:MenuItem Header="Open Command prompt" Icon="{DynamicResource CommandPromptMenuItemIcon}" IsSplited="True">
-                                        <Fluent:MenuItem x:Name="OpenCmdButton" Header="Open command prompt" Click="OpenCmdButton_Click"/>
-                                        <Fluent:MenuItem x:Name="OpenCmdAdminButton" Header="Open command prompt as administrator" Click="OpenCmdButton_Click"/>
-                                    </Fluent:MenuItem>
-                                    <Fluent:MenuItem x:Name="PowerShellTabItem" Header="Open Windows PowerShell" Icon="{DynamicResource PowerShellMenuItemIcon}" IsSplited="True">
-                                        <Fluent:MenuItem x:Name="OpenPowerShellButton" Header="Open PowerShell" Click="OpenPowerShellButton_Click"/>
-                                        <Fluent:MenuItem x:Name="OpenPowerShellAdminButton" Header="Open PowerShell as administrator" Click="OpenPowerShellButton_Click"/>
-                                    </Fluent:MenuItem>
-                                    <Separator/>
-                                    <Fluent:MenuItem Header="Delete History" Icon="{DynamicResource DeleteHistoryMenuItemIcon}">
+                <Grid DockPanel.Dock="Top">
+                    <DockPanel Style="{DynamicResource TabStripPanelStyle}" HorizontalAlignment="Stretch" Height="1" IsHitTestVisible="False">
+                        <!--Rectangle Width="{Binding ActualWidth, Mode=OneWay, Source={x:Reference RibbonTitle}}" DockPanel.Dock="Left"/-->
+                        <Rectangle Width="{Binding ActualWidth, Mode=OneWay, Source={x:Reference TabsSetAsideToggleButton}}" DockPanel.Dock="Left"/>
+                        <Rectangle Width="{Binding ActualWidth, Mode=OneWay, Source={x:Reference SetTabsAsideButton}}" DockPanel.Dock="Left"/>
+                        <Rectangle Width="{Binding ActualWidth, Mode=OneWay, Source={x:Reference NewTabButton}}" DockPanel.Dock="Right"/>
+                        <Rectangle x:Name="TabControlSizingAidRectangle" VerticalAlignment="Stretch"/>
+                    </DockPanel>
+                    <Fluent:RibbonTitleBar x:Name="RibbonTitle" Visibility="Collapsed"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <ToggleButton x:Name="TabsSetAsideToggleButton" Style="{DynamicResource TabsSetAsideToggleButtonStyle}" Click="TabsSetAsideToggleButton_Click" ToolTip="Tabs Overview"/>
+                        <Button x:Name="SetTabsAsideButton" Style="{DynamicResource SetTabsAsideButtonStyle}" Click="SetTabsAsideButton_Click" ToolTip="Set Tabs Aside"/>
+                        <TabControl x:Name="TitlebarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}" ItemsSource="{Binding Tabs}" SelectedIndex="{Binding CurrentTabIndex}"/>
+                        <Button x:Name="NewTabButton" Style="{DynamicResource NewTabButtonStyle}" Click="NewTabButton_Click" ToolTip="New Tab"/>
+                        <!--Button x:Name="TabPreviewsButton" Style="{DynamicResource NewTabButtonStyle}" Click="TabPreviewsButton_Click" ToolTip="Show Tab Previews" Visibility="Collapsed"/-->
+                    </StackPanel>
+                </Grid>
+                <!--ContentControl Style="{DynamicResource ToolbarBackgroundContentControlStyle}" DockPanel.Dock="Top"-->
+                <rerr:Rearranger x:Name="Rearranger" IsLocked="{Binding LockPanes, Source={x:Static local:Config.Instance}, Mode=OneWay}" Style="{DynamicResource RearrangerStyle}">
+                    <!---->
+                    <!--DockPanel-->
+                    <!--Grid Style="{DynamicResource NavigationBarGridStyle}"-->
+                    <Fluent:Ribbon x:Name="Ribbon" TitleBar="{Binding Source={x:Reference RibbonTitle}, FallbackValue={x:Null}}" AutomaticStateManagement="True" SelectedTabIndex="0" IsKeyTipHandlingEnabled="True" rerr:Rearranger.PaneTitle="Ribbon" DockPanel.Dock="Top">
+                        <!--Source={x:Reference Name=RibbonTitleBar}-->
+                        <!--x:Reference RibbonTitleBar-->
+                        <Fluent:Ribbon.Menu>
+                            <!--Fluent:Backstage x:Name="RibbonBackstage" IsOpen="False"/-->
+                            <!--IsOpenChanged="RibbonBackstage_IsOpenChanged"-->
+                            <Fluent:ApplicationMenu Header="File">
+                                <!---->
+                                <Fluent:MenuItem x:Name="NewWindowMenuItem" Header="Open New Window" Icon="{DynamicResource NewWindowMenuItemIcon}" IsSplited="True" Click="NewWindowButton_Click">
+                                    <!--MouseLeftButtonUp="NewWindowMenuItem_MouseLeftButtonUp"-->
+                                    <Fluent:MenuItem x:Name="NewWindowSubmenuItem" Header="Open New Window" Click="NewWindowButton_Click"/>
+                                    <Fluent:MenuItem x:Name="NewWindowDefaultLocationButton" Header="Open New Window in default location" Click="NewWindowButton_Click"/>
+                                    <!--Fluent:MenuItem Header="Open New Window in new Process"/-->
+                                </Fluent:MenuItem>
+                                <Fluent:MenuItem Header="Open Command prompt" Icon="{DynamicResource CommandPromptMenuItemIcon}" IsSplited="True">
+                                    <Fluent:MenuItem x:Name="OpenCmdButton" Header="Open command prompt" Click="OpenCmdButton_Click"/>
+                                    <Fluent:MenuItem x:Name="OpenCmdAdminButton" Header="Open command prompt as administrator" Click="OpenCmdButton_Click"/>
+                                </Fluent:MenuItem>
+                                <Fluent:MenuItem x:Name="PowerShellTabItem" Header="Open Windows PowerShell" Icon="{DynamicResource PowerShellMenuItemIcon}" IsSplited="True">
+                                    <Fluent:MenuItem x:Name="OpenPowerShellButton" Header="Open PowerShell" Click="OpenPowerShellButton_Click"/>
+                                    <Fluent:MenuItem x:Name="OpenPowerShellAdminButton" Header="Open PowerShell as administrator" Click="OpenPowerShellButton_Click"/>
+                                </Fluent:MenuItem>
+                                <Separator/>
+                                <Fluent:MenuItem Header="Delete History" Icon="{DynamicResource DeleteHistoryMenuItemIcon}">
 
-                                    </Fluent:MenuItem>
-                                    <Separator/>
-                                    <Fluent:MenuItem Header="Help"/>
-                                    <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
-                                </Fluent:ApplicationMenu>
-                            </Fluent:Ribbon.Menu>
-                            <Fluent:RibbonTabItem Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
-                                <Fluent:RibbonGroupBox x:Name="ClipboardBox" Header="Clipboard">
-                                    <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" Icon="{DynamicResource CopyButtonIcon}" SizeDefinition="Large,Small" KeyTip="CO" Click="CopyButton_Click"/>
-                                    <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" Icon="{DynamicResource PasteButtonIcon}" SizeDefinition="Large,Small" KeyTip="V" Click="PasteButton_Click"/>
-                                    <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="T" Click="CutButton_Click"/>
-                                    <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" KeyTip="CP" Click="CopyPathButton_Click"/>
-                                    <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="PS" Click="PasteShortcutButton_Click"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
-                                    <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}"/>
-                                    <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}"/>
-                                    <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
-                                        <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle"/>
-                                        <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete"/>
-                                    </Fluent:SplitButton>
-                                    <Fluent:Button x:Name="RenameButton" Header="Rename" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="New" Header="New">
-                                    <Fluent:Button x:Name="NewFolderButton" Header="New folder" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
-                                    <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" Icon="{DynamicResource NewItemButtonIcon}" SizeDefinition="Middle,Small"/>
-                                    <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" Icon="{DynamicResource EasyAccessButtonIcon}" SizeDefinition="Middle,Small"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
-                                    <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" LargeIcon="{DynamicResource PropertiesButtonLargeIcon}" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
-                                    <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
-                                    <Fluent:Button x:Name="EditButton" Header="Edit" Icon="{DynamicResource EditButtonIcon}" SizeDefinition="Middle,Small" Click="EditButton_Click"/>
-                                    <Fluent:Button x:Name="HistoryButton" Header="History" Icon="{DynamicResource HistoryButtonIcon}" SizeDefinition="Middle,Small" Click="HistoryButton_Click"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="Select" Header="Select">
-                                    <Fluent:Button x:Name="SelectAllButton" Header="Select all" Icon="{DynamicResource SelectAllButtonIcon}" SizeDefinition="Middle,Small" Click="SelectAllButton_Click"/>
-                                    <Fluent:Button x:Name="SelectNoneButton" Header="Select none" Icon="{DynamicResource SelectNoneButtonIcon}" SizeDefinition="Middle,Small" Click="SelectNoneButton_Click"/>
-                                    <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" Icon="{DynamicResource InvertSelectionButtonIcon}" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click"/>
-                                </Fluent:RibbonGroupBox>
-                            </Fluent:RibbonTabItem>
-                            <Fluent:RibbonTabItem Header="Share" ReduceOrder="ShareWith,Send,ShareBlank" KeyTip="S">
-                                <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
-                                    <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large"/>
-                                    <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large"/>
-                                    <Fluent:Button x:Name="Burn" Header="Burn to disc" SizeDefinition="Middle,Small"/>
-                                    <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small"/>
-                                    <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="ShareWith" Header="Share with">
-                                    <Fluent:InRibbonGallery MinItemsInRow="1" Header="Share with..." SizeDefinition="Large" IsCollapsed="False">
-                                        <!--Style="{DynamicResource ShareWithGalleryStyle}"-->
-                                        <Fluent:GalleryItem>UpdatusUser</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem>Specific people...</Fluent:GalleryItem>
-                                    </Fluent:InRibbonGallery>
-                                    <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="ShareBlank">
-                                    <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large"/>
-                                </Fluent:RibbonGroupBox>
-                            </Fluent:RibbonTabItem>
-                            <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide" KeyTip="V">
-                                <Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
-                                    <Fluent:DropDownButton Header="Navigation Pane" SizeDefinition="Large,Small">
-                                        <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" IsChecked="{Binding ShowNavigationPane, Mode=TwoWay}"  Header="Navigation Pane"/>
-                                    </Fluent:DropDownButton>
-                                    <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview Pane" IsChecked="{Binding ShowPreviewPane}" SizeDefinition="Middle,Small"/>
-                                    <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details Pane" IsChecked="{Binding ShowDetailsPane}" SizeDefinition="Middle,Small"/>
-                                    <!--Fluent:Button Header="Test"/-->
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
-                                    <Fluent:InRibbonGallery x:Name="FolderViewsGallery" ItemWidth="110" ItemHeight="20" MinItemsInRow="1" MaxItemsInRow="5" Header="Folder Views" ResizeMode="Both" SelectionChanged="FolderViewsGallery_SelectionChanged">
-                                        <!--MinItemsInRow="2" MaxItemsInRow="3"-->
-                                        <!-- Style="{DynamicResource LayoutGalleryStyle}"-->
-                                        <Fluent:GalleryItem x:Name="ExtraLargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Extra large icons</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="LargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Large icons</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="MediumIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Medium icons</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="SmallIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Small icons</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="ListViewGalleryItem" Click="CurrentViewGalleryItem_Click">List</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="DetailsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Details</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="TilesViewGalleryItem" Click="CurrentViewGalleryItem_Click">Tiles</Fluent:GalleryItem>
-                                        <Fluent:GalleryItem x:Name="ContentViewGalleryItem" Click="CurrentViewGalleryItem_Click">Content</Fluent:GalleryItem>
-                                    </Fluent:InRibbonGallery>
-                                    <!--Fluent:InRibbonGallery x:Name="InRibbonGallery"
+                                </Fluent:MenuItem>
+                                <Separator/>
+                                <Fluent:MenuItem Header="Help"/>
+                                <Fluent:MenuItem Header="Close" Click="CloseWindowButton_Click"/>
+                            </Fluent:ApplicationMenu>
+                        </Fluent:Ribbon.Menu>
+                        <Fluent:Ribbon.ContextualGroups>
+                            <Fluent:RibbonContextualTabGroup x:Name="ArchiveToolsGroup" Header="Compressed Folder Tools" Background="#FFFBC4DF" BorderBrush="#FFFBC4DF"/>
+                        </Fluent:Ribbon.ContextualGroups>
+                        <Fluent:RibbonTabItem x:Name="ComputerRibbonTabItem" Header="Computer" Visibility="Collapsed" ReduceOrder="Location,Network,SystemBox" Fluent:KeyTip.Keys="C">
+                            <!-- KeyTip="C"-->
+                            <Fluent:RibbonGroupBox x:Name="Location" Header="Location">
+                                <Fluent:Button x:Name="ComputerPropertiesButton" Header="Properties" Icon="{DynamicResource ComputerPropertiesButtonIcon}" LargeIcon="{DynamicResource ComputerPropertiesButtonLargeIcon}" SizeDefinition="Large,Middle" Fluent:KeyTip.Keys="PR"/>
+                                <!--KeyTip="PR"-->
+                                <Fluent:Button x:Name="ComputerOpenButton" Header="Open" Icon="{DynamicResource ComputerOpenButtonIcon}" LargeIcon="{DynamicResource ComputerOpenButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="O" Click="OpenButton_Click"/>
+                                <Fluent:Button x:Name="ComputerRenameButton" Header="Rename" Icon="{DynamicResource ComputerRenameButtonIcon}" LargeIcon="{DynamicResource ComputerRenameButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="R" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Network" Header="Network">
+                                <Fluent:DropDownButton x:Name="AccessMediaButton" Header="Access media" Icon="{DynamicResource ComputerAccessMediaButtonIcon}" LargeIcon="{DynamicResource ComputerAccessMediaButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="M" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="MapNetworkDriveButton" Header="Map network drive" Icon="{DynamicResource ComputerMapNetworkDriveButtonIcon}" LargeIcon="{DynamicResource ComputerMapNetworkDriveButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="N" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="AddNetworkLocationButton" Header="Add a network location" Icon="{DynamicResource ComputerAddNetworkLocationButtonIcon}" LargeIcon="{DynamicResource ComputerAddNetworkLocationButtonLargeIcon}" SizeDefinition="Large,Middle" KeyTip="L" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="SystemBox" Header="System">
+                                <Fluent:Button x:Name="OpenControlPanelButton" Header="Open Control Panel" Icon="{DynamicResource ComputerOpenControlPanelButtonIcon}" LargeIcon="{DynamicResource ComputerOpenControlPanelButtonLargeIcon}" SizeDefinition="Large" KeyTip="C" Click="OpenControlPanelButton_Click"/>
+                                <Fluent:Button x:Name="OpenSettingsAppButton" Header="Open Settings" Icon="{DynamicResource ComputerOpenSettingsButtonIcon}" LargeIcon="{DynamicResource ComputerOpenSettingsButtonLargeIcon}" SizeDefinition="Large" KeyTip="S" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="UninstallOrChangeProgramButton" Header="Uninstall or change a program" Icon="{DynamicResource UninstallOrChangeProgramButtonIcon}" SizeDefinition="Middle,Small" KeyTip="U" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="SystemPropertiesButton" Header="System properties" Icon="{DynamicResource ComputerSystemPropertiesButtonIcon}" SizeDefinition="Middle,Small" KeyTip="S" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="ManageSystemButton" Header="Manage" Icon="{DynamicResource ComputerManageSystemButtonIcon}" SizeDefinition="Middle,Small" KeyTip="G"/>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem x:Name="HomeRibbonTabItem" Header="Home" ReduceOrder="Select,ClipboardBox,Open,Organize,New" KeyTip="H">
+                            <Fluent:RibbonGroupBox x:Name="ClipboardBox" Header="Clipboard">
+                                <Fluent:Button x:Name="CopyButton" Header="Copy" LargeIcon="{DynamicResource CopyButtonLargeIcon}" Icon="{DynamicResource CopyButtonIcon}" SizeDefinition="Large,Small" KeyTip="CO" Click="CopyButton_Click"/>
+                                <Fluent:Button x:Name="PasteButton" Header="Paste" LargeIcon="{DynamicResource PasteButtonLargeIcon}" Icon="{DynamicResource PasteButtonIcon}" SizeDefinition="Large,Small" KeyTip="V" Click="PasteButton_Click"/>
+                                <Fluent:Button x:Name="CutButton" Header="Cut" Icon="{DynamicResource CutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="T" Click="CutButton_Click"/>
+                                <Fluent:Button x:Name="CopyPathButton" Header="Copy path" Icon="{DynamicResource CopyPathButtonIcon}" SizeDefinition="Middle,Small" KeyTip="CP" Click="CopyPathButton_Click"/>
+                                <Fluent:Button x:Name="PasteShortcutButton" Header="Paste shortcut" Icon="{DynamicResource PasteShortcutButtonIcon}" SizeDefinition="Middle,Small" KeyTip="PS" Click="PasteShortcutButton_Click" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Organize" Header="Organize">
+                                <Fluent:DropDownButton x:Name="MoveToButton" Header="Move to" Icon="{DynamicResource MoveToButtonIcon}" LargeIcon="{DynamicResource MoveToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="CopyToButton" Header="Copy to" Icon="{DynamicResource CopyToButtonIcon}" LargeIcon="{DynamicResource CopyToButtonLargeIcon}" SizeDefinition="Large,Small" ItemsSource="{Binding QuickDestinations, Source={x:Static local:Config.Instance}}" ItemTemplate="{DynamicResource TransferToDataTemplate}" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:SplitButton x:Name="DeleteButton" Header="Delete" Icon="{DynamicResource DeleteButtonIcon}" LargeIcon="{DynamicResource DeleteButtonLargeIcon}" SizeDefinition="Large,Small" Click="DeleteButton_Click">
+                                    <Fluent:MenuItem x:Name="RecycleMenuItem" Header="Recycle" Click="DeleteButton_Click"/>
+                                    <Fluent:MenuItem x:Name="PermaDeleteItem" Header="Permenently Delete" local:FeatureNYI.IsNYI="True"/>
+                                </Fluent:SplitButton>
+                                <Fluent:Button x:Name="RenameButton" Header="Rename" Icon="{DynamicResource RenameButtonIcon}" LargeIcon="{DynamicResource RenameButtonLargeIcon}" SizeDefinition="Large,Small" Click="RenameButton_Click"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="New" Header="New">
+                                <Fluent:Button x:Name="NewFolderButton" Header="New folder" Icon="{DynamicResource NewFolderButtonIcon}" LargeIcon="{DynamicResource NewFolderButtonLargeIcon}" SizeDefinition="Large,Small" Click="NewFolderButton_Click"/>
+                                <Fluent:DropDownButton x:Name="NewItemButton" Header="New item" Icon="{DynamicResource NewItemButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton x:Name="EasyAccessButton" Header="Easy Access" Icon="{DynamicResource EasyAccessButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Open" Header="Open">
+                                <Fluent:SplitButton x:Name="PropertiesButton" Header="Properties" Icon="{DynamicResource PropertiesButtonIcon}" LargeIcon="{DynamicResource PropertiesButtonLargeIcon}" SizeDefinition="Large,Small" Click="PropertiesButton_Click"/>
+                                <Fluent:SplitButton x:Name="OpenButton" Header="Open" SizeDefinition="Middle,Small" Click="OpenButton_Click"/>
+                                <Fluent:Button x:Name="EditButton" Header="Edit" Icon="{DynamicResource EditButtonIcon}" SizeDefinition="Middle,Small" Click="EditButton_Click" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="HistoryButton" Header="History" Icon="{DynamicResource HistoryButtonIcon}" SizeDefinition="Middle,Small" Click="HistoryButton_Click" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Select" Header="Select">
+                                <Fluent:Button x:Name="SelectAllButton" Header="Select all" Icon="{DynamicResource SelectAllButtonIcon}" SizeDefinition="Middle,Small" Click="SelectAllButton_Click"/>
+                                <Fluent:Button x:Name="SelectNoneButton" Header="Select none" Icon="{DynamicResource SelectNoneButtonIcon}" SizeDefinition="Middle,Small" Click="SelectNoneButton_Click"/>
+                                <Fluent:Button x:Name="InvertSelectionButton" Header="Invert selection" Icon="{DynamicResource InvertSelectionButtonIcon}" SizeDefinition="Middle,Small" Click="InvertSelectionButton_Click" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem x:Name="ShareRibbonTabItem" Header="Share" ReduceOrder="ShareWith,Send,ShareBlank" KeyTip="S">
+                            <Fluent:RibbonGroupBox x:Name="Send" Header="Send">
+                                <Fluent:Button x:Name="EmailButton" Header="Email" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="Zip" Header="Zip" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="Burn" Header="Burn to disc" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="Print" Header="Print" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button x:Name="Fax" Header="Fax" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="ShareWith"  Header="Share with">
+                                <Fluent:InRibbonGallery x:Name="ShareWithGallery" Header="Share with..." SizeDefinition="Large" local:FeatureNYI.IsNYI="True">
+                                    <!--Style="{DynamicResource ShareWithGalleryStyle}"-->
+                                    <Fluent:GalleryItem>UpdatusUser</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem>Specific people...</Fluent:GalleryItem>
+                                </Fluent:InRibbonGallery>
+                                <Fluent:Button x:Name="StopSharingButton" Header="Stop sharing" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="ShareBlank">
+                                <Fluent:Button x:Name="AdvancedSecurityButton" Header="Advanced security" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem Header="View" ReduceOrder="Layout,CurrentViewGroupBox,Panes,ShowHide,Options" KeyTip="V">
+                            <!--Fluent:RibbonGroupBox x:Name="Panes" Header="Panes">
+                                <Fluent:ToggleButton x:Name="PreviewPaneToggleButton" Header="Preview pane" Icon="{DynamicResource ViewPreviewPaneButtonIcon}" SizeDefinition="Middle,Small" Click="PreviewPaneToggleButton_Click"/>
+                                <Fluent:ToggleButton x:Name="DetailsPaneToggleButton" Header="Details pane" Icon="{DynamicResource ViewDetailsPaneButtonIcon}" SizeDefinition="Middle,Small" Click="DetailsPaneToggleButton_Click"/>
+                            </Fluent:RibbonGroupBox-->
+                            <Fluent:RibbonGroupBox x:Name="Layout" Header="Layout">
+                                <Fluent:DropDownButton Header="Toggle panes" Icon="{DynamicResource TogglePanesButtonIcon}" LargeIcon="{DynamicResource TogglePanesButtonLargeIcon}" SizeDefinition="Large,Small">
+                                    <Fluent:MenuItem x:Name="NavigationBarMenuItem" IsCheckable="True" Header="Navigation bar pane" IsChecked="{Binding ShowNavigationBarPane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                    <Fluent:MenuItem x:Name="NavigationPaneMenuItem" IsCheckable="True" Header="Navigation tree pane" IsChecked="{Binding ShowNavigationTreePane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                    <Fluent:MenuItem x:Name="PreviewPaneMenuItem" IsCheckable="True" Header="Preview pane" IsChecked="{Binding ShowPreviewPane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                    <!--Icon="{DynamicResource ViewPreviewPaneButtonIcon}"-->
+                                    <Fluent:MenuItem x:Name="DetailsPaneMenuItem" IsCheckable="True" Header="Details pane" IsChecked="{Binding ShowDetailsPane, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                    <!--Icon="{DynamicResource ViewDetailsPaneButtonIcon}"-->
+                                    <Fluent:MenuItem x:Name="StatusBarMenuItem" IsCheckable="True" Header="Status bar" IsChecked="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                </Fluent:DropDownButton>
+                                <Fluent:CheckBox x:Name="LockPanesCheckBox" Header="Lock panes" SizeDefinition="Large,Small" IsChecked="{Binding LockPanes, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                <!--ItemWidth="110" ItemHeight="20" MinItemsInRow="1" MaxItemsInRow="5" ResizeMode="Both"-->
+                                <Fluent:InRibbonGallery x:Name="FolderViewsGallery" Header="Folder Views" SizeDefinition="Large,Large" SelectionChanged="FolderViewsGallery_SelectionChanged">
+                                    <!--MinItemsInRow="2" MaxItemsInRow="3"-->
+                                    <!-- Style="{DynamicResource LayoutGalleryStyle}"-->
+                                    <Fluent:GalleryItem x:Name="ExtraLargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Extra large icons</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="LargeIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Large icons</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="MediumIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Medium icons</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="SmallIconsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Small icons</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="ListViewGalleryItem" Click="CurrentViewGalleryItem_Click">List</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="DetailsViewGalleryItem" Click="CurrentViewGalleryItem_Click">Details</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="TilesViewGalleryItem" Click="CurrentViewGalleryItem_Click">Tiles</Fluent:GalleryItem>
+                                    <Fluent:GalleryItem x:Name="ContentViewGalleryItem" Click="CurrentViewGalleryItem_Click">Content</Fluent:GalleryItem>
+                                </Fluent:InRibbonGallery>
+                                <!--Fluent:InRibbonGallery x:Name="InRibbonGallery"
                                             Header="Split"
                                             KeyTip="S"
                                             GroupBy="Tag"
-         a                                   ResizeMode="Both"
+                                            ResizeMode="Both"
                                             MaxItemsInRow="6"
                                             MinItemsInRow="2"
                                             ItemWidth="40"
@@ -202,7 +204,6 @@
                                             <Fluent:GalleryGroupFilter Title="Group2"
                                                        Groups="Group2" />
                                         </Fluent:InRibbonGallery.Filters>
-
                                         <TextBlock Tag="Group1">1</TextBlock>
                                         <TextBlock Tag="Group1">2</TextBlock>
                                         <TextBlock Tag="Group1">3</TextBlock>
@@ -213,104 +214,159 @@
                                         <TextBlock Tag="Group2">2 (G 2)</TextBlock>
                                         <TextBlock Tag="Group2">3 (G 2)</TextBlock>
                                     </Fluent:InRibbonGallery-->
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="CurrentViewGroupBox" Header="Current view">
-                                    <Fluent:DropDownButton Header="Sort by" SizeDefinition="Large,Small"/>
-                                    <Fluent:DropDownButton Header="Group by" SizeDefinition="Middle,Small"/>
-                                    <Fluent:DropDownButton Header="Add columns" SizeDefinition="Middle,Small"/>
-                                    <Fluent:Button Header="Size all columns to fit" SizeDefinition="Middle,Small"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="ShowHide" Header="Show/hide">
-                                    <Fluent:CheckBox Header="Item check boxes" IsChecked="{Binding Path=ShowItemCheckboxes}" SizeDefinition="Large,Small"/>
-                                    <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small"/>
-                                    <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small"/>
-                                    <Fluent:Button Header="Hide selected items" SizeDefinition="Large,Small"/>
-                                </Fluent:RibbonGroupBox>
-                                <Fluent:RibbonGroupBox x:Name="Options" Header="Options">
-                                    <Fluent:DropDownButton Header="Options" SizeDefinition="Large,Small">
-                                        <Fluent:MenuItem x:Name="FolderAndSearchOptionsMenuItem" Header="Change folder and search options" Click="FolderAndSearchOptionsMenuItem_Click"/>
-                                    </Fluent:DropDownButton>
-                                </Fluent:RibbonGroupBox>
-                            </Fluent:RibbonTabItem>
-                        </Fluent:Ribbon>
-                    </DockPanel>
-                </ContentControl>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="CurrentViewGroupBox" Header="Current view">
+                                <Fluent:DropDownButton Header="Sort by" Icon="{DynamicResource ViewSortByButtonIcon}" LargeIcon="{DynamicResource ViewSortByButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton Header="Group by" Icon="{DynamicResource ViewGroupByButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:DropDownButton Header="Add columns" Icon="{DynamicResource ViewAddColumnsButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button Header="Size all columns to fit" Icon="{DynamicResource ViewSizeColumnsToFitButtonIcon}" SizeDefinition="Middle,Small" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="ShowHide" Header="Show/hide">
+                                <Fluent:CheckBox x:Name="ShowItemCheckBoxesCheckBox" Header="Item check boxes" SizeDefinition="Large,Small" IsChecked="{Binding ShowItemSelectionCheckBoxes, Source={x:Static local:Config.Instance}, Mode=TwoWay}"/>
+                                <Fluent:CheckBox Header="File name extensions" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:CheckBox Header="Hidden items" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                                <Fluent:Button Header="Hide selected items" Icon="{DynamicResource ViewHideSelectedItemsButtonIcon}" LargeIcon="{DynamicResource ViewHideSelectedItemsButtonLargeIcon}" SizeDefinition="Large,Small" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="Options" Header="Configure">
+                                <Fluent:Button Header="Options" Icon="{DynamicResource ViewOptionsButtonIcon}" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small" Click="FolderAndSearchOptionsMenuItem_Click"/>
+                                <!--Fluent:DropDownButton Header="Options" Icon="{DynamicResource ViewOptionsButtonIcon}" LargeIcon="{DynamicResource ViewOptionsButtonLargeIcon}" SizeDefinition="Large,Small">
+                                    <Fluent:MenuItem x:Name="FolderAndSearchOptionsMenuItem" Header="Change folder and search options" Click="FolderAndSearchOptionsMenuItem_Click"/>
+                                </Fluent:DropDownButton-->
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                        <Fluent:RibbonTabItem Header="Extract" ReduceOrder="ExtractTo,ExtractAll" KeyTip="JZ" Group="{Binding Source={x:Reference ArchiveToolsGroup}}">
+                            <Fluent:RibbonGroupBox x:Name="ExtractTo" Header="Extract To">
+                                <Fluent:InRibbonGallery x:Name="ExtractToGallery" Header="Extract To" SizeDefinition="Large,Medium" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                            <Fluent:RibbonGroupBox x:Name="ExtractAll">
+                                <Fluent:Button x:Name="ExtractAllButton" Header="Extract all" SizeDefinition="Large,Large" local:FeatureNYI.IsNYI="True"/>
+                            </Fluent:RibbonGroupBox>
+                        </Fluent:RibbonTabItem>
+                    </Fluent:Ribbon>
+                    <ContentControl x:Name="NavigationBarGrid" Style="{DynamicResource NavigationBarBackgroundStyle}" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Navigation bar pane">
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                <StackPanel Style="{DynamicResource NavButtonsContainerStyle}" Orientation="Horizontal">
+                                    <Button x:Name="NavBackButton" Style="{DynamicResource NavigationBackButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationBackButtonIcon}" IsEnabled="False" Click="NavBackButton_Click"/>
+                                    <!--IsEnabled="{TemplateBinding IsBackButtonEnabled}"-->
+                                    <Button x:Name="NavForwardButton" Style="{DynamicResource NavigationForwardButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationForwardButtonIcon}" IsEnabled="False" Click="NavForwardButton_Click"/>
+                                    <!--IsEnabled="{TemplateBinding IsForwardButtonEnabled}"-->
+                                    <Fluent:DropDownButton x:Name="NavHistoryButton" Style="{DynamicResource NavigationHistoryButtonStyle}" Size="Small" SizeDefinition="Small" ItemsSource="{Binding CurrentTab.Content.HistoryElements, FallbackValue={x:Null}}" ItemTemplate="{DynamicResource RecentsDataTemplate}" />
+                                    <Button x:Name="NavUpButton" Style="{DynamicResource NavigationUpButtonStyle}" ui:AttachedProperties.Icon="{DynamicResource NavigationUpButtonIcon}" Click="NavUpButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <!--local:SearchBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" SearchSubmitted="SearchTextBox_SearchSubmitted" SearchType="Instant" /-->
+                            <ui:ActionBox x:Name="SearchTextBox" MinWidth="100" Style="{DynamicResource NavigationSearchBoxStyle}" DockPanel.Dock="Right" ActionSubmitted="SearchTextBox_ActionSubmitted" ActionType="Instant" />
+                            <Grid>
+                                <!--TextBox x:Name="AddressBox" Style="{DynamicResource NavigationAddressBoxStyle}" KeyDown="AddressBox_KeyDown"/-->
+                                <ui:BreadcrumbsBar x:Name="AddressBox" PathUpdated="AddressBox_PathUpdated"/>
+                                <bread:BreadcrumbsBar x:Name="BreadcrumbsBar" Style="{DynamicResource BreadcrumbsBarStyle}" PathUpdated="BreadcrumbsBar_PathUpdated" PathItemAdded="BreadcrumbsBar_PathItemAdded"/>
+                            </Grid>
+                        </DockPanel>
+                    </ContentControl>
+                    <ui:CommandBar x:Name="CommandBarControl" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Command bar">
+                            <ui:CommandBar.CommandBarLayers>
+                                <ui:CommandBarLayer Identifier="Global"/>
+                                <ui:CommandBarLayer Identifier="Libraries" IsVisible="False"/>
+                                <ui:CommandBarLayer Identifier="ItemSelected" IsVisible="False"/>
+                                <ui:CommandBarLayer Identifier="Folder" IsVisible="False"/>
+                            </ui:CommandBar.CommandBarLayers>
+                            <Button ui:CommandBar.Layers="Global">Organize v</Button>
+                            <Button ui:CommandBar.Layers="Libraries">New library</Button>
+                            <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="OpenButton_Click">Open</Button>
+                            <Button ui:CommandBar.Layers="Folder,ItemSelected">Share with v</Button>
+                            <Button ui:CommandBar.Layers="Folder,ItemSelected" Click="NewFolderButton_Click">New Folder</Button>
+                        </ui:CommandBar>
+                    <ToolBarTray x:Name="ToolBarTray" Background="Transparent" DockPanel.Dock="Top" rerr:Rearranger.PaneTitle="Toolbars (TEMP)">
+                            <ToolBar x:Name="MenuBarToolBar" Visibility="Collapsed">
+                                <Menu x:Name="MenuBar">
+                                    <MenuItem Header="File">
+                                        <MenuItem IsEnabled="False"/>
+                                    </MenuItem>
+                                    <MenuItem Header="Edit">
+                                        <MenuItem IsEnabled="False"/>
+                                    </MenuItem>
+                                    <MenuItem Header="View">
+                                        <MenuItem IsEnabled="False"/>
+                                    </MenuItem>
+                                    <MenuItem Header="Tools">
+                                        <MenuItem Header="Folder options..." Click="FolderAndSearchOptionsMenuItem_Click"/>
+                                    </MenuItem>
+                                </Menu>
+                            </ToolBar>
+                            <ToolBar x:Name="DefaultToolBar" Visibility="Collapsed" Band="1">
+                                <Button Click="NavBackButton_Click">Back</Button>
+                                <Button Click="NavForwardButton_Click">Forward</Button>
+                                <Button Click="NavUpButton_Click">Up</Button>
+                                <Separator/>
+                            </ToolBar>
+                            <ToolBar x:Name="TabsToolBar" Visibility="Collapsed" Band="2">
+                                <TabControl x:Name="ToolbarTabControl" Style="{DynamicResource TitleBarTabControlStyle}" MaxWidth="{Binding ActualWidth, Source={x:Reference TabControlSizingAidRectangle}}"/>
+                            </ToolBar>
+                        </ToolBarTray>
+                        <!--mgrbase:NavigationBar x:Name="NavBar" DockPanel.Dock="Bottom"/-->
+                    <!--/DockPanel-->
+                    <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}" DockPanel.Dock="Bottom" rerr:Rearranger.PaneTitle="Status bar">
+                        <StatusBarItem x:Name="ItemCounter" HorizontalAlignment="Left"/>
+                        <StatusBarItem x:Name="SelectedItemCounter" HorizontalAlignment="Left" Visibility="Hidden"/>
+                        <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                <ToggleButton x:Name="DetailsViewButton" Style="{DynamicResource StatusBarDetailsViewToggleButtonStyle}" Click="DetailsViewButton_Click"/>
+                                <ToggleButton x:Name="IconsViewButton" Style="{DynamicResource StatusBarIconsViewToggleButtonStyle}" Click="IconsViewButton_Click"/>
+                            </StackPanel>
+                        </StatusBarItem>
+                    </StatusBar>
+                    <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}" DockPanel.Dock="Right" rerr:Rearranger.PaneTitle="Details pane" IsVisibleChanged="DetailsPane_IsVisibleChanged">
+                        <!--Visibility="{Binding ShowDetailsPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                        <StackPanel Orientation="Vertical">
+                            <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
+                                <Rectangle x:Name="DetailsFileIconRectangle"/>
+                            </ContentControl>
+                            <TextBlock x:Name="DetailsFileNameTextBlock"/>
+                        </StackPanel>
+                    </ContentControl>
+                    <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="{Binding ShowPreviewPane, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}" DockPanel.Dock="Right" rerr:Rearranger.PaneTitle="Preview pane" IsVisibleChanged="PreviewPane_IsVisibleChanged">
+                        <!--Visibility="{Binding ShowPreviewPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                        <Grid x:Name="PreviewPaneGrid">
+                            <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
+                            <TextBlock Text="No preview available." Visibility="Collapsed"/>
+                            <Rectangle Visibility="Collapsed"/>
+                            <StackPanel Orientation="Vertical" Visibility="Collapsed">
+                                <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
+                                <UniformGrid/>
+                            </StackPanel>
+                            <ScrollViewer Visibility="Collapsed">
+                                <TextBlock/>
+                            </ScrollViewer>
+                        </Grid>
+                    </ContentControl>
+                    <ContentControl x:Name="NavigationPaneContentControl" Visibility="{Binding ShowNavigationTreePane, Source={x:Static local:Config.Instance}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}" rerr:Rearranger.PaneTitle="Navigation tree pane" Style="{DynamicResource NavigationTreePaneContentControlStyle}" DockPanel.Dock="Left">
+                        <TreeView x:Name="NavigationPaneTreeView" MinWidth="175" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <!--Visibility="{Binding ShowNavigationPane, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                            <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{Binding Favorites, Source={x:Static local:Config.Instance}}">
+                                <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
+                                <TreeViewItem.Header>
+                                    <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
+                                </TreeViewItem.Header>
+                            </TreeViewItem>
+                            <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{Binding ComputerSubFolders, Source={x:Static local:Config.Instance}}">
+                                <TreeViewItem.Header>
+                                    <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
+                                </TreeViewItem.Header>
+                            </TreeViewItem>
+                        </TreeView>
+                    </ContentControl>
+                    <ContentPresenter x:Name="TabContentDisplayContentControl" Content="{Binding ContentTabControl.SelectedContent.(local:FolderTabItem.Content)}"/>
+                </rerr:Rearranger>
+                <!--/ContentControl-->
                 <!--DockPanel-->
-                <StatusBar Visibility="{Binding ShowStatusBar, Source={x:Static local:Config.Instance}, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Bottom">
-                    <StatusBarItem x:Name="ItemCounter" HorizontalAlignment="Left"/>
-                    <StatusBarItem x:Name="SelectedItemCounter" HorizontalAlignment="Left" Visibility="Hidden"/>
-                    <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Stretch">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                            <ToggleButton x:Name="DetailsViewButton" Style="{DynamicResource StatusBarDetailsViewToggleButtonStyle}" Click="DetailsViewButton_Click"/>
-                            <ToggleButton x:Name="IconsViewButton" Style="{DynamicResource StatusBarIconsViewToggleButtonStyle}" Click="IconsViewButton_Click"/>
-                        </StackPanel>
-                    </StatusBarItem>
-                </StatusBar>
-                <TreeView x:Name="NavigationPaneTreeView" Visibility="{Binding ShowNavigationPane}" Width="175" DockPanel.Dock="Left" Style="{DynamicResource FavoritesTreeViewStyle}" SelectedItemChanged="NavigationPaneTreeView_SelectedItemChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <TreeViewItem x:Name="FavoritesTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.Favorites}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                        <!--Style="{DynamicResource FavoritesTreeViewFavoritesItemStyle}"-->
-                        <TreeViewItem.Header>
-                            <Control Style="{DynamicResource FavoritesItemHeaderStyle}"/>
-                        </TreeViewItem.Header>
-                    </TreeViewItem>
-                    <TreeViewItem x:Name="MyComputerTreeViewItem" IsExpanded="True" ItemsSource="{x:Static local:Config.ComputerSubfolders}" ItemTemplate="{DynamicResource NavigationPaneDataTemplate}">
-                        <TreeViewItem.Header>
-                            <Control Style="{DynamicResource ComputerItemHeaderStyle}"/>
-                        </TreeViewItem.Header>
-                    </TreeViewItem>
-                </TreeView>
-                <ContentControl x:Name="DetailsPane" Style="{DynamicResource DetailsPaneStyle}" MinWidth="150" Visibility="{Binding ShowDetailsPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Right">
-                    <StackPanel Orientation="Vertical">
-                        <ContentControl x:Name="DetailsFileIconContentControl" Style="{DynamicResource DetailsPaneIconContainerStyle}">
-                            <Rectangle x:Name="DetailsFileIconRectangle"/>
-                        </ContentControl>
-                        <TextBlock x:Name="DetailsFileNameTextBlock"/>
-                    </StackPanel>
-                </ContentControl>
-                <ContentControl x:Name="PreviewPane" Style="{DynamicResource PreviewPaneStyle}" MinWidth="100" Visibility="{Binding ShowPreviewPane, Converter={StaticResource BoolToVisibilityConverter}}" DockPanel.Dock="Right">
-                    <Grid x:Name="PreviewPaneGrid">
-                        <TextBlock Text="Select a file to preview." Visibility="Collapsed"/>
-                        <TextBlock Text="No preview available." Visibility="Collapsed"/>
-                        <Rectangle Visibility="Collapsed"/>
-                        <StackPanel Orientation="Vertical" Visibility="Collapsed">
-                            <MediaElement x:Name="PreviewPlayer" LoadedBehavior="Manual"/>
-                            <UniformGrid/>
-                        </StackPanel>
-                        <ScrollViewer Visibility="Collapsed">
-                            <TextBlock/>
-                        </ScrollViewer>
-                    </Grid>
-                </ContentControl>
-                <ListView x:Name="CurrentDirectoryListView" Style="{DynamicResource CurrentDirectoryListViewStyle}" SelectionChanged="CurrentDirectoryListView_SelectionChanged" KeyDown="CurrentDirectoryListView_KeyDown">
-                    <ListView.Resources>
-                        <ContextMenu x:Key="ItemContextMenu" Opened="TouchableContextMenu_Opened">
-                            <MenuItem x:Name="OpenMenuItem" Header="Open" Click="OpenMenuItem_Click"/>
-                            <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
-                            <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator" Click="RunAsAdminMenuItem_Click"/>
-                            <Separator/>
-                            <MenuItem x:Name="CopyMenuItem" Header="Copy" Click="CopyMenuItem_Click"/>
-                            <MenuItem x:Name="CutMenuItem" Header="Cut" Click="CutMenuItem_Click"/>
-                            <Separator/>
-                            <MenuItem x:Name="DeleteMenuItem" Header="Delet" Click="DeleteMenuItem_Click"/>
-                            <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
-                            <Separator/>
-                            <MenuItem x:Name="PropertiesMenuItem" Header="Properties" Click="PropertiesMenuItem_Click"/>
-                        </ContextMenu>
-
-                        <!--Style TargetType="{x:Type ListViewItem}">
-                    <!-BasedOn="{StaticResource {x:Type ListViewItem}}"->
-                    <EventSetter Event="Control.MouseDoubleClick" Handler="CurrentDirectoryListView_Item_MouseDoubleClick"/>
-                    <!-EventSetter Event="Loaded" Handler="CurrentDirectoryListViewItem_Loaded"/->
-                    <Setter Property="ContextMenu" Value="{DynamicResource ItemContextMenu}"/>
-                    <Setter Property="Template" Value="{DynamicResource CurrentDirectoryListViewItemControlTemplate}"/>
-                </Style-->
-                    </ListView.Resources>
-                </ListView>
+                <!--CurrentTab.Content-->
+                <!--ContentSource="{Binding Path=(local:MainWindow.CurrentTab).Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:MainWindow}}}"-->
                 <!--/DockPanel-->
                 <!--mgrbase:FileManagerBase x:Name="FileManagerControl"/-->
             </DockPanel>
             <!--Fluent:BackstageTabControl x:Name="RibbonBackstageTabs" IsEnabled="{Binding IsOpen, FallbackValue=False, Source={x:Reference RibbonBackstage}}">
-            <!-Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=False}"->
+            <!-Visibility="{Binding IsOpen, Source={x:Reference RibbonBackstage}, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=False}"->
             <Fluent:Button x:Name="NewWindowButton" Header="New Window" Click="NewWindowButton_Click"/>
             <Fluent:Button x:Name="CloseWindowButton" Header="Close" Click="CloseWindowButton_Click"/>
             <!-Fluent:Button Header="New Window in New Process"/->
@@ -328,7 +384,18 @@
             </Fluent:BackstageTabItem>
             <Fluent:BackstageTabItem Header="History" />
         </Fluent:BackstageTabControl-->
+
+            <ContentControl x:Name="TabsOverviewContentControl" Style="{DynamicResource TabsOverviewContentControlStyle}" IsManipulationEnabled="False">
+                <ContentControl.DataContext>
+                    <local:TabOverviewManager x:Name="TabMgr"/>
+                </ContentControl.DataContext>
+                <DockPanel>
+                    <ListView x:Name="TabsSetAsideListView" Style="{DynamicResource TabsSetAsideListViewStyle}" ItemsSource="{Binding TabsSetAside, Source={x:Reference TabMgr}, Mode=OneWay}"  DockPanel.Dock="Left"/>
+                    <ListView x:Name="CurrentlyOpenTabsListView" Style="{DynamicResource CurrentlyOpenTabsListViewStyle}" ItemsSource="{Binding OpenTabs, Source={x:Reference TabMgr}, Mode=OneWay}" SelectionChanged="CurrentlyOpenTabsListView_SelectionChanged"/>
+                </DockPanel>
+            </ContentControl>
+
         </Grid>
-    </win:DecoratableWindow.FullWindowContent>
-    <!--/win:DecoratableWindow.FullWindowContent-->
+        <!--/win:DecoratableWindow.FullWindowContent-->
+    </AdornerDecorator>
 </win:DecoratableWindow>

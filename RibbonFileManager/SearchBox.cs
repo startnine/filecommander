@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -13,39 +9,70 @@ namespace RibbonFileManager
     [TemplatePart(Name = PartWatermarkTextBlock, Type = typeof(TextBlock))]
     public class SearchBox : TextBox
     {
-        const string PartGoStopToggleButton = "PART_GoStopToggleButton";
-        const string PartWatermarkTextBlock = "PART_WatermarkTextBlock";
+        public const String PartGoStopToggleButton = "PART_GoStopToggleButton";
+        public const String PartWatermarkTextBlock = "PART_WatermarkTextBlock";
 
-        public string WatermarkText
+        public String WatermarkText
         {
-            get => (string)GetValue(WatermarkTextProperty);
+            get => (String) GetValue(WatermarkTextProperty);
             set => SetValue(WatermarkTextProperty, value);
         }
 
         public static readonly DependencyProperty WatermarkTextProperty =
-            DependencyProperty.Register("WatermarkText", typeof(string), typeof(SearchBox), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register(nameof(WatermarkText), typeof(String), typeof(SearchBox), new PropertyMetadata(String.Empty));
 
-        public SearchBox()
+        public SearchType SearchType
         {
-
+            get => (SearchType) GetValue(SearchTypeProperty);
+            set => SetValue(SearchTypeProperty, value);
         }
 
-        ToggleButton _goStopToggleButton;
+        public static readonly DependencyProperty SearchTypeProperty =
+            DependencyProperty.Register(nameof(SearchType), typeof(SearchType), typeof(SearchBox), new PropertyMetadata(SearchType.Regular));
+
+        public void CancelSearch()
+        {
+            SearchButton.IsChecked = false;
+        }
+        
+        public static readonly RoutedEvent SearchSubmittedEvent = EventManager.RegisterRoutedEvent(
+            nameof(SearchSubmitted), RoutingStrategy.Bubble, typeof(EventHandler<SearchSubmittedEventArgs>), typeof(SearchBox));
+
+        public event EventHandler<SearchSubmittedEventArgs> SearchSubmitted
+        {
+            add { AddHandler(SearchSubmittedEvent, value); }
+            remove { RemoveHandler(SearchSubmittedEvent, value); }
+        }
+
+        public static readonly RoutedEvent SearchCanceledEvent = EventManager.RegisterRoutedEvent(
+            nameof(SearchCanceled), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(SearchBox));
+
+        public event RoutedEventHandler SearchCanceled
+        {
+            add { AddHandler(SearchCanceledEvent, value); }
+            remove { RemoveHandler(SearchCanceledEvent, value); }
+        }
+
+
+        internal ToggleButton SearchButton;
         TextBlock _watermarkTextBlock;
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _goStopToggleButton = GetTemplateChild(PartGoStopToggleButton) as ToggleButton;
-            if (_goStopToggleButton != null)
-                _goStopToggleButton.Click += GoStopToggleButton_Click;
+            SearchButton = GetTemplateChild(PartGoStopToggleButton) as ToggleButton;
+            if (SearchButton != null)
+                SearchButton.Click += GoStopToggleButton_Click;
 
             _watermarkTextBlock = GetTemplateChild(PartWatermarkTextBlock) as TextBlock;
         }
 
-        private void GoStopToggleButton_Click(object sender, RoutedEventArgs e)
+        private void GoStopToggleButton_Click(Object sender, RoutedEventArgs e)
         {
-            
+            if (SearchButton.IsChecked == true)
+                RaiseEvent(new SearchSubmittedEventArgs(Text, SearchSubmittedEvent));
+            else
+                RaiseEvent(new RoutedEventArgs(SearchCanceledEvent));
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
@@ -53,11 +80,36 @@ namespace RibbonFileManager
             base.OnTextChanged(e);
             if (_watermarkTextBlock != null)
             {
-                if (string.IsNullOrWhiteSpace(Text))
-                    _watermarkTextBlock.Visibility = Visibility.Visible;
-                else
-                    _watermarkTextBlock.Visibility = Visibility.Collapsed;
+                _watermarkTextBlock.Visibility = String.IsNullOrWhiteSpace(Text) ? Visibility.Visible : Visibility.Collapsed;
             }
+
+            if (SearchType == SearchType.Instant)
+            {
+                SearchButton.IsChecked = !String.IsNullOrWhiteSpace(Text);
+                RaiseEvent(new SearchSubmittedEventArgs(Text, SearchCanceledEvent));
+                RaiseEvent(new SearchSubmittedEventArgs(Text, SearchSubmittedEvent));
+            }
+        }
+    }
+
+    public enum SearchType
+    {
+        Regular,
+        Instant
+    }
+
+    public class SearchSubmittedEventArgs : RoutedEventArgs
+    {
+        internal SearchSubmittedEventArgs(String text, RoutedEvent @event) : base(@event)
+        {
+            Query = text;
+        }
+
+        public String Query { get; }
+
+        public void CancelSearch()
+        {
+            ((SearchBox) Source).SearchButton.IsChecked = false;
         }
     }
 }

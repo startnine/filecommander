@@ -1,20 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interactivity;
+using Microsoft.Xaml.Behaviors;
 
 namespace RibbonFileManager
 {
     public class ClickToOpenBehavior : Behavior<Panel>
     {
-        /*public DiskItem TargetItem
-        {
-            get => (DiskItem)GetValue(TargetItemProperty);
-            set => SetValue(TargetItemProperty, value);
-        }
-
-        public static readonly DependencyProperty TargetItemProperty =
-            DependencyProperty.Register("TargetItem", typeof(DiskItem), typeof(ClickToOpenBehavior), new PropertyMetadata(null));*/
-
         public ListViewItem ParentListViewItem
         {
             get => (ListViewItem)GetValue(ParentListViewItemProperty);
@@ -24,7 +17,7 @@ namespace RibbonFileManager
         public static readonly DependencyProperty ParentListViewItemProperty =
             DependencyProperty.Register("ParentListViewItem", typeof(ListViewItem), typeof(ClickToOpenBehavior), new PropertyMetadata(null, OnParentListViewItemChangedCallback));
 
-        static void OnParentListViewItemChangedCallback(object sender, DependencyPropertyChangedEventArgs e)
+        static void OnParentListViewItemChangedCallback(System.Object sender, DependencyPropertyChangedEventArgs e)
         {
             var sned = sender as ClickToOpenBehavior;
             if (e.NewValue != null)
@@ -34,24 +27,20 @@ namespace RibbonFileManager
                 (e.OldValue as ListViewItem).PreviewMouseDoubleClick -= sned.ParentListViewItem_PreviewMouseDoubleClick;
         }
 
-        public MainWindow ManagerBase
+        public WindowContent WindowContent
         {
-            get => (MainWindow)GetValue(ManagerBaseProperty);
-            set => SetValue(ManagerBaseProperty, value);
+            get => (WindowContent)GetValue(WindowContentProperty);
+            set => SetValue(WindowContentProperty, value);
         }
 
-        public static readonly DependencyProperty ManagerBaseProperty =
-            DependencyProperty.Register("ManagerBase", typeof(MainWindow), typeof(ClickToOpenBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty WindowContentProperty =
+            DependencyProperty.Register(nameof(WindowContent), typeof(WindowContent), typeof(ClickToOpenBehavior), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
-        //ListViewItem _item;
-        /*protected override void OnAttached()
-        {
-            base.OnAttached();
-        }*/
 
-        private void ParentListViewItem_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void ParentListViewItem_PreviewMouseDoubleClick(System.Object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ManagerBase.OpenSelection();
+            await Dispatcher.BeginInvoke(new Action(() => WindowContent = ((MainWindow)Window.GetWindow(AssociatedObject)).CurrentTab.Content));
+            await WindowContent.OpenSelectionAsync();
         }
     }
 }

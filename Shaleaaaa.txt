@@ -1,0 +1,76 @@
+
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="{x:Type local:DiskItem}">
+                            <DataTemplate.Resources>
+                                <!--Style x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundBrush}"/>
+                                </Style-->
+                            </DataTemplate.Resources>
+                            <StackPanel x:Name="RootStackPanel" Orientation="Vertical">
+                                <e:Interaction.Behaviors>
+                                    <local:ClickToOpenBehavior x:Name="ClickToOpen" ParentListViewItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}}" WindowContent="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, Mode=OneWay}" />
+                                    <local:DiskItemDragBehavior TargetItem="{Binding}"/>
+                                </e:Interaction.Behaviors>
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu x:Name="ItemContextMenu">
+                                        <!-- Opened="TouchableContextMenu_Opened"-->
+                                        <MenuItem x:Name="OpenMenuItem" Header="Open"/>
+                                        <!--Click="OpenMenuItem_Click"-->
+                                        <!--Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}"-->
+                                        <MenuItem x:Name="RunAsAdminMenuItem" Header="Run as administrator"/>
+                                        <!-- Click="RunAsAdminMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="CopyMenuItem" Header="Copy"/>
+                                        <!-- Click="CopyMenuItem_Click"-->
+                                        <MenuItem x:Name="CutMenuItem" Header="Cut"/>
+                                        <!-- Click="CutMenuItem_Click"-->
+                                        <Separator/>
+                                        <MenuItem x:Name="DeleteMenuItem" Header="Delet"/>
+                                        <!-- Click="DeleteMenuItem_Click"-->
+                                        <MenuItem x:Name="RenameMenuItem" Header="Rename"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="PropertiesMenuItem" Header="Properties"/>
+                                        <!-- Click="PropertiesMenuItem_Click"-->
+                                        <e:Interaction.Behaviors>
+                                            <local:ItemContextMenuBehavior WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}, Mode=OneWay}" OpenMenuItem="{Binding Source={x:Reference OpenMenuItem}}" RunAsAdminMenuItem="{Binding Source={x:Reference RunAsAdminMenuItem}}" CopyMenuItem="{Binding Source={x:Reference CopyMenuItem}}" CutMenuItem="{Binding Source={x:Reference CutMenuItem}}" RenameMenuItem="{Binding Source={x:Reference RenameMenuItem}}" RenameTextBox="{Binding Source={x:Reference RenameTextBox}}" PropertiesMenuItem="{Binding Source={x:Reference PropertiesMenuItem}}" TargetItem="{Binding}"/>
+                                        </e:Interaction.Behaviors>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <!--Width="52" MinHeight="52"-->
+                                <!--StackPanel.ContextMenu>
+                            <ui:TouchableContextMenu>
+                                <MenuItem Header="Open"/>
+                                <MenuItem Header="Properties"/>
+                            </ui:TouchableContextMenu>
+                        </StackPanel.ContextMenu-->
+                                <Rectangle HorizontalAlignment="Center" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}" Fill="{Binding ItemExtraLargeIcon, Converter={StaticResource IconToImageBrushConverter}, ConverterParameter='48'}" UseLayoutRounding="True" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased"/>
+                                <!--Width="48" Height="48"-->
+                                <Grid x:Name="NameGrid" Width="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}">
+                                    <Grid x:Name="InnerNameGrid" Margin="-3,3,-3,0" MaxHeight="57">
+                                        <TextBlock x:Name="NameTextBlock" Text="{Binding ItemDisplayName}" HorizontalAlignment="Stretch" TextAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" TextWrapping="Wrap"/>
+                                        <!-- Style="{DynamicResource FileLabelStyle}"-->
+                                        <!--TextElement.TextWrapping="Wrap"-->
+                                        <TextBox x:Name="RenameTextBox" Visibility="Collapsed" HorizontalAlignment="Stretch" MaxWidth="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}}" TextWrapping="Wrap">
+                                            <e:Interaction.Behaviors>
+                                                <local:ItemRenameBehavior TargetItem="{Binding}" WindowContent="{Binding WindowContent, Source={x:Reference ClickToOpen}}" IsRenaming="{Binding IsRenaming}"/>
+                                            </e:Interaction.Behaviors>
+                                        </TextBox>
+                                    </Grid>
+                                </Grid>
+                            </StackPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IconSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:WindowContent}}, FallbackValue=1.0}" Value="16">
+                                    <Setter TargetName="RootStackPanel" Property="Orientation" Value="Horizontal"/>
+                                    <Setter TargetName="RootStackPanel" Property="Width" Value="225"/>
+                                    <Setter TargetName="NameGrid" Property="Width" Value="Auto"/>
+                                    <Setter TargetName="InnerNameGrid" Property="Margin" Value="3,0,0,0"/>
+                                </DataTrigger>
+                                <Trigger SourceName="RenameTextBox" Property="IsVisible" Value="True">
+                                    <Setter TargetName="NameTextBlock" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+

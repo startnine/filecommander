@@ -6,20 +6,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using Microsoft.VisualBasic.FileIO;
-//using NT6FileManagerBase;
+using Start9.UI.Wpf;
 using Start9.UI.Wpf.Windows;
-using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {
@@ -28,6 +24,85 @@ namespace RibbonFileManager
     /// </summary>
     public partial class MainWindow : DecoratableWindow
     {
+        public TabControl ContentTabControl
+        {
+            get
+            {
+                if (Config.Instance.TabsMode == Config.TabDisplayMode.Titlebar)
+                    return TitlebarTabControl;
+                else if (Config.Instance.TabsMode == Config.TabDisplayMode.Toolbar)
+                    return ToolbarTabControl;
+                else
+                    return null;
+            }
+        }
+
+        public ObservableCollection<FolderTabItem> Tabs
+        {
+            get => (ObservableCollection<FolderTabItem>)GetValue(TabsProperty);
+            set => SetValue(TabsProperty, value);
+        }
+
+        public static readonly DependencyProperty TabsProperty =
+            DependencyProperty.Register(nameof(Tabs), typeof(ObservableCollection<FolderTabItem>), typeof(MainWindow), new PropertyMetadata(OnTabPropertiesChangedCallback));
+
+        public int CurrentTabIndex
+        {
+            get => (int)GetValue(CurrentTabIndexProperty);
+            set => SetValue(CurrentTabIndexProperty, value);
+        }
+
+        public static readonly DependencyProperty CurrentTabIndexProperty =
+            DependencyProperty.Register(nameof(CurrentTabIndex), typeof(int), typeof(MainWindow), new PropertyMetadata(0, OnTabPropertiesChangedCallback));
+
+        static void OnTabPropertiesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MainWindow win)
+                win.UpdateCurrentTab();
+        }
+
+        public void UpdateCurrentTab()
+        {
+            if ((CurrentTabIndex >= 0) && (CurrentTabIndex < Tabs.Count))
+                CurrentTab = Tabs.ElementAt(CurrentTabIndex);
+            else
+                CurrentTab = null;
+        }
+
+        public FolderTabItem CurrentTab
+        {
+            get => (FolderTabItem)GetValue(CurrentTabProperty);
+            set => SetValue(CurrentTabProperty, value);
+        }
+
+        public static readonly DependencyProperty CurrentTabProperty =
+            DependencyProperty.Register(nameof(CurrentTab), typeof(FolderTabItem), typeof(MainWindow), new FrameworkPropertyMetadata(null, OnCurrentTabChangedCallback));
+
+        static void OnCurrentTabChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MainWindow win)
+            {
+                if ((win.CurrentTab != null) && win.CurrentTab.Content.IsLoaded)
+                {
+                    win.Navigate(win.CurrentTab.Content.CurrentLocation);
+                    //win.NavigationPaneMenuItem.IsChecked = Config.Instance.ShowNavigationTreePane;
+                    //win.DetailsPaneMenuItem.IsChecked = Config.Instance.ShowDetailsPane;
+                    //win.PreviewPaneMenuItem.IsChecked = Config.Instance.ShowPreviewPane;
+                    if (win.CurrentTab.Content.CurrentLocation is DirectoryQuery query)
+                        win.ValidateCommandStates(query.Item.SubItems.Count, query.Item);
+                }
+            }
+            /*if ((d is MainWindow win) && (win.CurrentTab != null))
+            {
+                win.TabContentDisplayContentControl.Content = win.CurrentTab.Content;
+                Debug.WriteLine("Setting TabContentDisplayContentControl content");
+            }
+            else
+                Debug.WriteLine("CurrentTab was null!");*/
+        }
+
+        //public IEnumerable<WindowContent> WindowContents => ContentTabControl.Items.OfType<WindowContent>();
+
         public Config.InterfaceModeType InterfaceMode
         {
             get => (Config.InterfaceModeType)GetValue(InterfaceModeProperty);
@@ -39,58 +114,131 @@ namespace RibbonFileManager
 
         static void OnInterfaceModeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine("interface mode updated");
-            (d as MainWindow).UpdateInterface();
+            (d as MainWindow).UpdateInterfaceMode();
         }
 
-        void UpdateInterface()
+        void UpdateInterfaceMode()
         {
             if (InterfaceMode == Config.InterfaceModeType.CommandBar)
             {
                 CommandBarControl.Visibility = Visibility.Visible;
                 MenuBar.IsEnabled = true;
+                MenuBarToolBar.Visibility = Visibility.Visible;
+                DefaultToolBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Collapsed;
-                RibbonTitleBar.Visibility = Visibility.Collapsed;
+                NavigationBarGrid.Visibility = Visibility.Visible;
             }
             else if (InterfaceMode == Config.InterfaceModeType.Ribbon)
             {
                 CommandBarControl.Visibility = Visibility.Collapsed;
                 MenuBar.IsEnabled = false;
-                MenuBar.Visibility = Visibility.Collapsed;
+                MenuBarToolBar.Visibility = Visibility.Collapsed;
+                DefaultToolBar.Visibility = Visibility.Collapsed;
                 Ribbon.Visibility = Visibility.Visible;
-                RibbonTitleBar.Visibility = Visibility.Visible;
+
+                NavigationBarGrid.Visibility = Visibility.Visible;
+            }
+            else if (InterfaceMode == Config.InterfaceModeType.None)
+            {
+                CommandBarControl.Visibility = Visibility.Collapsed;
+                MenuBar.IsEnabled = true;
+                MenuBarToolBar.Visibility = Visibility.Visible;
+                DefaultToolBar.Visibility = Visibility.Visible;
+                Ribbon.Visibility = Visibility.Collapsed;
+                NavigationBarGrid.Visibility = Visibility.Collapsed;
             }
         }
 
-        /*static MainWindow()
+        private void Config_ConfigUpdated(object sender, EventArgs e)
         {
-            //Debug.WriteLine("My Computer Path: " + Environment.GetFolderPath(Environment.SpecialFolder.MyComputer));
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MainWindow), new FrameworkPropertyMetadata(typeof(DecoratableWindow)));
-        }*/
+            if (sender is Config Instance)
+            {
+                TitlebarTabControl.Visibility = Visibility.Collapsed;
+                ToolbarTabControl.Visibility = Visibility.Collapsed;
+                if (Config.Instance.InterfaceMode == Config.InterfaceModeType.Ribbon)
+                    RibbonTitle.Visibility = Visibility.Visible;
+                else
+                    RibbonTitle.Visibility = Visibility.Collapsed;
+                TabsSetAsideToggleButton.Visibility = Visibility.Collapsed;
+                SetTabsAsideButton.Visibility = Visibility.Collapsed;
+                NewTabButton.Visibility = Visibility.Collapsed;
+                //BindingOperations.ClearBinding(TabContentDisplayContentControl, ContentProperty);
+                if (Instance.TabsMode == Config.TabDisplayMode.Titlebar)
+                {
+                    TitlebarTabControl.Visibility = Visibility.Visible;
+                    RibbonTitle.Visibility = Visibility.Collapsed;
+                    TabsSetAsideToggleButton.Visibility = Visibility.Visible;
+                    SetTabsAsideButton.Visibility = Visibility.Visible;
+                    NewTabButton.Visibility = Visibility.Visible;
+                    /*var contentBinding = new Binding()
+                    {
+                        Source = TitlebarTabControl,
+                        Path = new PropertyPath("SelectedContent"),
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    };
+                    BindingOperations.SetBinding(TabContentDisplayContentControl, ContentProperty, contentBinding);*/
+                }
+                else if (Instance.TabsMode == Config.TabDisplayMode.Toolbar)
+                {
+                    ToolbarTabControl.Visibility = Visibility.Visible;
+                    /*var contentBinding = new Binding()
+                    {
+                        Source = ToolbarTabControl,
+                        Path = new PropertyPath("SelectedContent"),
+                        Mode = BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    };
+                    BindingOperations.SetBinding(TabContentDisplayContentControl, ContentProperty, contentBinding);*/
+                }
 
-        public static RoutedCommand CloseWindowCommand = new RoutedCommand();
-        public static RoutedCommand MenuBarCommand = new RoutedCommand();
+                ShowItemCheckBoxesCheckBox.IsChecked = Config.Instance.ShowItemSelectionCheckBoxes;
 
-        public static RoutedCommand BackCommand = new RoutedCommand();
-        public static RoutedCommand ForwardCommand = new RoutedCommand();
-        public static RoutedCommand UpLevelCommand = new RoutedCommand();
+                if (Instance.TabsMode != Config.TabDisplayMode.Titlebar)
+                {
+                    ShowTitlebarText = Instance.ShowTitlebarText;
+                    ShowTitlebarIcon = Instance.ShowTitlebarIcon;
+                }
+                else
+                {
+                    ShowTitlebarText = false;
+                    ShowTitlebarIcon = false;
+                }
+            }
+        }
 
-        public static RoutedCommand RenameCommand = new RoutedCommand();
+        Location _firstNavigationPath = WindowManager.WindowDefaultLocation;
 
-        void Initialize()
+        public static BreadcrumbsPathToItemsConverter Converter { get; } = new BreadcrumbsPathToItemsConverter((path) =>
         {
+            if (path.Contains("Search results in"))
+            {
+                return new[] { new BreadcrumbItem(path, path) };
+            }
+
+            var sb = new StringBuilder(path.Length);
+            var items = new List<BreadcrumbItem>();
+
+            foreach (var p in path.Split('\\'))
+            {
+                sb.Append(p);
+                sb.Append("\\");
+                items.Add(new BreadcrumbItem(p, sb.ToString().Trim('\\')));
+            }
+
+            return items.ToArray();
+        });
+
+        public MainWindow()
+        {
+            SetCurrentValue(TabsProperty, new ObservableCollection<FolderTabItem>());
             InitializeComponent();
 
-            CloseWindowCommand.InputGestures.Add(new KeyGesture(Key.W, ModifierKeys.Control));
-            MenuBarCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Alt));
+            AddressBox.Converter = Converter;
 
-            BackCommand.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Alt));
-            ForwardCommand.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Alt));
-            UpLevelCommand.InputGestures.Add(new KeyGesture(Key.Up, ModifierKeys.Alt));
+            Activated += MainWindow_Activated;
 
-            RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
-
-            Binding interfaceModeBinding = new Binding()
+            var interfaceModeBinding = new Binding()
             {
                 Source = Config.Instance,
                 Path = new PropertyPath("InterfaceMode"),
@@ -98,175 +246,232 @@ namespace RibbonFileManager
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             BindingOperations.SetBinding(this, InterfaceModeProperty, interfaceModeBinding);
-            UpdateInterface();
+            UpdateInterfaceMode();
 
-            /*Binding checkBoxBinding = new Binding()
-            {
-                Source = typeof(Config),
-                Path = new PropertyPath("ShowItemCheckboxes"),
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            BindingOperations.SetBinding(this, FileManagerBase.ShowItemCheckboxesProperty, checkBoxBinding);*/
+            Tabs.CollectionChanged += (sneder, args) => UpdateCurrentTab();
+
+            Config_ConfigUpdated(Config.Instance, null);
+            Config.ConfigUpdated += Config_ConfigUpdated;
 
             WindowManager.OpenWindows.Add(this);
-            //FileManagerControl.Resources.MergedDictionaries.Add(Resources);
         }
 
-        private void RenameCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void MainWindow_Activated(Object sender, EventArgs e)
         {
-            RenameSelection();
+            UpdateClipboardButtons();
         }
 
-        public MainWindow()
+        public void UpdateClipboardButtons()
         {
-            Initialize();
-            Navigate(WindowManager.WindowDefaultPath, true);
-            InitialNavigate(WindowManager.WindowDefaultPath);
-        }
-
-        public MainWindow(string path)
-        {
-            Initialize();
-            Navigate(path, true);
-            InitialNavigate(path);
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            //var collection = Favorites;// (FavoritesTreeViewItem.ItemsSource as ObservableCollection<DiskItem>);
-            //Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents")));
-            //Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures")));
-            //Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads")));
-            //UpdateInterface();
-
-            /*Binding statusBarBinding = new Binding()
+            if (Clipboard.ContainsFileDropList())
             {
-                Source = Config.Instance,
-                Path = new PropertyPath("InterfaceMode"),
-                Mode = BindingMode.OneWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            BindingOperations.SetBinding(FileManagerControl.StatusBar, VisibilityProperty, statusBarBinding);*/
-
-            ResetFavorites();
-
-            Config.Favorites.CollectionChanged += (sneder, args) =>
+                PasteButton.IsEnabled = true;
+                PasteShortcutButton.IsEnabled = true;
+            }
+            else
             {
-                ResetFavorites();
-            };
+                PasteButton.IsEnabled = false;
+                PasteShortcutButton.IsEnabled = false;
+            }
+        }
 
+        /*MainWindow _copyWindow = null;
+        public MainWindow(MainWindow copyWindow)
+        {
+            _copyWindow = copyWindow;
+            Initialize();
+        }
+
+        public MainWindow(Location path)
+        {
+            _firstNavigationPath = path;
+            Initialize();
+        }*/
+
+        private void MainWindow_Loaded(Object sender, RoutedEventArgs e)
+        {
             Config.ClipboardContents.CollectionChanged += ClipboardContents_CollectionChanged;
-
-            CurrentDirectorySelectionChanged += FileManagerBase_CurrentDirectorySelectionChanged;
-            Navigated += (sneder, args) =>
+            /*if (_copyWindow != null)
             {
-                //FileManagerBase_CurrentDirectorySelectionChanged(null, null);
-                Navigate(CurrentPath);
-                ValidateNavButtonStates();
-            };
-            FileManagerBase_CurrentDirectorySelectionChanged(null, null);
-            ClipboardContents_CollectionChanged(null, null);
-            Icon = ((ImageBrush)((new Start9.UI.Wpf.Converters.IconToImageBrushConverter()).Convert(new DiskItem(CurrentPath).ItemLargeIcon, null, "32", null))).ImageSource;
-
-            /*List<Fluent.GalleryItem> items = new List<Fluent.GalleryItem>();
-            foreach (var i in FolderViewsGallery.Items)
-                items.Add(i);
-
-            FolderViewsGallery.Items.Clear();
-            foreach (var t in items)
-                FolderViewsGallery.Items.Add(t);*/
-        }
-
-        private void ResetFavorites()
-        {
-            Config.Favorites.Clear();
-            foreach (DiskItem d in Config.Favorites)
-            {
-                Config.Favorites.Add(d);
-            }
-        }
-
-        /*public void Navigate(int index)
-        {
-            if ((index > 0) && (index < (HistoryList.Count - 1)))
-            {
-                string path = Environment.ExpandEnvironmentVariables(HistoryList[index]);
-                if (HistoryList.Contains(path))
+                foreach (var w in _copyWindow.Tabs)
                 {
-                    CurrentDirectoryListView.ItemsSource = new DiskItem(currentPath).SubItems;
-                    AddressBox.Text = currentPath;
-                    Title = Path.GetFileName(currentPath);
+                    if (w.Content.NavManager.Current is DirectoryQuery query)
+                        AddTab(query);
+                    else if (w.Content.NavManager.Current is ShellLocation location)
+                        AddTab(location);
+                    else if (w.Content.NavManager.Current is SearchQuery search)
+                    {
+                        //TODO figure out what to do here lol
+                    }
                 }
+                //AddTab((w.CurrentLocation as DirectoryQuery).Item.ItemPath);
             }
-        }*/
+            else*/
+            if (Tabs.Count == 0)
+                AddTab(_firstNavigationPath);
 
-        /*public void Navigate(string path)
+            //TabContentDisplayContentControl.Content = CurrentTab.Content;
+
+            ContentTabControl.SelectedIndex = 0;
+            ClipboardContents_CollectionChanged(null, null);
+            ValidateCommandStates(0, null);
+
+            Debug.WriteLine("Is CurrentTab null? " + (CurrentTab == null));
+
+            Loaded -= MainWindow_Loaded;
+        }
+
+        public FolderTabItem AddTab(Location location)
         {
-            Navigate(path, false);
-        }*/
+            if (Config.Instance.TabsMode != Config.TabDisplayMode.Disabled)
+            {
+                var item = new FolderTabItem(location);
+                Tabs.Add(item);
+                CurrentTabIndex = Tabs.IndexOf(item);
+                return item;
+            }
+            else
+                return null;
+        }
 
-        public void Navigate(string path, bool updateFileManager)
+        private void CloseCurrentLocation()
         {
-            var item = new DiskItem(path);
-            Title = Path.GetFileName(path);
-            Icon = ((ImageBrush)((new Start9.UI.Wpf.Converters.IconToImageBrushConverter()).Convert(item.ItemLargeIcon, null, "32", null))).ImageSource;
+            if (Config.Instance.TabsMode != Config.TabDisplayMode.Disabled)
+                RemoveTab(CurrentTab);
+            else
+                Close();
+        }
 
-            if (updateFileManager)
-                Navigate(path);
-
-            ValidateNavButtonStates();
-            //FileManagerControl.CurrentDirectoryListView.ItemsSource = item.SubItems;
-            //AddressBox.Text = currentPath;
-            //BreadcrumbsBar.Path = @"Computer\" + path;
-            Title = Path.GetFileName(CurrentPath);
+        public void RemoveTab(FolderTabItem item)
+        {
+            if (Tabs.Count <= 1)
+                Close();
+            else
+            {
+                if (CurrentTabIndex > 0)
+                    CurrentTabIndex--;
+                Tabs.Remove(item);
+            }
         }
 
         public void ValidateNavButtonStates()
         {
-            ValidateNavButtonStates((HistoryIndex == 0), (HistoryIndex >= (HistoryList.Count - 1)), (HistoryList.Count > 1), (Directory.Exists(Path.GetDirectoryName(CurrentPath))));
+            NavBackButton.IsEnabled = CurrentTab.Content.NavManager.CanGoBack;
+            NavForwardButton.IsEnabled = CurrentTab.Content.NavManager.CanGoForward;
+            if (CurrentTab.Content.NavManager.Current is DirectoryQuery query)
+                NavUpButton.IsEnabled = Directory.GetParent(query.Item.ItemPath) != null;
+            else
+                NavUpButton.IsEnabled = false;
         }
 
-        bool _newWindowSubmenuItemClick = false;
-
-        private void NewWindowButton_Click(object sender, RoutedEventArgs e)
+        public void ValidateCommandStates(Int32 selectedCount, DiskItem activeItem)
         {
-            if (sender == NewWindowMenuItem)
+            if (selectedCount == 0)
+            {
+                CopyButton.IsEnabled = false;
+                CopyPathButton.IsEnabled = false;
+                CutButton.IsEnabled = false;
+                MoveToButton.IsEnabled = false;
+                CopyToButton.IsEnabled = false;
+                DeleteButton.IsEnabled = false;
+                RenameButton.IsEnabled = false;
+                OpenButton.IsEnabled = false;
+                EditButton.IsEnabled = false;
+
+                CommandBarControl.CommandBarLayers[2].IsVisible = false;
+                CommandBarControl.CommandBarLayers[3].IsVisible = false;
+
+                ArchiveToolsGroup.Visibility = Visibility.Collapsed;
+
+                SelectedItemCounter.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                CopyButton.IsEnabled = true;
+                CopyPathButton.IsEnabled = true;
+                CutButton.IsEnabled = true;
+                MoveToButton.IsEnabled = true;
+                CopyToButton.IsEnabled = true;
+                DeleteButton.IsEnabled = true;
+                RenameButton.IsEnabled = true;
+                OpenButton.IsEnabled = true;
+                EditButton.IsEnabled = true;
+
+                if ((selectedCount == 1) && (activeItem.ItemCategory == DiskItemCategory.Directory))
+                {
+                    CommandBarControl.CommandBarLayers[2].IsVisible = false;
+                    CommandBarControl.CommandBarLayers[3].IsVisible = true;
+                }
+                else
+                {
+                    CommandBarControl.CommandBarLayers[2].IsVisible = true;
+                    CommandBarControl.CommandBarLayers[3].IsVisible = false;
+                }
+
+                if ((selectedCount == 1) && (Path.GetExtension(activeItem.ItemRealName).ToLowerInvariant() == ".zip"))
+                    ArchiveToolsGroup.Visibility = Visibility.Visible;
+                else
+                    ArchiveToolsGroup.Visibility = Visibility.Collapsed;
+
+
+                if ((activeItem.ItemCategory != DiskItemCategory.Directory) && (activeItem.ItemCategory != DiskItemCategory.App))
+                {
+                    var openWith = activeItem.GetOpenWithPrograms();
+                }
+
+                SelectedItemCounter.Visibility = Visibility.Visible;
+                SelectedItemCounter.Content = selectedCount + " items selected " + activeItem.FriendlyItemSize;
+            }
+        }
+
+        private void ClipboardContents_CollectionChanged(Object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (Config.ClipboardContents.Count == 0)
+            {
+                PasteButton.IsEnabled = false;
+                PasteShortcutButton.IsEnabled = false;
+            }
+            else
+            {
+                PasteButton.IsEnabled = true;
+                PasteShortcutButton.IsEnabled = true;
+            }
+        }
+
+        Boolean _newWindowSubmenuItemClick = false;
+
+        private void NewWindowButton_Click(Object sender, RoutedEventArgs e)
+        {
+            /*if (sender == NewWindowMenuItem)
             {
                 if (_newWindowSubmenuItemClick)
                     _newWindowSubmenuItemClick = false;
                 else
                     WindowManager.CloneWindow(this);
             }
-            else if (sender == NewWindowSubmenuItem)
+            else
             {
                 _newWindowSubmenuItemClick = true;
-                WindowManager.CloneWindow(this);
-            }
-            else
-                WindowManager.CloneWindow(this);
+
+                if (sender == NewWindowSubmenuItem)
+                    WindowManager.CloneWindow(this);
+                else if (sender == NewWindowDefaultLocationButton)
+                    WindowManager.CreateWindow();
+            }*/
         }
 
-        private void NewWindowDefaultLocationButton_Click(object sender, RoutedEventArgs e)
+        private void CurrentViewGalleryItem_Click(Object sender, RoutedEventArgs e)
         {
-            WindowManager.CreateWindow();
+
         }
 
-        private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
+        private void CloseWindowButton_Click(Object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        /*private ProcessStartInfo GetAdminProcessStartOptions(string exeName)
-        {
-            return new ProcessStartInfo(exeName)
-            {
-                Verb = "runas"
-            };
-        }*/
-
-        string cmdName = "cmd.exe";
-        string psName = "powershell.exe";
+        String cmdName = "cmd.exe";
+        String psName = "powershell.exe";
 
         private void OpenCmdButton_Click(Object sender, RoutedEventArgs e)
         {
@@ -296,763 +501,790 @@ namespace RibbonFileManager
             base.OnClosing(e);
         }
 
-        private void FileManagerBase_CurrentDirectorySelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void OpenButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (CurrentDirectoryListView.SelectedItems.Count == 0)
-            {
-                //SetDetailsPane(HistoryList[HistoryIndex]);
-                CopyButton.IsEnabled = false;
-                CopyPathButton.IsEnabled = false;
-                CutButton.IsEnabled = false;
-                MoveToButton.IsEnabled = false;
-                CopyToButton.IsEnabled = false;
-                DeleteButton.IsEnabled = false;
-                RenameButton.IsEnabled = false;
-                OpenButton.IsEnabled = false;
-                EditButton.IsEnabled = false;
-
-                CommandBarControl.CommandBarLayers[2].IsVisible = false;
-                CommandBarControl.CommandBarLayers[3].IsVisible = false;
-            }
-            else
-            {
-                /*if (CurrentDirectoryListView.SelectedItems.Count == 1)
-                {
-                    SetDetailsPane(((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex].ItemPath);
-                }*/
-
-                CopyButton.IsEnabled = true;
-                CopyPathButton.IsEnabled = true;
-                CutButton.IsEnabled = true;
-                MoveToButton.IsEnabled = true;
-                CopyToButton.IsEnabled = true;
-                DeleteButton.IsEnabled = true;
-                RenameButton.IsEnabled = true;
-                OpenButton.IsEnabled = true;
-                EditButton.IsEnabled = true;
-                ////////SelectedItemCounter.Visibility = Visibility.Visible;
-                ////////SetPanes((DiskItem)(CurrentDirectoryListView.SelectedItem));
-
-
-                if ((CurrentDirectoryListView.SelectedItems.Count == 1) && ((CurrentDirectoryListView.SelectedItem as DiskItem).ItemCategory == DiskItem.DiskItemCategory.Directory))
-                {
-                    CommandBarControl.CommandBarLayers[2].IsVisible = false;
-                    CommandBarControl.CommandBarLayers[3].IsVisible = true;
-                }
-                else
-                {
-                    CommandBarControl.CommandBarLayers[2].IsVisible = true;
-                    CommandBarControl.CommandBarLayers[3].IsVisible = false;
-                }
-            }
-
-            ////////SelectedItemCounter.Content = CurrentDirectoryListView.SelectedItems.Count.ToString() + " items selected";
+            await CurrentTab.Content.OpenSelectionAsync();
         }
 
-        private void ClipboardContents_CollectionChanged(Object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void CopyButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (Config.ClipboardContents.Count == 0)
-            {
-                PasteButton.IsEnabled = false;
-                PasteShortcutButton.IsEnabled = false;
-            }
-            else
-            {
-                PasteButton.IsEnabled = true;
-                PasteShortcutButton.IsEnabled = true;
-            }
+            CurrentTab.Content.CopySelection();
         }
 
-        private void CurrentViewGalleryItem_Click(object sender, RoutedEventArgs e)
+        private void CopyPathButton_Click(Object sender, RoutedEventArgs e)
+        {
+            CurrentTab.Content.CopyPathToSelection();
+        }
+
+        private async void PasteButton_Click(Object sender, RoutedEventArgs e)
+        {
+            await CurrentTab.Content.PasteCurrentAsync();
+        }
+
+        private async void PasteShortcutButton_Click(Object sender, RoutedEventArgs e)
+        {
+            await CurrentTab.Content.PasteShortcutAsync();
+        }
+
+        private void CutButton_Click(Object sender, RoutedEventArgs e)
+        {
+            CurrentTab.Content.CutSelection();
+        }
+
+        private void EditButton_Click(Object sender, RoutedEventArgs e)
         {
             
         }
 
-        private void FolderViewsGallery_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DeleteButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (FolderViewsGallery.SelectedItem == ListViewGalleryItem)
-                CurrentView = FileBrowserView.List;
-            else if (FolderViewsGallery.SelectedItem == DetailsViewGalleryItem)
-                CurrentView = FileBrowserView.Details;
-            else if (FolderViewsGallery.SelectedItem == TilesViewGalleryItem)
-                CurrentView = FileBrowserView.Tiles;
-            else if (FolderViewsGallery.SelectedItem == ContentViewGalleryItem)
-                CurrentView = FileBrowserView.Content;
-            else
-                CurrentView = FileBrowserView.Icons;
-
-            Debug.WriteLine("CurrentView: " + CurrentView.ToString());
+            await CurrentTab.Content.DeleteSelectionAsync();
         }
 
-        private void CurrentDirectoryListViewItem_Loaded(object sender, RoutedEventArgs e)
+        private void PropertiesButton_Click(Object sender, RoutedEventArgs e)
         {
-            /*var item = sender as ListViewItem;
-
-            if (((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemCategory == DiskItem.DiskItemCategory.Directory)
-            {
-                foreach (MenuItem item item.ContextMenu.Items
-            }*/
+            CurrentTab.Content.ShowPropertiesForSelection();
         }
 
-        private void RunAsAdminMenuItem_Loaded(object sender, RoutedEventArgs e)
+        private void RenameButton_Click(Object sender, RoutedEventArgs e)
         {
-            var item = (sender as MenuItem).Tag as ListViewItem;
-
-            if (((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemCategory == DiskItem.DiskItemCategory.Directory)
-                (sender as MenuItem).Visibility = Visibility.Collapsed;
+            CurrentTab.Content.RenameSelection();
         }
 
-        private void RunAsAdminMenuItem_Initialized(object sender, EventArgs e)
-        {
-            
-        }
-
-        /*private void TopLevelTreeViewItem_Selected(object sender, RoutedEventArgs e)
-        {
-            CurrentDirectoryListView.ItemsSource = (sender as TreeView).ItemsSource;
-        }*/
-
-        private void OpenButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenSelection();
-        }
-
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
-        {
-            CopySelection();
-        }
-
-        private void CopyPathButton_Click(object sender, RoutedEventArgs e)
-        {
-            CopyPathToSelection();
-        }
-
-        private void PasteButton_Click(object sender, RoutedEventArgs e)
-        {
-            PasteCurrent();
-        }
-
-        private void PasteShortcutButton_Click(object sender, RoutedEventArgs e)
-        {
-            PasteShortcut();
-        }
-
-        private void CutButton_Click(object sender, RoutedEventArgs e)
-        {
-            CutSelection();
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteSelection();
-        }
-
-        private void PropertiesButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShowPropertiesForSelection();
-        }
-
-        private void RenameButton_Click(object sender, RoutedEventArgs e)
-        {
-            RenameSelection();
-        }
-
-        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        private void HistoryButton_Click(Object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void NewFolderButton_Click(object sender, RoutedEventArgs e)
+        private async void NewFolderButton_Click(Object sender, RoutedEventArgs e)
         {
-            CreateNewFolder();
+            await CurrentTab.Content.CreateNewFolderAsync();
         }
 
-        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        private void SelectAllButton_Click(Object sender, RoutedEventArgs e)
         {
-            SelectAll();
+            CurrentTab.Content.SelectAll();
         }
 
-        private void SelectNoneButton_Click(object sender, RoutedEventArgs e)
+        private void SelectNoneButton_Click(Object sender, RoutedEventArgs e)
         {
-            SelectNone();
+            CurrentTab.Content.SelectNone();
         }
 
-        private void InvertSelectionButton_Click(object sender, RoutedEventArgs e)
+        private void InvertSelectionButton_Click(Object sender, RoutedEventArgs e)
         {
-            InvertSelection();
+            CurrentTab.Content.InvertSelection();
         }
 
-        private void BackCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            NavigateBack();
-            ValidateNavButtonStates();
-        }
-
-        private void ForwardCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            NavigateForward();
-            ValidateNavButtonStates();
-        }
-
-        private void UpLevelCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            NavigateUp();
-            ValidateNavButtonStates();
-        }
-
-        private void FolderAndSearchOptionsMenuItem_Click(object sender, RoutedEventArgs e)
+        private void FolderAndSearchOptionsMenuItem_Click(Object sender, RoutedEventArgs e)
         {
             Config.SettingsWindow.Show();
             Config.SettingsWindow.Focus();
             Config.SettingsWindow.Activate();
         }
 
-        private void MenuBarCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void ToggleMenuBar()
         {
             if (MenuBar.IsEnabled)
             {
                 if (MenuBar.Visibility == Visibility.Visible)
                 {
                     MenuBar.Visibility = Visibility.Collapsed;
-                    CurrentDirectoryListView.Focus();
+                    CurrentTab.Content.CurrentDirectoryListView.Focus();
                 }
                 else
                 {
                     MenuBar.Visibility = Visibility.Visible;
                     MenuBar.Focus();
-                    //FocusManager.SetFocusedElement(MenuBar);
                 }
             }
         }
 
-        public string CurrentFolderTitle
+        bool _syncView = false;
+
+        private void FolderViewsGallery_SelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            get
+            if (!_syncView)
             {
-                try
+                if (FolderViewsGallery.SelectedItem == ListViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.List;
+                else if (FolderViewsGallery.SelectedItem == DetailsViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Details;
+                else if (FolderViewsGallery.SelectedItem == TilesViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Tiles;
+                else if (FolderViewsGallery.SelectedItem == ContentViewGalleryItem)
+                    CurrentTab.Content.CurrentView = FileBrowserView.Content;
+                else
                 {
-                    return Path.GetFileName(CurrentPath);
-                }
-                catch
-                {
-                    return string.Empty;
+                    CurrentTab.Content.CurrentView = FileBrowserView.Icons;
+
+                    if (FolderViewsGallery.SelectedItem == ExtraLargeIconsViewGalleryItem)
+                        CurrentTab.Content.IconSize = 256;
+                    else CurrentTab.Content.IconSize = FolderViewsGallery.SelectedItem == LargeIconsViewGalleryItem
+                        ? 96
+                        : FolderViewsGallery.SelectedItem == SmallIconsViewGalleryItem ? 16 : 48;
                 }
             }
         }
 
-        public List<string> HistoryList { get; set; } = new List<string>();
-        /*{
-            get => (List<String>)GetValue(HistoryListProperty);
-            set => SetValue(HistoryListProperty, value);
+        /*private void FileManagerBase_Loaded(Object sender, RoutedEventArgs e)
+        {
+            Initialize();
         }*/
 
-        //public static readonly DependencyProperty HistoryListProperty = DependencyProperty.Register("HistoryList", typeof(List<String>), typeof(FileManagerBase), new PropertyMetadata(new List<String>()));
-
-        public Int32 HistoryIndex
+        public async Task<Boolean> NavigateBackAsync()
         {
-            get => (Int32)GetValue(HistoryIndexProperty);
-            set => SetValue(HistoryIndexProperty, value);
-        }
-
-        public static readonly DependencyProperty HistoryIndexProperty = DependencyProperty.Register("HistoryIndex", typeof(Int32), typeof(MainWindow), new PropertyMetadata(0, OnHistoryIndexPropertyChangedCallback));
-
-        public bool IsRenamingFiles
-        {
-            get => (bool)GetValue(IsRenamingFilesProperty);
-            set => SetValue(IsRenamingFilesProperty, value);
-        }
-
-        public static readonly DependencyProperty IsRenamingFilesProperty = DependencyProperty.Register("IsRenamingFiles", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
-
-        static void OnHistoryIndexPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            MainWindow sender = d as MainWindow;
-            var oldValue = (Int32)e.OldValue;
-            var newValue = (Int32)e.NewValue;
-
-            ////////sender.ValidateNavButtonStates();
-
-            sender.Navigate(sender.HistoryList[newValue]);
-        }
-
-        public string CurrentPath
-        {
-            get => HistoryList[HistoryIndex];
-        }
-
-        /*public ObservableCollection<DiskItem> Favorites
-        {
-            get => (ObservableCollection<DiskItem>)GetValue(FavoritesProperty);
-            set => SetValue(FavoritesProperty, value);
-        }
-
-        public static readonly DependencyProperty FavoritesProperty = DependencyProperty.Register("Favorites", typeof(ObservableCollection<DiskItem>), typeof(FileManagerBase), new PropertyMetadata(new ObservableCollection<DiskItem>()));*/
-
-        /*public ObservableCollection<DiskItem> ComputerSubfolders
-        {
-            get => (ObservableCollection<DiskItem>)GetValue(ComputerSubfoldersProperty);
-            set => SetValue(ComputerSubfoldersProperty, value);
-        }
-
-        public static readonly DependencyProperty ComputerSubfoldersProperty = DependencyProperty.Register("ComputerSubfolders", typeof(ObservableCollection<DiskItem>), typeof(FileManagerBase), new PropertyMetadata(new ObservableCollection<DiskItem>()));*/
-
-        public Double IconSize
-        {
-            get => (Double)GetValue(IconSizeProperty);
-            set => SetValue(IconSizeProperty, value);
-        }
-
-        public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register("IconSize", typeof(Double), typeof(MainWindow), new PropertyMetadata((Double)48.0));
-
-        public bool ShowDetailsPane
-        {
-            get => (bool)GetValue(ShowDetailsPaneProperty);
-            set => SetValue(ShowDetailsPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowDetailsPaneProperty = DependencyProperty.Register("ShowDetailsPane", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
-
-        public bool ShowPreviewPane
-        {
-            get => (bool)GetValue(ShowPreviewPaneProperty);
-            set => SetValue(ShowPreviewPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowPreviewPaneProperty = DependencyProperty.Register("ShowPreviewPane", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
-
-        public bool ShowNavigationPane
-        {
-            get => (bool)GetValue(ShowNavigationPaneProperty);
-            set => SetValue(ShowNavigationPaneProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowNavigationPaneProperty = DependencyProperty.Register("ShowNavigationPane", typeof(bool), typeof(MainWindow), new PropertyMetadata(true));
-
-        public enum FileBrowserView
-        {
-            Icons,
-            List,
-            Details,
-            Tiles,
-            Content
-        }
-
-        public FileBrowserView CurrentView
-        {
-            get => (FileBrowserView)GetValue(CurrentViewProperty);
-            set => SetValue(CurrentViewProperty, value);
-        }
-
-        public static readonly DependencyProperty CurrentViewProperty = DependencyProperty.Register("CurrentView", typeof(FileBrowserView), typeof(MainWindow), new PropertyMetadata(FileBrowserView.Icons));
-
-        public bool ShowItemCheckboxes
-        {
-            get => (bool)GetValue(ShowItemCheckboxesProperty);
-            set => SetValue(ShowItemCheckboxesProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowItemCheckboxesProperty = DependencyProperty.Register("ShowItemCheckboxes", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
-
-
-        public event EventHandler<SelectionChangedEventArgs> CurrentDirectorySelectionChanged;
-
-        public event EventHandler<EventArgs> Navigated;
-
-
-        private void FileManagerBase_Loaded(object sender, RoutedEventArgs e)
-        {
-            /*foreach (ResourceDictionary d in Window.GetWindow(this).Resources.MergedDictionaries)
-                Resources.MergedDictionaries.Add(d);*/
-
-            Initialize();
-        }
-
-        public bool NavigateBack()
-        {
-            if (HistoryIndex > 0)
+            /*if (ActiveContent.NavigationStack.CanGoBack)
             {
-                HistoryIndex--;
+                ActiveContent.NavigationStack.Back();
+                ActiveContent.RecentLocations.Back();
+                ValidateNavButtonStates();
+                await ActiveContent.RefreshAsync();
                 return true;
             }
-            else return false;
+            else return false;*/
+            return CurrentTab.Content.NavManager.GoBack();
         }
 
-        public bool NavigateForward()
+        public async Task<Boolean> NavigateForwardAsync()
         {
-            if (HistoryIndex < (HistoryList.Count - 1))
+            /*if (ActiveContent.NavigationStack.CanGoForward)
             {
-                HistoryIndex++;
+                ActiveContent.NavigationStack.Forward();
+                ActiveContent.RecentLocations.Forward();
+                ValidateNavButtonStates();
+                await ActiveContent.RefreshAsync();
                 return true;
             }
-            else return false;
+            else return false;*/
+            return CurrentTab.Content.NavManager.GoFoward();
         }
 
-        public bool NavigateUp()
+        public async Task<Boolean> NavigateUpAsync()
         {
-            bool returnValue = false;
-            try
-            {
-                string path = Path.GetDirectoryName(CurrentPath);
-                if (Directory.Exists(path))
-                {
-                    Navigate(path);
-                    returnValue = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-
-            return returnValue;
-        }
-
-        public void CopySelection()
-        {
-            Config.Cut = false;
-            SetClipboard();
-        }
-
-        public void CutSelection()
-        {
-            Config.Cut = true;
-            SetClipboard();
-        }
-
-        public void CopyPathToSelection()
-        {
-            var paths = "";
-            for (var i = 0; i < CurrentDirectoryListView.SelectedItems.Count; i++)
-            {
-                var d = (DiskItem)(CurrentDirectoryListView.SelectedItems[i]);
-                paths = paths + "\"" + d.ItemPath + "\"";
-                if (i < (CurrentDirectoryListView.SelectedItems.Count - 1))
-                {
-                    paths = paths + "\n";
-                }
-            }
-            Clipboard.SetText(paths);
-        }
-
-        public void PasteCurrent()
-        {
-            var items = Config.CopyTo(HistoryList[HistoryIndex]);
-            var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            foreach (var d in items)
-            {
-                if (source.Contains(d))
-                {
-                    source.Remove(d);
-                }
-                else
-                {
-                    source.Add(d);
-                }
-            }
-
-            Refresh();
-        }
-
-        public void SetClipboard()
-        {
-            Config.ClipboardContents.Clear();
-            foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
-            {
-                Config.ClipboardContents.Add(d);
-            }
-        }
-
-        public void Refresh()
-        {
-            Navigate(CurrentPath);
-        }
-
-        public void PasteShortcut()
-        {
-            /*foreach (DiskItem d in CurrentDirectoryListView.SelectedItems)
-            {
-                Shortcut.CreateShortcut(d.ItemName + " - Shortcut", null, d.ItemPath, HistoryList[HistoryIndex]);
-            }*/
-            Refresh();
-        }
-
-        public void DeleteSelection()
-        {
-            //var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            for (var i = 0; i < CurrentDirectoryListView.SelectedItems.Count; i++)
-            {
-                var d = (CurrentDirectoryListView.SelectedItems[i] as DiskItem);
-
-                /*if (source.Contains(d))
-                {*/
-                if (d.ItemCategory == DiskItem.DiskItemCategory.Directory)
-                    FileSystem.DeleteDirectory(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                else if ((d.ItemCategory == DiskItem.DiskItemCategory.File) || (d.ItemCategory == DiskItem.DiskItemCategory.Shortcut))
-                    FileSystem.DeleteFile(d.ItemPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
-                //}
-            }
-
-            Refresh();
-        }
-
-        public void RenameSelection()
-        {
-            IsRenamingFiles = true;
-        }
-
-        public void CreateNewFolder()
-        {
-            string path = CurrentPath + @"\New Folder";
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            else
-            {
-                int cycle = 1;
-                while (Directory.Exists(path))
-                {
-                    path = CurrentPath + @"\New Folder (" + cycle.ToString() + ")";
-                    MessageBox.Show(path);
-                    cycle++;
-                }
-                Directory.CreateDirectory(path);
-            }
-            Refresh();
-        }
-
-        public void ShowPropertiesForSelection()
-        {
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-            {
-                /*string path = i.ItemPath;
-
-                /*if (Directory.Exists(path))
-                    Manager.CreateWindow(path);
-                else*
-                try
-                {
-                    var info = new ProcessStartInfo(path)
-                    {
-                        Verb = "properties",
-                        UseShellExecute = true
-                    };
-                    Process.Start(info);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }*/
-                //Debug.WriteLine("properties result: " + i.ShowProperties());
-            }
-        }
-
-        public void OpenSelection()
-        {
-            OpenSelection(DiskItem.OpenVerbs.Normal);
-        }
-
-        public void OpenSelection(DiskItem.OpenVerbs verb)
-        {
-            //var source = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource);
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-            {
-                string path = i.ItemPath;
-
-                if (Directory.Exists(path))
-                {
-                    if (CurrentDirectoryListView.SelectedItems.Count == 1)
-                    {
-                        Navigate(path);
-                        break;
-                    }
-                    else
-                    {
-                        ////////Manager.CreateWindow(path);
-                    }
-                }
-                else
-                    try
-                    {
-                        //Process.Start(path);
-                        i.Open(verb);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
-            }
-        }
-
-        public void EditSelection()
-        {
-
-        }
-
-        public void SelectAll()
-        {
-            CurrentDirectoryListView.SelectAll();
-        }
-
-        public void SelectNone()
-        {
-            CurrentDirectoryListView.SelectedItem = null;
-        }
-
-        public void InvertSelection()
-        {
-
-        }
-
-        private void NavigationPaneTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var val = e.NewValue as DiskItem;
-
-            if (val != null)
-                Navigate(Environment.ExpandEnvironmentVariables(val.ItemPath));
-        }
-
-
-        public void Navigate(string targetPath)
-        {
-            /*if ((HistoryList.Count == 0) || (HistoryIndex >= (HistoryList.Count - 1)))
-            {
-                HistoryList.Add(path);
-                HistoryIndex++;
-            }
-            else
-            {
-                HistoryList.Insert(HistoryIndex, path);
-
-                while (HistoryList.Count > (HistoryIndex + 1))
-                    HistoryList.RemoveAt(HistoryIndex + 1);
-            }
-
-            CurrentDirectoryListView.ItemsSource = new DiskItem(currentPath).SubItems;*/
-            string path = Environment.ExpandEnvironmentVariables(targetPath);
-            var item = new DiskItem(path);
+            var p = ((DirectoryQuery)CurrentTab.Content.CurrentLocation).Item.ItemPath;
+            var path = Directory.GetParent(p).ToString();
             if (Directory.Exists(path))
             {
-                ItemCounter.Content = item.SubItems.Count.ToString() + " items";
-
-                if (!(HistoryList.Contains(path)))
-                {
-                    if (HistoryIndex < (HistoryList.Count - 1))
-                    {
-                        for (int i = HistoryList.Count - 1; i > HistoryIndex; i--)
-                        {
-                            HistoryList.RemoveAt(i);
-                        }
-                    }
-
-                    HistoryList.Add(path);
-                }
-
-                HistoryIndex = HistoryList.IndexOf(path);
-
-                SetPanes(item);
-
-                CurrentDirectoryListView.ItemsSource = item.SubItems;
+                var q = new DirectoryQuery(path);
+                //await ActiveContent.NavigateAsync(q, true);
+                CurrentTab.Content.NavManager.MoveTo(q);
+                ValidateNavButtonStates();
+                return true;
             }
-            CurrentDirectoryListView_SelectionChanged(null, null);
-            //Navigated?.Invoke(this, null);
-            SearchTextBox.WatermarkText = "Search " + item.ItemDisplayName;
+            else
+                return false;
+        }
+
+
+        public void Navigate(Location location)
+        {
+            //(ContentTabControl.SelectedItem as TabItem).GetBindingExpression(HeaderedContentControl.HeaderProperty).UpdateTarget(); //activec
+            if ((location is ShellLocation loc) && (loc.LocationGuid == ShellLocation.ThisPcGuid))
+            {
+                ComputerRibbonTabItem.Visibility = Visibility.Visible;
+                HomeRibbonTabItem.Visibility = Visibility.Collapsed;
+                ShareRibbonTabItem.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                HomeRibbonTabItem.Visibility = Visibility.Visible;
+                ShareRibbonTabItem.Visibility = Visibility.Visible;
+                ComputerRibbonTabItem.Visibility = Visibility.Collapsed;
+            }
+
+            ValidateNavButtonStates();
+            SetPanes(location);
+        }
+
+        public void UpdateStatusBar(Location loc)
+        {
+            string count = string.Empty;
+            if (loc is DirectoryQuery query)
+                count = query.Item.SubItems.Count.ToString();
+            else
+                count = CurrentTab.Content.CurrentDirectoryListView.Items.Count.ToString();
+
+            ItemCounter.Content = count + " items";
+        }
+
+        public void UpdateSearchBar(Location loc)
+        {
+            _resettingAddress = true;
+            AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
+            if (CurrentTab.Content.CurrentLocation is DirectoryQuery q)
+                SearchTextBox.WatermarkText = "Search " + Path.GetFileName(q.Name);
+            _resettingAddress = false;
+        }
+
+        public void UpdateAddressBar(Location loc)
+        {
+            _resettingAddress = true;
+            //AddressBox.BreadcrumbItems = CurrentTab.Content.CurrentLocation.BreadcrumbsSegments;
+            if (loc is DirectoryQuery query)
+            {
+                if (query.Item.HasSpecialIcon)
+                {
+                    BreadcrumbsBar.ItemsSource = new ObservableCollection<Location>
+                    {
+                        new ShellLocation(ShellLocation.ThisPcGuid),
+                        loc
+                    };
+                }
+                else
+                {
+                    var collection = new ObservableCollection<Location> { };
+                    var qur = new DirectoryInfo(query.Item.ItemPath);
+                    while (qur != null)
+                    {
+                        collection.Insert(0, new DirectoryQuery(qur.ToString()));
+                        qur = qur.Parent;
+                    }
+                    BreadcrumbsBar.ItemsSource = collection;
+                }
+            }
+            else
+                BreadcrumbsBar.ItemsSource = new ObservableCollection<Location> { loc };
+            _resettingAddress = false;
+            
+            NavHistoryButton.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
+        }
+
+        Boolean _resettingAddress = false;
+
+        /*public void InitialNavigate(String path)
+        {
+            var q = new DirectoryQuery(path);
+            CurrentTab.Content.NavManager.MoveTo(q);
+            Navigate(q);
+        }*/
+
+        private void DetailsViewButton_Click(Object sender, RoutedEventArgs e)
+        {
+            CurrentTab.Content.CurrentView = FileBrowserView.Details;
+            IconsViewButton.IsChecked = false;
+            DetailsViewButton.IsChecked = true;
+        }
+
+        private void IconsViewButton_Click(Object sender, RoutedEventArgs e)
+        {
+            CurrentTab.Content.CurrentView = FileBrowserView.Icons;
+            DetailsViewButton.IsChecked = false;
+            IconsViewButton.IsChecked = true;
+        }
+
+        /*public void ValidateNavButtonStates(Boolean canGoBack, Boolean canGoForward, Boolean canGoUp)
+        {
+            NavBackButton.IsEnabled = canGoBack;
+            NavForwardButton.IsEnabled = canGoForward;
+            NavHistoryButton.IsEnabled = canGoBack || canGoForward;
+            NavUpButton.IsEnabled = canGoUp;
+        }*/
+
+        private async void NavBackButton_Click(Object sender, RoutedEventArgs e)
+        {
+            await NavigateBackAsync();
             ValidateNavButtonStates();
         }
 
-        public void InitialNavigate(string path)
+        private async void NavForwardButton_Click(Object sender, RoutedEventArgs e)
         {
-            HistoryList.Add(path);
-            Navigate(path);
+            await NavigateForwardAsync();
+            ValidateNavButtonStates();
         }
 
-        private void CurrentDirectoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NavHistoryButton_Click(Object sender, RoutedEventArgs e)
         {
-            if (CurrentDirectoryListView.SelectedItems.Count == 0)
+            /*foreach (var s in ActiveContent.NavManager)
+                Debug.WriteLine(ActiveContent.NavManager.IndexOf(s).ToString() + ": " + s);*/
+        }
+
+        private async void NavUpButton_Click(Object sender, RoutedEventArgs e)
+        {
+            await NavigateUpAsync();
+            ValidateNavButtonStates();
+        }
+
+        private void NewTabButton_Click(Object sender, RoutedEventArgs e)
+        {
+            AddTab(WindowManager.WindowDefaultLocation);
+        }
+
+        private void TabsSetAsideToggleButton_Click(Object sender, RoutedEventArgs e)
+        {
+            ShowHideTabsOverview(!(TabsOverviewContentControl.IsManipulationEnabled));
+        }
+
+        public void ShowHideTabsOverview(Boolean show)
+        {
+            if (Config.Instance.TabsMode != Config.TabDisplayMode.Disabled)
             {
-                //SetDetailsPane(HistoryList[HistoryIndex]);
-                ////////CopyButton.IsEnabled = false;
-                ////////CopyPathButton.IsEnabled = false;
-                ////////CutButton.IsEnabled = false;
-                ////////MoveToButton.IsEnabled = false;
-                ////////CopyToButton.IsEnabled = false;
-                ////////DeleteButton.IsEnabled = false;
-                ////////RenameButton.IsEnabled = false;
-                ////////OpenButton.IsEnabled = false;
-                ////////EditButton.IsEnabled = false;
-                SelectedItemCounter.Visibility = Visibility.Hidden;
-                SetPanes(new DiskItem(CurrentPath));
+                if (show)
+                {
+                    (TabsOverviewContentControl.DataContext as TabOverviewManager).Populate();
+
+                    TabsSetAsideToggleButton.IsChecked = true;
+                    TabsOverviewContentControl.IsManipulationEnabled = true;
+                }
+                else
+                {
+                    TabsSetAsideToggleButton.IsChecked = false;
+                    TabsOverviewContentControl.IsManipulationEnabled = false;
+
+                    if (ContentTabControl.Items.Count == 0)
+                        Close();
+                }
             }
             else
             {
-                /*if (CurrentDirectoryListView.SelectedItems.Count == 1)
-                {
-                    SetDetailsPane(((ObservableCollection<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex].ItemPath);
-                }*/
-
-                ////////CopyButton.IsEnabled = true;
-                ////////CopyPathButton.IsEnabled = true;
-                ////////CutButton.IsEnabled = true;
-                ////////MoveToButton.IsEnabled = true;
-                ////////CopyToButton.IsEnabled = true;
-                ////////DeleteButton.IsEnabled = true;
-                ////////RenameButton.IsEnabled = true;
-                ////////OpenButton.IsEnabled = true;
-                ////////EditButton.IsEnabled = true;
-                SelectedItemCounter.Visibility = Visibility.Visible;
-                SetPanes((DiskItem)(CurrentDirectoryListView.SelectedItem));
+                TabsSetAsideToggleButton.IsChecked = false;
+                TabsOverviewContentControl.IsManipulationEnabled = false;
             }
-
-            SelectedItemCounter.Content = CurrentDirectoryListView.SelectedItems.Count.ToString() + " items selected";
-
-            CurrentDirectorySelectionChanged?.Invoke(sender, e);
         }
 
-        public void SetPanes(DiskItem item)
+        private void SetTabsAsideButton_Click(Object sender, RoutedEventArgs e)
         {
-            /*DetailsFileIconBorder.Background*/
-            //Debug.WriteLine("ActualHeight: " + DetailsFileIconRectangle.ActualHeight.ToString());
-            double size = DetailsFileIconRectangle.ActualHeight;
+            TabOverviewManager.SetTabsAside(this);
+        }
+
+        private async void AddressBox_PathUpdated(Object sender, EventArgs e)
+        {
+            if (!_resettingAddress)
+                CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path));
+                //await ActiveContent.NavigateAsync(new DirectoryQuery(AddressBox.BreadcrumbItems.Last().Path), true);
+        }
+
+        /*private void ContentTabControl_SelectionChanged(Object sender, SelectionChangedEventArgs e)
+        {
+            if ((CurrentTab != null) && CurrentTab.Content.IsLoaded)
+            {
+                Navigate(CurrentTab.Content.CurrentLocation);
+                NavigationPaneMenuItem.IsChecked = CurrentTab.Content.ShowNavigationPane;
+                DetailsPaneToggleButton.IsChecked = CurrentTab.Content.ShowDetailsPane;
+                PreviewPaneToggleButton.IsChecked = CurrentTab.Content.ShowPreviewPane;
+                if (CurrentTab.Content.CurrentLocation is DirectoryQuery query)
+                    ValidateCommandStates(query.Item.SubItems.Count, query.Item);
+            }
+        }*/
+
+        /*private void NavigationPaneMenuItem_Click(Object sender, RoutedEventArgs e)
+        {
+            Config.Instance.ShowNavigationPane = NavigationPaneMenuItem.IsChecked == true;
+        }
+
+        private void PreviewPaneMenuItem_Click(Object sender, RoutedEventArgs e)
+        {
+            Config.Instance.ShowPreviewPane = PreviewPaneMenuItem.IsChecked == true;
+        }
+
+        private void DetailsPaneMenuItem_Click(Object sender, RoutedEventArgs e)
+        {
+            Config.Instance.ShowDetailsPane = DetailsPaneMenuItem.IsChecked == true;
+        }*/
+
+        /*private void ShowItemCheckBoxesCheckBox_Click(Object sender, RoutedEventArgs e)
+        {
+            //CurrentTab.Content.ShowItemCheckboxes = ShowItemCheckBoxesCheckBox.IsChecked == true;
+            Config.Instance.ShowItemSelectionCheckBoxes = ShowItemCheckBoxesCheckBox.IsChecked.Value;
+        }*/
+
+        Boolean _altActionTaken = true;
+
+        private async void MainWindow_PreviewKeyDown(Object sender, KeyEventArgs e)
+        {
+            if (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)) //((Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down))
+            {
+                if (ContentTabControl != null)
+                {
+                    if (e.Key == Key.W)
+                        CloseCurrentLocation();
+                    else if (e.Key == Key.T)
+                        AddTab(WindowManager.WindowDefaultLocation);
+                    else if (e.Key == Key.PageUp)
+                    {
+                        if (ContentTabControl.SelectedIndex > 0)
+                            ContentTabControl.SelectedIndex--;
+                        else
+                            ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                    }
+                    else if (e.Key == Key.PageDown)
+                    {
+                        if (ContentTabControl.SelectedIndex < (ContentTabControl.Items.Count - 1))
+                            ContentTabControl.SelectedIndex++;
+                        else
+                            ContentTabControl.SelectedIndex = 0;
+                    }
+                    else if (e.Key == Key.R)
+                        CurrentTab.Content.RenameSelection();
+                    else if (e.Key == Key.D1 || e.Key == Key.NumPad1)
+                    {
+                        if (ContentTabControl.Items.Count > 0)
+                            ContentTabControl.SelectedIndex = 0;
+                    }
+                    else if (e.Key == Key.D2 || e.Key == Key.NumPad2)
+                    {
+                        if (ContentTabControl.Items.Count > 1)
+                            ContentTabControl.SelectedIndex = 1;
+                    }
+                    else if (e.Key == Key.D3 || e.Key == Key.NumPad3)
+                    {
+                        if (ContentTabControl.Items.Count > 2)
+                            ContentTabControl.SelectedIndex = 2;
+                    }
+                    else if (e.Key == Key.D4 || e.Key == Key.NumPad4)
+                    {
+                        if (ContentTabControl.Items.Count > 3)
+                            ContentTabControl.SelectedIndex = 3;
+                    }
+                    else if (e.Key == Key.D5 || e.Key == Key.NumPad5)
+                    {
+                        if (ContentTabControl.Items.Count > 4)
+                            ContentTabControl.SelectedIndex = 4;
+                    }
+                    else if (e.Key == Key.D6 || e.Key == Key.NumPad6)
+                    {
+                        if (ContentTabControl.Items.Count > 5)
+                            ContentTabControl.SelectedIndex = 5;
+                    }
+                    else if (e.Key == Key.D7 || e.Key == Key.NumPad7)
+                    {
+                        if (ContentTabControl.Items.Count > 6)
+                            ContentTabControl.SelectedIndex = 6;
+                    }
+                    else if (e.Key == Key.D8 || e.Key == Key.NumPad8)
+                    {
+                        if (ContentTabControl.Items.Count > 7)
+                            ContentTabControl.SelectedIndex = 7;
+                    }
+                    else if (e.Key == Key.D9 || e.Key == Key.NumPad9)
+                    {
+                        if (ContentTabControl.Items.Count > 0)
+                            ContentTabControl.SelectedIndex = ContentTabControl.Items.Count - 1;
+                    }
+                }
+                else if (e.Key == Key.W)
+                    Close();
+            }
+            
+            if (e.KeyboardDevice.IsKeyDown(Key.LeftAlt) || e.KeyboardDevice.IsKeyDown(Key.RightAlt)) //((Keyboard.GetKeyStates(Key.LeftAlt) == KeyStates.Down) || (Keyboard.GetKeyStates(Key.RightAlt) == KeyStates.Down))
+            {
+                if (e.Key == Key.Left)
+                {
+                    await NavigateBackAsync();
+                    _altActionTaken = true;
+                }
+                else if (e.Key == Key.Right)
+                {
+                    await NavigateForwardAsync();
+                    _altActionTaken = true;
+                }
+                else if (e.Key == Key.Up)
+                {
+                    await NavigateUpAsync();
+                    _altActionTaken = true;
+                }
+                else
+                {
+                    _altActionTaken = false;
+                }
+            }
+
+            if (e.Key == Key.F2)
+                CurrentTab.Content.RenameSelection();
+        }
+
+        public void SelectTabAt(int index)
+        {
+            ContentTabControl.SelectedIndex = index;
+            UpdateViewToCurrentTab();
+        }
+
+        public void UpdateViewToCurrentTab()
+        {
+            _syncView = true;
+
+            if (CurrentTab.Content.CurrentView == FileBrowserView.List)
+                FolderViewsGallery.SelectedItem = ListViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Details)
+                FolderViewsGallery.SelectedItem = DetailsViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Tiles)
+                FolderViewsGallery.SelectedItem = TilesViewGalleryItem;
+            else if (CurrentTab.Content.CurrentView == FileBrowserView.Content)
+                FolderViewsGallery.SelectedItem = ContentViewGalleryItem;
+            else
+            {
+                if (CurrentTab.Content.IconSize >= 256)
+                    FolderViewsGallery.SelectedItem = ExtraLargeIconsViewGalleryItem;
+                else if (CurrentTab.Content.IconSize >= 96)
+                    FolderViewsGallery.SelectedItem = LargeIconsViewGalleryItem;
+                else if (CurrentTab.Content.IconSize >= 48)
+                    FolderViewsGallery.SelectedItem = MediumIconsViewGalleryItem;
+                else
+                    FolderViewsGallery.SelectedItem = SmallIconsViewGalleryItem;
+            }
+
+            _syncView = false;
+        }
+
+        private void MainWindow_PreviewKeyUp(Object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.System) && (!_altActionTaken))
+                ToggleMenuBar();
+        }
+
+        private async void SearchTextBox_ActionSubmitted(Object sender, ActionSubmittedEventArgs e)
+        {
+            var cts = new CancellationTokenSource();
+            var sb = (ActionBox)sender;
+
+            void Cancellation(Object sender, RoutedEventArgs e)
+            {   
+                cts.Cancel();
+                sb.CancelAction();
+            }
+
+            sb.ActionCanceled += Cancellation;
+
+            var path = CurrentTab.Content.CurrentLocation switch
+            {
+                SearchQuery s => s.Path,
+                DirectoryQuery d => d.Item.ItemPath,
+                ShellLocation s => s.LocationPath,
+            };
+
+            Guid id = Guid.Empty;
+            if (CurrentTab.Content.CurrentLocation is ShellLocation loc)
+                id = loc.LocationGuid;
+
+            try
+            {
+                if (sb.Text == "")
+                {
+                    if (Directory.Exists(path))
+                        CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(path)); //await ActiveContent.NavigateAsync(new DirectoryQuery(path), true, cts.Token);
+                    else
+                        CurrentTab.Content.NavManager.MoveTo(new ShellLocation(id)); //await ActiveContent.NavigateAsync(new ShellLocation(id), true, cts.Token);
+                }
+                else
+                {
+                    CurrentTab.Content.NavManager.MoveTo(new SearchQuery(path, sb.Text)); //await ActiveContent.NavigateAsync(new SearchQuery(path, sb.Text), true, cts.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // do nothing, user canceled search
+            }
+
+            sb.ActionCanceled -= Cancellation;
+            sb.CancelAction();
+        }
+
+        private void CurrentlyOpenTabsListView_SelectionChanged(Object sender, SelectionChangedEventArgs e)
+        {
+            if /*(TabsOverviewContentControl.IsVisible && */(CurrentlyOpenTabsListView.SelectedItem != null)//)
+            {
+                (CurrentlyOpenTabsListView.SelectedItem as OverviewLocationTab).SwitchTo();
+                CurrentlyOpenTabsListView.SelectedItem = null;
+                ShowHideTabsOverview(false);
+            }
+        }
+
+        private void DecoratableWindow_Deactivated(Object sender, EventArgs e)
+        {
+            if (TabsOverviewContentControl.IsVisible)
+                ShowHideTabsOverview(false);
+        }
+
+        private void TabPreviewsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenControlPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("control.exe");
+        }
+
+        private void NavigationPaneTreeView_SelectedItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e)
+        {
+            if (e.NewValue is Location loc)
+                CurrentTab.Content.NavManager.MoveTo(loc);
+            else if (e.NewValue is DiskItem val)
+                CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(val.ItemPath)); //await NavigateAsync(new DirectoryQuery(Environment.ExpandEnvironmentVariables(val.ItemPath)), true);
+            else
+            {
+                //Debug.WriteLine("Tree SelectedValuePath: " + NavigationPaneTreeView.SelectedValuePath);
+                /*if (NavigationPaneTreeView.SelectedValuePath == MyComputerTreeViewItem.Header)
+                    await NavigateAsync(new ShellLocation(ShellLocation.ThisPcGuid));*/
+            }
+        }
+
+        public void SetPanes(Location loc)
+        {
+            UpdateDetailsPane(loc);
+            if (loc is DirectoryQuery query)
+                UpdatePreviewPane(query.Item);
+            UpdateStatusBar(loc);
+            UpdateSearchBar(loc);
+            UpdateWindow(loc);
+            UpdateAddressBar(loc);
+        }
+
+        void UpdateWindow(Location loc)
+        {
+            if (IsLoaded)
+            {
+                Title = loc.Name;
+                if (loc.HasSpecialIcon)
+                {
+                    if (false)
+                    {
+                        //Icon = (conv.Convert(query.Item.ItemSmallIcon, typeof(Brush), 16, System.Globalization.CultureInfo.CurrentCulture) as ImageBrush).ImageSource;
+                        RenderTargetBitmap render = new RenderTargetBitmap((int)SystemScaling.WpfUnitsToRealPixels(48/*query.Item.SpecialIcon.DesiredSize.Width*/), (int)SystemScaling.WpfUnitsToRealPixels(48/*query.Item.SpecialIcon.DesiredSize.Height*/), 96, 96, PixelFormats.Pbgra32);
+
+                        var drawVis = new DrawingVisual();
+                        using (var context = drawVis.RenderOpen())
+                        {
+                            var visB = new VisualBrush(loc.SpecialIcon);
+                            //context.DrawRectangle(new SolidColorBrush(Colors.Transparent), null, new Rect(new Point(0, 0), new Size(47, 47)));
+                            context.DrawRectangle(visB, null, new Rect(new Point(-100, -100), new Size(147, 147)));
+                        }
+                        render.Render(drawVis/*query.Item.SpecialIcon*/);
+                        Icon = render; //new ImageSourceConverter().ConvertFrom(loc.SpecialIcon) as ImageSource;
+                    }
+                    AttachedProperties.SetIcon(BreadcrumbsBar, new ContentPresenter()
+                    {
+                        Content = loc.SpecialIcon,
+                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        LayoutTransform = new ScaleTransform(0.333333333333333, 0.333333333333333)
+                    });
+
+                    var presenter = new ContentPresenter()
+                    {
+                        Content = loc.SpecialIcon/*,
+                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        LayoutTransform = new ScaleTransform(0.666666666666667, 0.666666666666667)*/
+                    };
+                    BreadcrumbsBar.UpdateLayout();
+
+                    BitmapImage bmp = new BitmapImage();
+                    using (var fileStream = new MemoryStream())
+                    {
+                        RenderTargetBitmap bitmap = new RenderTargetBitmap((Int32)SystemScaling.WpfUnitsToRealPixels(32), (Int32)SystemScaling.WpfUnitsToRealPixels(32), 96 * 2, 96 * 2, PixelFormats.Pbgra32);
+                        bitmap.Render(AttachedProperties.GetIcon(BreadcrumbsBar) as Visual);
+
+                        BitmapEncoder encoder = new PngBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                        encoder.Save(fileStream);
+
+                        bmp.BeginInit();
+                        bmp.CacheOption = BitmapCacheOption.OnLoad;
+                        bmp.StreamSource = fileStream;
+                        bmp.EndInit();
+                    }
+                    Icon = bmp;
+                }
+                else// if (loc.Icon is Visual vis)
+                {
+                    Icon = (new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(loc.Icon, typeof(Brush), 16.ToString(), System.Globalization.CultureInfo.CurrentCulture) as ImageBrush).ImageSource;
+
+                    AttachedProperties.SetIcon(BreadcrumbsBar, new System.Windows.Shapes.Rectangle()
+                    {
+                        Width = 16,
+                        Height = 16,
+                        Fill = new ImageBrush(Icon) //new SolidColorBrush(Colors.Red)
+                    });
+                }
+                /*Icon = new System.Windows.Shapes.Rectangle()
+                {
+                    Width = 16,
+                    Height = 16,
+                    loc.Icon
+                };*/
+                /*AttachedProperties.SetIcon(BreadcrumbsBar, new System.Windows.Shapes.Rectangle()
+                {
+                    Width = 16,
+                    Height = 16,
+                    Fill = new ImageBrush(Icon) //new SolidColorBrush(Colors.Red)
+                });*/
+            }
+        }
+
+        void UpdateDetailsPane(Location loc)
+        {
+            System.Drawing.Icon icon = null;
+
+            var size = DetailsFileIconRectangle.ActualHeight;
             if (size <= 0)
                 size = 48;
-            DetailsFileIconRectangle.Fill = (ImageBrush)((new Start9.UI.Wpf.Converters.IconToImageBrushConverter()).Convert(item.ItemJumboIcon, null, size.ToString(), null));
-            if ((item.ItemCategory == DiskItem.DiskItemCategory.Directory) && (item.ItemRealName == Path.GetFileName(CurrentPath)))
-                DetailsFileNameTextBlock.Text = item.SubItems.Count.ToString() + " items";
-            else
-                DetailsFileNameTextBlock.Text = item.ItemDisplayName;
 
-
-            if (item.ItemCategory != DiskItem.DiskItemCategory.Directory)
+            if ((CurrentTab.Content.CurrentDirectoryListView.SelectedItem != null) && (CurrentTab.Content.CurrentDirectoryListView.SelectedItem is DiskItem sItem))
             {
-                if (item.ItemPath.ToLowerInvariant() == CurrentPath.ToLowerInvariant())
+                icon = sItem.ItemJumboIcon;
+                DetailsFileNameTextBlock.Text =
+                        (sItem.ItemCategory == DiskItemCategory.Directory) && (sItem.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
+                        ? sItem.SubItems.Count.ToString() + " items"
+                        : sItem.ItemDisplayName;
+            }
+            else
+            {
+                icon = loc.Icon;
+                string name = string.Empty;
+                string count = string.Empty;
+                if (loc is DirectoryQuery q)
+                {
+                    var item = q.Item;
+
+                    /*DetailsFileNameTextBlock.Text =
+                        (item.ItemCategory == DiskItemCategory.Directory) && (item.ItemDisplayName == CurrentTab.Content.CurrentLocation.Name)
+                        ? item.SubItems.Count.ToString() + " items"
+                        : item.ItemDisplayName;*/
+                    name = item.ItemDisplayName;
+                    count = item.SubItems.Count.ToString();
+                }
+                else
+                {
+                    name = loc.Name;
+                    count = CurrentTab.Content.CurrentDirectoryListView.Items.Count.ToString();
+                }
+
+                DetailsFileNameTextBlock.Text = name + " (" + count + " items)";
+
+                if (loc is DirectoryQuery query) //TODO: if (doesn't have Special icon)
+                {
+                    icon = query.Item.ItemJumboIcon;
+                }
+                else
+                {
+                    //TODO: Special icons
+                }
+            }
+
+            if (icon != null)
+                DetailsFileIconRectangle.Fill = (ImageBrush)new Start9.UI.Wpf.Converters.IconToImageBrushConverter().Convert(icon, null, size.ToString(), null);
+            else
+                DetailsFileIconRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+        }
+
+        void UpdatePreviewPane(DiskItem item)
+        {
+            if (item.ItemCategory != DiskItemCategory.Directory)
+            {
+                if (item.ItemPath.ToLowerInvariant() == CurrentTab.Content.CurrentLocation.Name.ToLowerInvariant())
                 {
                     SetPreviewPaneLayer(0);
                 }
                 else
                 {
-                    string ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
-                    if (ext == "bmp" || ext == "png" || ext == "jpg" || ext == "jpeg")
+                    var ext = Path.GetExtension(item.ItemPath).ToLowerInvariant();
+                    if (ext == ".bmp" || ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                     {
                         (PreviewPaneGrid.Children[2] as System.Windows.Shapes.Rectangle).Fill = new ImageBrush(new BitmapImage(new Uri(item.ItemPath, UriKind.RelativeOrAbsolute)));
                         SetPreviewPaneLayer(2);
                     }
                     else
                     {
-                        /*bool isMediaFile = true;
-                        PreviewPlayer.Source = new Uri(item.ItemPath, UriKind.RelativeOrAbsolute);
-                        PreviewPlayer.MediaFailed += (sneder, args) =>
-                        {
-                            isMediaFile = false;
-                        };
-
-                        if (isMediaFile)
-                            SetPreviewPaneLayer(3);
-                        else //if (ext == "txt" || ext == "xml" || ext = "")
-                        {*/
-                        string content = File.ReadAllText(item.ItemPath);
+                        var content = File.ReadAllText(item.ItemPath);
                         if (content.Contains("\0\0"))
                             SetPreviewPaneLayer(1);
                         else
@@ -1060,290 +1292,47 @@ namespace RibbonFileManager
                             ((PreviewPaneGrid.Children[4] as ScrollViewer).Content as TextBlock).Text = content;
                             SetPreviewPaneLayer(4);
                         }
-                        //}
                     }
-                    /*else if (ext == "wav" || ext == "wma" || ext == "mp3" || ext == "m4a")
-                    {
-
-                    }
-                    else if (ext == "mp4" || ext == "wmv" || ext == "mp3" || ext == "m4a")
-                    {
-
-                    }*/
                 }
             }
         }
 
-        void SetPreviewPaneLayer(int index)
+        void SetPreviewPaneLayer(Int32 index)
         {
-            for (int i = 0; i < PreviewPaneGrid.Children.Count; i++)
+            for (var i = 0; i < PreviewPaneGrid.Children.Count; i++)
             {
                 var control = PreviewPaneGrid.Children[i];
-                if (i == index)
-                    control.Visibility = Visibility.Visible;
-                else
-                    control.Visibility = Visibility.Collapsed;
+                control.Visibility = i == index ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
-        private void CurrentDirectoryListView_Item_MouseDoubleClick(Object sender, MouseButtonEventArgs e)
+        private void DetailsPane_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (CurrentDirectoryListView.SelectedItems.Count == 1)
-            {
-                string path = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex].ItemPath;
-                if (Directory.Exists(path))
-                    Navigate(path);
-                else
-                    try
-                    {
-                        //Process.Start(path);
-                        ((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[CurrentDirectoryListView.SelectedIndex].Open();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
-            }
-            else if (CurrentDirectoryListView.SelectedItems.Count > 1)
-            {
-                //var source = (List<DiskItem>)(CurrentDirectoryListView.ItemsSource);
-                foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-                {
-                    string path = i.ItemPath;
-
-                    if (Directory.Exists(path))
-                    {
-                        ////////WindowManager.CreateWindow(path);
-                    }
-                    else
-                        try
-                        {
-                            //Process.Start(path);
-                            i.Open();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine(ex);
-                        }
-                }
-            }
+            Debug.WriteLine("DetailsPane_IsVisibleChanged");
+            if ((sender is UIElement el) && el.IsVisible)
+                UpdateDetailsPane(CurrentTab.Content.CurrentLocation);
         }
 
-        private void DetailsViewButton_Click(object sender, RoutedEventArgs e)
+        private void PreviewPane_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            CurrentView = FileBrowserView.Details;
-            IconsViewButton.IsChecked = false;
-            DetailsViewButton.IsChecked = true;
+            Debug.WriteLine("PreviewPane_IsVisibleChanged");
+            if ((sender is UIElement el) && el.IsVisible && (CurrentTab.Content.CurrentLocation is DirectoryQuery query))
+                UpdatePreviewPane(query.Item);
         }
 
-        private void IconsViewButton_Click(object sender, RoutedEventArgs e)
+        private void BreadcrumbsBar_PathUpdated(object sender, Start9.UI.Wpf.Breadcrumbs.PathChangedEventArgs e)
         {
-            CurrentView = FileBrowserView.Icons;
-            DetailsViewButton.IsChecked = false;
-            IconsViewButton.IsChecked = true;
+            if (!_resettingAddress)
+                CurrentTab.Content.NavManager.MoveTo(new DirectoryQuery(e.NewPath));
         }
 
-        private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
+        private void BreadcrumbsBar_PathItemAdded(object sender, Start9.UI.Wpf.Breadcrumbs.PathItemAddedEventArgs e)
         {
-            /*var item = (sender as MenuItem).Tag as ListViewItem;
-
-            string path = ((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemPath;*/
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-            {
-                string path = i.ItemPath;
-
-                if (Directory.Exists(path))
-                {
-                    Navigate(path);
-                    break;
-                }
-                else
-                    try
-                    {
-                        //Process.Start(path);
-                        i.Open();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
-            }
-        }
-
-        private void RunAsAdminMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            //var item = (sender as MenuItem).Tag as ListViewItem;
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-            {
-                string path = i.ItemPath; //((List<DiskItem>)CurrentDirectoryListView.ItemsSource)[(item.Parent as ListView).Items.IndexOf(item)].ItemPath;
-                if (File.Exists(path))
-                    try
-                    {
-                        /*Process.Start(new ProcessStartInfo(path)
-                        {
-                            Verb = "runas"
-                        });*/
-                        i.Open(DiskItem.OpenVerbs.Admin);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
-            }
-        }
-
-        private void TouchableContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            bool canRunAsAdmin = true;
-            foreach (DiskItem i in CurrentDirectoryListView.SelectedItems)
-            {
-                if (i.ItemCategory == DiskItem.DiskItemCategory.Directory)
-                {
-                    canRunAsAdmin = false;
-                    break;
-                }
-            }
-
-            foreach (MenuItem m in (sender as ContextMenu).Items)
-            {
-                if (m.Name == "RunAsAdminMenuItem")
-                {
-                    if (canRunAsAdmin)
-                        m.Visibility = Visibility.Visible;
-                    else
-                        m.Visibility = Visibility.Collapsed;
-
-                    break;
-                }
-            }
-        }
-
-        void CopyMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            CopySelection();
-        }
-
-        void CutMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            CutSelection();
-        }
-
-        void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteSelection();
-        }
-
-        void PropertiesMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ShowPropertiesForSelection();
-        }
-
-        private void CurrentDirectoryListView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                if (e.Key == Key.C)
-                    CopySelection();
-                else if (e.Key == Key.X)
-                    CutSelection();
-                else if (e.Key == Key.V)
-                    PasteCurrent();
-            }
-            else if (e.Key == Key.Delete)
-                DeleteSelection();
-        }
-
-        public void ValidateNavButtonStates(bool historyIndexZero, bool IndexLessThan, bool listCount, bool dirExists)
-        {
-            if (historyIndexZero)
-                NavBackButton.IsEnabled = false;
-            else
-                NavBackButton.IsEnabled = true;
-
-            if (IndexLessThan)
-                NavForwardButton.IsEnabled = false;
-            else
-                NavForwardButton.IsEnabled = true;
-
-            try
-            {
-                if (listCount)
-                    NavHistoryButton.IsEnabled = true;
-                else
-                    NavHistoryButton.IsEnabled = false;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                NavHistoryButton.IsEnabled = false;
-            }
-
-            try
-            {
-                if (dirExists)
-                    NavUpButton.IsEnabled = true;
-                else
-                    NavUpButton.IsEnabled = false;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                NavUpButton.IsEnabled = false;
-            }
-        }
-
-        private void NavBackButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateBack();
-            ValidateNavButtonStates();
-        }
-
-        private void NavForwardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateForward();
-            ValidateNavButtonStates();
-        }
-
-        private void NavHistoryButton_Click(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("HISTORY: ");
-            foreach (string s in HistoryList)
-                Debug.WriteLine(HistoryList.IndexOf(s).ToString() + ": " + s);
-        }
-
-        private void NavUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateUp();
-            ValidateNavButtonStates();
-        }
-
-        private void AddressBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            var bar = (sender as TextBox);
-            if (e.Key == Key.Enter)
-            {
-                string expText = Environment.ExpandEnvironmentVariables(bar.Text);
-                if (Directory.Exists(expText))
-                {
-                    Navigate(expText, true);
-                    CurrentDirectoryListView.Focus();
-                    //NavBar_PathTextBox_LostFocus(null, null);
-                }
-                else
-                {
-                    var failText = expText;
-                    MessageBox<MessageBoxEnums.OkButton>.Show("Ribbon File Browser can't find '" + failText + "'. Check the #speeling and try again.", "File Commander"); //(this, "Ribbon File Browser can't find '" + failText + "'. Check the speeling and try again.", "Ribbon File Browser");
-                }
-            }
-            else if (e.Key == Key.Escape)
-            {
-                CurrentDirectoryListView.Focus();
-            }
-        }
-
-        private void CloseWindowCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Close();
+            UpdateAddressBar(e.NewValue as Location);
+            /*var source = BreadcrumbsBar.ItemsSource as ObservableCollection<Location>;
+            source.Insert(e.Index, e.NewValue as Location);
+            for (int i = source.IndexOf(e.NewValue as Location); i < source.Count; i++)
+                source.RemoveAt(source.IndexOf(e.NewValue as Location) + 1);*/
         }
     }
 }

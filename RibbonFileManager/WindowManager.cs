@@ -7,69 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using WindowsSharp.DiskItems;
 
 namespace RibbonFileManager
 {
     public static class WindowManager
     {
-        public static string WindowDefaultPath = @"%userprofile%";
+        public static Location WindowDefaultLocation = new ShellLocation(new Guid("20D04FE0-3AEA-1069-A2D8-08002B30309D")); //Environment.ExpandEnvironmentVariables(@"%userprofile%");
 
-        public static List<MainWindow> OpenWindows = new List<MainWindow>();
-
-        public static void CreateWindow()
-        {
-            CreateWindow(WindowDefaultPath);
-        }
-
-        public static void CreateWindow(string targetPath)
-        {
-            string path = Environment.ExpandEnvironmentVariables(targetPath);
-            bool found = false;
-            if (path != Environment.ExpandEnvironmentVariables(WindowDefaultPath))
-            {
-                foreach (MainWindow w in OpenWindows)
-                {
-                    if (w.CurrentPath == path)
-                    {
-                        w.Show();
-                        w.Focus();
-                        w.Activate();
-                        found = true;
-                    }
-
-                    if (found)
-                        break;
-                }
-            }
-
-            if (!found)
-            {
-                var win = new MainWindow(path);
-                win.Show();
-                win.Focus();
-                win.Activate();
-            }
-        }
-
-        public static void CloneWindow(MainWindow targetWindow)
-        {
-            var win = new MainWindow();
-
-            win.HistoryList = targetWindow.HistoryList;
-            win.HistoryIndex = targetWindow.HistoryIndex;
-
-            win.Show();
-            win.Focus();
-            win.Activate();
-        }
-
-        /*static Manager()
-        {
-            
-            Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents")));
-            Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Pictures")));
-            Favorites.Add(new DiskItem(Environment.ExpandEnvironmentVariables(@"%userprofile%\Downloads")));
-        }*/
+        public static ObservableCollection<MainWindow> OpenWindows = new ObservableCollection<MainWindow>();
     }
 }

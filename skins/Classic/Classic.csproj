@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AssemblyTitle>Classic</AssemblyTitle>
+    <Product>Classic</Product>
+    <Copyright>Copyright ©  2019</Copyright>
+    <OutputPath>C:\ProgramData\Start9\File Commander\Skins\Classic</OutputPath>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <AssemblyName>Classic</AssemblyName>
+    <RootNamespace>Classic</RootNamespace>
+  </PropertyGroup>
+  <!--ItemGroup>
+    <None Remove="Classic.xaml" />
+  </ItemGroup-->
+  <ItemGroup>
+    <Page Include="Classic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Classic">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\3.0.0-preview8-28405-07\PresentationFramework.Classic.dll</HintPath>
+    </Reference>
+    <Reference Include="Start9.UI.Wpf">
+      <HintPath>..\..\..\start9-ui\Start9.UI.Wpf\bin\Debug\netcoreapp3.0\Start9.UI.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RibbonFileManager\RibbonFileManager.csproj" />
+  </ItemGroup>
+</Project>
